@@ -5,9 +5,30 @@ GPL10264** and cBioPortal **prad_mskcc**. The pipeline selects primary tumors,
 checks sample-to-patient identities, preserves separate features sharing a gene
 mapping, and exports aligned CSV and AnnData (`.h5ad`) datasets.
 
-**Supported dataset: Taylor/MSKCC only.** Other cohorts require source,
-annotation and clinical adapters; see the preliminary
+**Supported datasets: Taylor/MSKCC (GSE21034) and Sboner/Swedish Watchful
+Waiting (GSE16560).** Other cohorts require source, annotation and clinical
+adapters; see the preliminary
 [dataset compatibility assessment](docs/dataset_compatibility.md).
+
+### Sboner / GSE16560 (GPL5474)
+
+```bash
+uv run --locked sboner-gse16560                      # snapshot sboner-v1
+uv run --locked sboner-gse16560 --offline            # rebuild from cached, checksummed inputs
+```
+
+Same output layout and reproducibility rules as Taylor (`data/raw|interim|processed|anndata/<snapshot>/`),
+reusing the shared source cache, CSV writer, AnnData export and output protection.
+Differences: GPL5474 supplies Entrez ID/symbol/RefSeq itself, so annotation is validated
+rather than looked up in MyGene (6,144 probes, all retained as separate features, 6,100
+unique genes); clinical data come only from GEO sample characteristics. All 281 samples
+(one FFPE primary tumor per patient) are kept. The endpoint is prostate-cancer-specific
+mortality encoded from the deposited extreme-groups label (`pcsm_event`: 165 lethal, 116
+indolent), plus all-cause death (`os_event`) and `followup_months`. **Caveats:** lethal/indolent
+proportions are set by the sampling design, not cohort incidence; the time origin is not
+stated in GEO; the cohort overlaps the Swedish WW population in Setlur (GSE8402); the DASL
+panel is targeted (~6k genes). Code: `src/ds_bu_bioinformatics/sboner_pipeline.py`; tests:
+`tests/test_sboner_pipeline.py`.
 
 ## Quick start
 
