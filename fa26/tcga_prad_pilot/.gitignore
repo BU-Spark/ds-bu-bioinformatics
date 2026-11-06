@@ -1,0 +1,16 @@
+# pipeline outputs (data stays out of git; share via the team Drive)
+pilot_out/
+*.h5ad
+*.csv.gz
+*.zip
+
+# Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+.pytest_cache/
+
+# OS
+.DS_Store
