@@ -28,3 +28,23 @@ upstream results; the manifest records the actual responses, and does not make
 remote services immutable. Keep the Git revision and locked dependency file
 alongside the raw cache when sharing a reproducible snapshot. Metadata includes
 implementation hashes, so code changes can legitimately change output metadata.
+
+## TCGA-PRAD (`tcga-prad-v1`)
+
+`tcga-prad-v1-manifest.json` is an unchanged copy of the raw-input manifest for the
+TCGA-PRAD build. It lists 13 files: the cBioPortal datahub RSEM matrix, the clinical
+attribute definitions, paged PATIENT/SAMPLE clinical records, the sample inventory, and
+the Firehose Legacy patient records used for Gleason. It was acquired on November 11, 2026.
+The RSEM matrix (`data_mrna_seq_v2_rsem.txt`, 77,127,361 bytes) has SHA-256:
+
+```text
+b7c66db902bb2e7b2e68a1ef8dba4afc6b26f45fb453837bf30163e31d820179
+```
+
+This matches the fingerprint recorded by the November 6 pilot run. To reproduce the
+build, get the complete `data/raw/tcga-prad-v1/` directory from a collaborator, then:
+
+```bash
+cmp docs/provenance/tcga-prad-v1-manifest.json data/raw/tcga-prad-v1/manifest.json
+uv run --offline --locked tcga-prad --offline --snapshot tcga-prad-v1
+```
