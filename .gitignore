@@ -1,0 +1,19 @@
+.venv/
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+.DS_Store
+*.part
+/data/raw/
+/data/interim/
+/data/processed/
+.codex-build/
+
+/data/anndata/
+/data/processed-averaged/
+/data/processed-features/
+
+# Local editor settings and build artifacts
+.vscode/
+dist/
+*.egg-info/

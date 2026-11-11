@@ -1,0 +1,24 @@
+[project]
+name = "ds-bu-bioinformatics"
+version = "0.1.0"
+description = "Reproducible Taylor/MSKCC GSE21034 expression and clinical workflow"
+readme = "README.md"
+authors = [
+    { name = "Mansur Orazkhan", email = "orazkhanmansur@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "anndata>=0.13.4",
+    "ipykernel>=7.4.0",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pandas>=3.0.6",
+]
+
+[project.scripts]
+taylor-gse21034 = "ds_bu_bioinformatics.taylor_pipeline:main"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"

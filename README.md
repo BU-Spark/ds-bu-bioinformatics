@@ -1,78 +1,172 @@
+# Taylor/MSKCC prostate cancer pipeline
 
-<h1 align="center">
-  <br>
-  <a href="https://www.bu.edu/spark/" target="_blank"><img src="https://www.bu.edu/spark/files/2023/08/logo.png" alt="BUSpark" width="200"></a>
-  <br>
-  Project README Template <change to project name>
-  <br>
-</h1>
+Reproducible acquisition, annotation and clinical matching for **GSE21034 /
+GPL10264** and cBioPortal **prad_mskcc**. The pipeline selects primary tumors,
+checks sample-to-patient identities, preserves separate features sharing a gene
+mapping, and exports aligned CSV and AnnData (`.h5ad`) datasets.
 
-<h4 align="center">A template for the project readme file. </h4> <change to repo short description>
+**Supported dataset: Taylor/MSKCC only.** Other cohorts require source,
+annotation and clinical adapters; see the preliminary
+[dataset compatibility assessment](docs/dataset_compatibility.md).
 
-<p align="center">
-  <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#project-description">Project Description</a> •
-  <a href="#data-locations">Data Locations</a>
-</p>
+## Quick start
 
-## Key Features
-In this section you will be including a list of key features of your code/project.
-
-You should also include a short description of what each part of your code does. (Detailed description in the readme of each directory, if applicable)
-* /path/to/directory - function and description
-  - Key notes
-* /path/to/script - function and description
-  - Key notes
-* Lorem Ipsum - Dolor Sit Amet
-  - Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-* Duis Aute Irure Dolor
-  - Excepteur sint occaecat
-* Excepteur Sint Occaecat
-  - Curabitur efficitur, nunc non ultricies gravida, felis purus posuere eros, sed faucibus sapien est nec quam. Nulla at nisl nisl.
- 
-## How To Use
-
-To clone and run this application, you'll need <a href="https://git-scm.com" target="_blank">Git</a>
-From your command line:
+Requirements: Git, Python 3.12+, and [uv](https://docs.astral.sh/uv/).
+The lockfile fixes dependency versions; `.python-version` selects Python 3.12.
 
 ```bash
-# Clone this repository
-$ git clone [repo link]
-
-# Further Instructions
-...
+git clone --branch mansur_orazkhan https://github.com/BU-Spark/ds-bu-bioinformatics.git
+cd ds-bu-bioinformatics
+uv sync --locked
+uv run --locked taylor-gse21034
 ```
 
-Create a new branch from dev, add changes on the new branch you just created.
+The command downloads GEO expression/platform records, cBioPortal clinical data
+and MyGene mappings, validates them, and writes the outputs below. First-time
+acquisition needs network access and depends on upstream service availability.
+Failed or invalid downloads retry up to three times and are not cached as valid
+inputs. No manual source download is required when the services are available.
 
-You will want to look into <a href="https://git-scm.com/docs/git-branch" target="_blank">git branch</a> and <a href="https://git-scm.com/docs/git-checkout" target="_blank">git checkout</a>
+## Output layout
+
+```text
+data/
+  raw/<snapshot>/          Original source files/responses and manifest.json
+  interim/<snapshot>/      feature_expression.csv.gz before mapping selection
+  processed/<snapshot>/
+    expression.csv.gz      Original feature IDs × selected sample IDs
+    genes.csv              Feature ID, gene ID/symbol and RefSeq annotations
+    samples.csv            Sample, GEO and cBioPortal patient identifiers
+    clinical.csv           Clinical covariates and nullable DFS outcomes
+    feature_mapping.csv.gz Every feature/candidate and its mapping decision
+    sample_audit.csv       Every GEO profile and its selection reason
+    metadata.json          Source/code hashes, schemas and processing policies
+    validation.json        Counts, missingness, alignment and round-trip checks
+    checksums.sha256       SHA-256 hashes of the final CSV/metadata files
+  anndata/<snapshot>/
+    expression.h5ad        Samples × features, clinical data and gene annotations
+    metadata.json          Same source/processing metadata as the CSV export
+    checksums.sha256       SHA-256 hashes of H5AD and metadata
+```
+
+The default snapshot is `taylor-v2`. Data, caches and generated outputs are
+ignored by Git. The synthetic files in `tests/fixtures/` are committed.
+
+In H5AD, `X` is the transposed expression matrix, `obs` contains clinical/sample
+fields indexed by sample ID, and `var` contains gene/RefSeq annotations indexed
+by original feature ID. Gene IDs and symbols may repeat; feature IDs stay unique.
+`uns['metadata_json']` stores source and processing provenance as JSON. CSV and
+H5AD reloads must preserve expression values, labels and annotation alignment
+before outputs are published. See the [data dictionary](docs/data_dictionary.md)
+for field meanings and clinical limitations.
+
+## Reproduce a snapshot
+
+Every cached input has its request, retrieval timestamp, byte size and SHA-256
+recorded in `data/raw/<snapshot>/manifest.json`. Repeated runs verify and reuse
+these inputs. Existing differing outputs are protected rather than overwritten.
+After acquisition, rebuild without network access:
 
 ```bash
-# Create and Checkout a new branch if it doesn't exist
-$ git checkout -b your-branch main
-...
+uv run --offline --locked taylor-gse21034 --offline --snapshot taylor-v2
 ```
 
-Open a Pull Request to dev. Add your PM and TPM as reviewers. 
+`uv --offline` prevents dependency downloads; the pipeline's `--offline` prevents
+HTTP acquisition and fails on missing or corrupt inputs. For an independent
+rebuild, use **all three** alternate output roots:
 
-At the end of the semester during project wrap up open a final Pull Request to main from dev branch.
- 
-## Project Description
+```bash
+uv run --offline --locked taylor-gse21034 --offline --snapshot taylor-v2 \
+  --output-root /tmp/taylor-check/processed \
+  --interim-root /tmp/taylor-check/interim \
+  --anndata-root /tmp/taylor-check/anndata
+```
 
-In this section, you should include the project description, either from the client or spark.
+To reproduce the same biological inputs on another machine, transfer the complete
+`data/raw/taylor-v2/` directory, including its manifest, then run offline with the
+locked environment. Also install dependencies before disconnecting. The
+[reference manifest](docs/provenance/taylor-v2-manifest.json) records the 58 inputs
+used for the verified cohort; it contains requests and checksums, **not the input
+payloads**. A fresh online download can differ if upstream annotations or clinical
+records change, even under the same snapshot name in a new checkout. See
+[provenance notes](docs/provenance/README.md).
 
-Please make sure it reflects what you see on the documents (project description) you recieved.
+To refresh sources intentionally, use a new input snapshot:
 
-* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Donec vel nunc at libero ultrices tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris ut ligula nec risus posuere ultricies at et ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-* Veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+```bash
+uv run --locked taylor-gse21034 --snapshot taylor-v3
+```
 
-## Data locations
+If pipeline code changes and existing output metadata differs, keep the raw
+snapshot and choose new output roots. CSV/gzip outputs are deterministic;
+checksum manifests allow file-level comparisons. H5AD also has semantic reload
+checks. Code hashes in metadata intentionally change when implementation changes.
 
-In this section, you should include the location of all of your datasets for the project (if applicable)
+## Interpretation and policies
 
-<a href="dataset-documentation">Dataset Documentation</a>
-* Location 1: [location]
-  - [description]
-* Location 2: [location]
-  - [description]
+- **Expression:** retain finite deposited values. GEO reports RMA background
+  adjustment and quantile normalization, but the exact deposited log base remains
+  unverified. No additional normalization, log transform, imputation, expression
+  filtering or batch correction is applied. No raw CEL quality control is done.
+- **Mapping:** GPL10264 maps features to RefSeq. Preserve original accessions;
+  strip only a terminal numeric version for lookup. Cache complete MyGene human
+  responses. Require exact RefSeq RNA agreement and a consistent Entrez/symbol
+  identity. Exclude ambiguous, unmapped, invalid, truncated or conflicting
+  mappings with reasons. Never select by highest score. Symbols are MyGene
+  annotations, not claimed HGNC-approved labels.
+- **Separate features:** retain each accepted feature and its deposited values,
+  including features sharing gene IDs or symbols. No averaging is applied.
+- **Samples:** require GEO `Primary tumor` and cBioPortal `Primary` when supplied.
+  Match exact sample IDs and verify patient associations. Missing joins,
+  conflicting records and multiple selected primary profiles per patient fail.
+  Identical duplicate clinical records are collapsed and counted.
+- **Clinical:** retain original covariates with `patient__`/`sample__` prefixes.
+  Missing values remain missing. Source definitions and provenance are recorded.
+- **DFS:** map source `0:DiseaseFree` to event 0 and `1:Recurred` or
+  `1:Recurred/Progressed` to event 1; unknown codes fail. Times remain in months.
+  Missing outcomes remain nullable. Negative/non-finite times fail; zero times
+  are retained but flagged ineligible. The exact recurrence/death criteria and
+  surgery-specific time origin remain unverified. DFS is not relabeled BCR.
+
+The verified frozen `taylor-v2` build contains **131 primary profiles, 25,900
+separate mapped features, 19,306 unique genes, 27 DFS events and 104 disease-free
+observations**. Counts are calculated, not imposed. `gene_rows` in the validation
+report counts unique Entrez genes; `retained_feature_rows` counts expression rows.
+Legacy counts are comparisons, not selection targets. Structural validity does
+not resolve the remaining expression-scale or DFS-definition limitations.
+
+## Tests and report
+
+```bash
+uv run --locked python -m unittest discover -s tests -v
+uv run --locked jupyter notebook notebooks/taylor_gse21034_report.ipynb
+```
+
+The 32 tests use synthetic inputs and mocked network responses. They cover sample
+identity/order, mapping ambiguity, separate features with repeated gene labels,
+nullable clinical outcomes, malformed inputs, cache corruption, pagination,
+interrupted acquisition, output protection and CSV/H5AD round trips. GitHub
+Actions runs the tests with the lockfile and Python 3.12; no live cohort download
+is required for tests.
+
+The notebook reads local outputs, verifies checksums/alignment, and demonstrates
+separate features sharing a gene. Run the pipeline first. To execute the report
+without opening Jupyter:
+
+```bash
+uv run --locked jupyter nbconvert --to notebook --execute \
+  notebooks/taylor_gse21034_report.ipynb --output /tmp/taylor-report.ipynb
+```
+
+## Repository layout
+
+- `src/ds_bu_bioinformatics/`: CLI, acquisition, parsing, annotation, clinical
+  matching, validation and AnnData export.
+- `tests/`: synthetic fixtures and automated tests.
+- `notebooks/`: local inspection report; generated cell outputs are not committed.
+- `docs/`: data dictionary, cohort compatibility assessment and input provenance.
+- `pyproject.toml`, `uv.lock`: package/CLI definition and locked dependencies.
+
+Superseded project templates were replaced by this workflow and documentation.
+Previous averaged outputs remain local under `data/processed-averaged/` and are
+not inputs to the feature-preserving workflow. License: [GPL-3.0](LICENSE).
