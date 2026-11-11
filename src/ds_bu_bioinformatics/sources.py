@@ -1,4 +1,4 @@
-"""Immutable, checksummed HTTP inputs for the Taylor dataset only."""
+"""Immutable, checksummed HTTP inputs shared by the Taylor and TCGA-PRAD pipelines."""
 from __future__ import annotations
 import hashlib
 import gzip
@@ -15,6 +15,7 @@ GEO_URL = 'https://ftp.ncbi.nlm.nih.gov/geo/series/GSE21nnn/GSE21034/matrix/GSE2
 GPL_URL = 'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL10264&targ=self&form=text&view=full'
 CBIO_BASE = 'https://www.cbioportal.org/api/studies/prad_mskcc'
 MYGENE_URL = 'https://mygene.info/v3/query'
+LFS_POINTER = b'version https://git-lfs'
 
 
 class DownloadError(ValueError):
@@ -24,6 +25,10 @@ class DownloadError(ValueError):
 def validate_download(path: Path, name: str) -> None:
     """Check the transfer's payload before publishing a cached input."""
     try:
+        with path.open('rb') as handle:
+            if handle.read(len(LFS_POINTER)) == LFS_POINTER:
+                # GitHub can answer with the Git LFS pointer instead of the payload.
+                raise ValueError('Received a Git LFS pointer, not the file contents')
         if name.endswith('.gz'):
             # Read through the trailer to check both gzip CRC and completeness.
             with gzip.open(path, 'rb') as handle:
@@ -52,12 +57,14 @@ def write_json(path: Path, value) -> None:
 
 
 class SourceCache:
-    def __init__(self, root: Path, offline: bool = False):
+    def __init__(self, root: Path, offline: bool = False, accessions=('GSE21034', 'GPL10264', 'prad_mskcc'),
+                 user_agent: str = 'Taylor-GSE21034/2.0'):
         self.root = root
         self.offline = offline
+        self.user_agent = user_agent
         self.manifest_path = root / 'manifest.json'
         self.manifest = json.loads(self.manifest_path.read_text()) if self.manifest_path.exists() else {
-            'schema_version': 1, 'accessions': ['GSE21034', 'GPL10264', 'prad_mskcc'], 'sources': {}}
+            'schema_version': 1, 'accessions': list(accessions), 'sources': {}}
 
     def fetch(self, name: str, url: str, body: bytes | None = None) -> Path:
         path = self.root / name
@@ -78,7 +85,7 @@ class SourceCache:
             raise ValueError(f'Unmanifested cached input: {path}; use a new snapshot')
         path.parent.mkdir(parents=True, exist_ok=True)
         temporary = path.with_name(path.name + '.part')
-        headers = {'User-Agent': 'Taylor-GSE21034/2.0', 'Accept': '*/*'}
+        headers = {'User-Agent': self.user_agent, 'Accept': '*/*'}
         if body is not None:
             headers['Content-Type'] = 'application/x-www-form-urlencoded'
         request = urllib.request.Request(url, data=body, headers=headers)

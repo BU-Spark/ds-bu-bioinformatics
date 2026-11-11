@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 
 
-def write_anndata(expression, clinical, genes, metadata, path):
+def write_anndata(expression, clinical, genes, metadata, path, layers=None):
+    """layers: optional {name: features x samples frame aligned with expression}."""
     obs = clinical.set_index('sample_id').loc[expression.columns].copy()
     obs.index.name = 'sample_id'
     var = genes.set_index('feature_id').loc[expression.index].copy()
@@ -18,7 +19,12 @@ def write_anndata(expression, clinical, genes, metadata, path):
                 frame[col] = pd.Categorical(frame[col].astype(object))
             elif isinstance(frame[col].dtype, pd.Float64Dtype | pd.Float32Dtype):
                 frame[col] = frame[col].to_numpy(dtype=float, na_value=np.nan)
+    layers = layers or {}
+    for name, frame in layers.items():
+        if frame.index.tolist() != expression.index.tolist() or frame.columns.tolist() != expression.columns.tolist():
+            raise ValueError(f'AnnData layer {name} is not aligned with expression')
     data = ad.AnnData(X=expression.to_numpy().T.copy(), obs=obs, var=var,
+                      layers={name: frame.to_numpy().T.copy() for name, frame in layers.items()},
                       uns={'metadata_json': json.dumps(metadata, sort_keys=True)})
     data.write_h5ad(path, compression='gzip')
     saved = ad.read_h5ad(path)
@@ -28,5 +34,8 @@ def write_anndata(expression, clinical, genes, metadata, path):
         raise ValueError('AnnData export changed deposited expression values')
     pd.testing.assert_frame_equal(saved.obs, obs, check_dtype=False, check_categorical=False)
     pd.testing.assert_frame_equal(saved.var, var, check_dtype=False, check_categorical=False)
+    for name, frame in layers.items():
+        if not np.array_equal(saved.layers[name], frame.to_numpy().T):
+            raise ValueError(f'AnnData export changed layer {name}')
     if saved.uns['metadata_json'] != data.uns['metadata_json']:
         raise ValueError('AnnData export changed provenance metadata')
