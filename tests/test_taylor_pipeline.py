@@ -287,6 +287,20 @@ class EndToEndTest(unittest.TestCase):
             self.assertEqual(report['counts']['primary_profiles'], 2)  # Never force 131.
             with patch('urllib.request.urlopen', side_effect=AssertionError('offline network attempted')):
                 build(SourceCache(root / 'raw' / 'fixture', offline=True), root / 'offline', root / 'offline-interim', root / 'offline-anndata')
+            metadata_path = root / 'out' / 'fixture' / 'metadata.json'
+            original_metadata = metadata_path.read_bytes()
+            offline_cache = SourceCache(root / 'raw' / 'fixture', offline=True)
+            with patch('ds_bu_bioinformatics.taylor_pipeline.sha256',
+                       side_effect=lambda path: '0' * 64 if path.suffix == '.py' else sha256(path)):
+                build(offline_cache, root / 'out', root / 'interim')
+                self.assertEqual(metadata_path.read_bytes(), original_metadata)
+                samples_path = metadata_path.with_name('samples.csv')
+                original_samples = samples_path.read_bytes()
+                samples_path.write_text('corrupt')
+                with self.assertRaisesRegex(ValueError, 'Existing outputs differ'):
+                    build(offline_cache, root / 'out', root / 'interim')
+                self.assertEqual(samples_path.read_text(), 'corrupt')
+                samples_path.write_bytes(original_samples)
             for path in (root / 'out' / 'fixture').iterdir():
                 self.assertEqual(sha256(path), sha256(root / 'offline' / 'fixture' / path.name), path.name)
             genes = pd.read_csv(root / 'out' / 'fixture' / 'expression.csv.gz', index_col=0)
