@@ -19,6 +19,7 @@ dependencies = [
 [project.scripts]
 taylor-gse21034 = "ds_bu_bioinformatics.taylor_pipeline:main"
 tcga-prad = "ds_bu_bioinformatics.tcga_pipeline:main"
+check-outputs = "ds_bu_bioinformatics.output_check:main"
 
 [build-system]
 requires = ["uv_build>=0.13.0,<0.14.0"]

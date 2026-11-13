@@ -183,6 +183,50 @@ PFI events** (median observed time 25.8 months). Offline rebuilds are byte-ident
 including the h5ad. The [reference manifest](docs/provenance/tcga-prad-v1-manifest.json)
 records the inputs.
 
+## Checking all datasets
+
+Each dataset has its own pipeline, because source formats, gene identifiers, sample
+rules and endpoints differ (see [dataset compatibility](docs/dataset_compatibility.md)).
+What they share is the output format. After running the pipelines, check every
+snapshot in `data/processed/` and `data/anndata/` against that format:
+
+```bash
+uv run --locked check-outputs                          # every snapshot
+uv run --locked check-outputs --snapshot taylor-v2     # one snapshot (repeatable)
+uv run --locked check-outputs --json report.json       # also save full results
+```
+
+It does not rerun any pipeline. For each snapshot it checks:
+
+- required files, plus a feature audit (`feature_mapping.csv.gz` or `feature_audit.csv`);
+- `checksums.sha256` in both folders;
+- `expression.csv.gz` is feature × sample with unique labels and finite values;
+- sample order is the same in `samples.csv`, `clinical.csv` and the selected rows of
+  `sample_audit.csv`, with one sample per patient;
+- feature order is the same in `genes.csv`;
+- every `<endpoint>_event` has `_months`, `_eligible`, `_eligibility_reason` and
+  `_time_unit` columns, with valid values;
+- `validation.json`, `metadata.json` and `expression.h5ad` agree with the CSVs.
+
+It prints one row per snapshot, with counts computed from the files rather than
+from `validation.json`, whose count names differ by dataset. It exits with status 1
+if any snapshot fails. Warnings flag differences that don't break the format but
+matter for combined analysis.
+
+Result on November 13, 2026 (Cambridge and Stockholm built from the `add-datasets` branch):
+
+| Dataset | Status | Samples | Feature rows | Unique genes | Expression min / median / max | Endpoints (eligible, events) |
+|---|---|---:|---:|---:|---|---|
+| taylor-v2 | PASS | 131 | 25,900 | 19,306 | 11.72 / 224.07 / 30762.05 | DFS 131, 27 |
+| tcga-prad-v2 | PASS | 484 | 19,088 | 19,064 | 0.00 / 7.95 / 20.62 | PFI 484, 91; OS 484, 10; DSS 482, 5; DFI 330, 30 |
+| cambridge-v2 | PASS | 112 | 41,610 | 29,604 | 4.94 / 6.63 / 15.38 | BCR 112, 19 |
+| stockholm-v1 | PASS | 94 | 41,615 | 29,608 | 5.30 / 6.12 / 14.50 | BCR 92, 45 |
+
+Warning: Taylor's deposited values are not on a log scale, while the other three are
+log2. Decide how to transform them before PCA module scoring. Endpoints also differ
+(DFS, PFI, BCR) and are not relabeled, so compare module scores within each
+dataset's own endpoint.
+
 ## Tests and report
 
 ```bash
@@ -191,7 +235,7 @@ uv run --locked jupyter notebook notebooks/taylor_gse21034_report.ipynb
 uv run --locked jupyter notebook notebooks/tcga_prad_report.ipynb   # TCGA-PRAD
 ```
 
-The 44 tests (32 Taylor, 12 TCGA-PRAD) use synthetic inputs and mocked network responses. They cover sample
+The 51 tests (32 Taylor, 12 TCGA-PRAD, 7 output check) use synthetic inputs and mocked network responses. They cover sample
 identity/order, mapping ambiguity, separate features with repeated gene labels,
 nullable clinical outcomes, malformed inputs, cache corruption, pagination,
 interrupted acquisition, output protection and CSV/H5AD round trips. GitHub
