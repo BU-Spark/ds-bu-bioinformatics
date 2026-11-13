@@ -183,6 +183,19 @@ PFI events** (median observed time 25.8 months). Offline rebuilds are byte-ident
 including the h5ad. The [reference manifest](docs/provenance/tcga-prad-v1-manifest.json)
 records the inputs.
 
+## PCA module scoring
+
+```bash
+uv run --locked module-scores                                   # every snapshot, placeholder modules
+uv run --locked module-scores --modules camplab_modules.csv     # gene,module CSV
+```
+
+For each dataset and module this computes a PC1 score per sample and tests it against that
+dataset's own endpoint, using a Cox model (hazard ratio per SD) and the C-index. Results go to
+`data/analysis/module_scores/`. The current modules are MSigDB Hallmark placeholders
+([modules/README.md](modules/README.md)) until the CampLab lists are shared. See
+[first results and open questions](docs/module_scoring.md).
+
 ## Tests and report
 
 ```bash
@@ -191,7 +204,7 @@ uv run --locked jupyter notebook notebooks/taylor_gse21034_report.ipynb
 uv run --locked jupyter notebook notebooks/tcga_prad_report.ipynb   # TCGA-PRAD
 ```
 
-The 44 tests (32 Taylor, 12 TCGA-PRAD) use synthetic inputs and mocked network responses. They cover sample
+The 50 tests (32 Taylor, 12 TCGA-PRAD, 6 module scoring) use synthetic inputs and mocked network responses. They cover sample
 identity/order, mapping ambiguity, separate features with repeated gene labels,
 nullable clinical outcomes, malformed inputs, cache corruption, pagination,
 interrupted acquisition, output protection and CSV/H5AD round trips. GitHub

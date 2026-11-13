@@ -11,6 +11,7 @@ dependencies = [
     "anndata>=0.13.4",
     "ipykernel>=7.4.0",
     "jupyter>=1.1.1",
+    "lifelines>=0.30",
     "matplotlib>=3.11.2",
     "numpy>=2.5.4",
     "pandas>=3.0.6",
@@ -19,6 +20,7 @@ dependencies = [
 [project.scripts]
 taylor-gse21034 = "ds_bu_bioinformatics.taylor_pipeline:main"
 tcga-prad = "ds_bu_bioinformatics.tcga_pipeline:main"
+module-scores = "ds_bu_bioinformatics.module_scores:main"
 
 [build-system]
 requires = ["uv_build>=0.13.0,<0.14.0"]
