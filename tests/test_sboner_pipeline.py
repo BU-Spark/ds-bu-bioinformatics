@@ -127,9 +127,37 @@ class SbonerTests(unittest.TestCase):
         c = sp.build_clinical(meta)
         self.assertEqual(c.pcsm_event.tolist(), [1, 0, 1, 0])
         self.assertEqual(c.os_event.tolist(), [1, 0, 1, 1])
+        for prefix in ("pcsm", "os"):  # shared endpoint contract
+            for suffix in ("event", "months", "eligible", "eligibility_reason", "time_unit"):
+                self.assertIn(f"{prefix}_{suffix}", c)
+        self.assertTrue(c.pcsm_eligible.all())
+        self.assertEqual(c.pcsm_months.tolist(), [122, 124, 54, 149])
+        self.assertEqual(set(c.pcsm_time_unit), {"months"})
         self.assertTrue(np.isnan(c.tmprss2_erg_fusion[2]))  # NA stays missing, not 0
         self.assertTrue(np.isnan(c.cancer_percent[2]))
         self.assertEqual(c.split.tolist(), ["train"] * 4)
+
+    def test_missing_outcome_stays_missing_and_ineligible(self):
+        meta, _, _ = self.parse(matrix_text(extreme=("Lethal", "NA", "Lethal", "Indolent")))
+        meta.loc[3, "fup.month"] = "0"
+        c = sp.build_clinical(meta)
+        self.assertTrue(pd.isna(c.pcsm_event[1]))  # never assumed censored
+        self.assertEqual(c.pcsm_eligibility_reason.tolist(),
+                         ["eligible", "missing_status", "eligible", "zero_time_requires_review"])
+        self.assertEqual(c.pcsm_eligible.tolist(), [True, False, True, False])
+
+    def test_strict_covariates_fail_on_bad_values(self):
+        for column, bad in [("age", "200"), ("gleason", "11"), ("gleason", "6.5"), ("fup.month", "-3"),
+                            ("fusion", "2"), ("cancer.percent", "abc")]:
+            meta, _, _ = self.parse(matrix_text())
+            meta.loc[0, column] = bad
+            with self.assertRaises(ValueError, msg=f"{column}={bad}"):
+                sp.build_clinical(meta)
+
+    def test_audit_uses_shared_columns(self):
+        meta, _, _ = self.parse(matrix_text())
+        audit = sp.build_audit(meta, sp.build_clinical(meta))
+        self.assertTrue({"sample_id", "selected", "selection_reason"} <= set(audit.columns))
 
     def test_clinical_rejects_unknown_codes(self):
         meta, _, _ = self.parse(matrix_text(extreme=("Lethal", "Maybe", "Lethal", "Indolent")))
@@ -144,7 +172,10 @@ class SbonerTests(unittest.TestCase):
         with mock.patch.object(sp, "EXPECTED_SAMPLES", N), mock.patch.object(sp, "N_TRAIN", 3):
             checks = sp.build(cache, *roots, snapshot="t")
             self.assertEqual(checks["counts"]["retained_feature_rows"], 3)
+            self.assertTrue(checks["structurally_valid"])
+            self.assertEqual(checks["primary_endpoint"], "pcsm")
             self.assertEqual(checks["counts"]["pcsm_events"], 2)
+            self.assertEqual(checks["endpoints"]["pcsm"]["eligible"], 4)
             self.assertEqual(checks["counts"]["validation"], 1)
             self.assertTrue(checks["anndata_round_trip_valid"])
             sp.build(cache, *roots, snapshot="t")  # identical rebuild accepted

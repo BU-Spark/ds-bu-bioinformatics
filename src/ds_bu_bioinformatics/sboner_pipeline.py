@@ -50,7 +50,7 @@ OUTCOME_CODES = {"lethal": 1, "indolent": 0}  # extreme-groups label -> PCSM ind
 VITAL_CODES = {"dead": 1, "alive": 0}
 REQUIRED_CHARS = ["gleason", "major.gleason", "minor.gleason", "batch", "extreme", "cancer.percent",
                   "age", "diag.yr", "status.all", "fup.month", "fusion"]
-SNAPSHOT_DEFAULT = "sboner-v1"
+SNAPSHOT_DEFAULT = "sboner-v2"
 
 
 # --------------------------------------------------------------------------- expression
@@ -184,43 +184,86 @@ def select_features(expression: pd.DataFrame, mapping: pd.DataFrame):
 
 
 # --------------------------------------------------------------------------- clinical
-def _num(series: pd.Series, name: str) -> pd.Series:
-    out = pd.to_numeric(series.replace({"NA": np.nan, "": np.nan}), errors="coerce")
-    bad = series.notna() & ~series.isin(["NA", ""]) & out.isna()
-    if bad.any():
-        raise ValueError(f"Non-numeric values in {name}: {sorted(series[bad].unique())[:5]}")
-    return out
+MISSING_TOKENS = {"", "NA", "N/A", "NAN", "NULL", "[NOT AVAILABLE]"}
+# endpoint prefix -> (source status column, source time column, status codes); same column
+# contract as the other cohorts: <e>_event, <e>_months, <e>_eligible, <e>_eligibility_reason, <e>_time_unit
+ENDPOINTS = {"pcsm": ("outcome_group", "followup_months", OUTCOME_CODES),
+             "os": ("vital_status", "followup_months", VITAL_CODES)}
+PRIMARY_ENDPOINT = "pcsm"
+
+
+def _is_missing(value) -> bool:
+    return pd.isna(value) or str(value).strip().upper() in MISSING_TOKENS
+
+
+def parse_number(series: pd.Series, name: str, low=None, high=None, integer=False) -> pd.Series:
+    """Missing tokens -> NA; any other non-numeric or out-of-range value stops the build."""
+    out = []
+    for value in series:
+        if _is_missing(value):
+            out.append(np.nan)
+            continue
+        try:
+            number = float(value)
+        except (TypeError, ValueError):
+            raise ValueError(f"Non-numeric value in {name}: {value!r}") from None
+        if not np.isfinite(number) or (low is not None and number < low) or (high is not None and number > high) \
+                or (integer and number != int(number)):
+            raise ValueError(f"Invalid value in {name}: {value!r}")
+        out.append(number)
+    return pd.Series(out, index=series.index, dtype="float64")
+
+
+def decode_endpoint(status, raw_time, codes):
+    """Return (event, months, eligibility_reason). Missing stays missing; unknown/invalid values fail."""
+    missing_status, missing_time = _is_missing(status), _is_missing(raw_time)
+    if not missing_status and status not in codes:
+        raise ValueError(f"Unknown endpoint status: {status!r}")
+    event = None if missing_status else codes[status]
+    months = None if missing_time else float(raw_time)
+    if months is not None and (not np.isfinite(months) or months < 0):
+        raise ValueError(f"Invalid endpoint time: {raw_time!r}")
+    reason = ("missing_status" if missing_status else "missing_time" if missing_time
+              else "zero_time_requires_review" if months == 0 else "eligible")
+    return event, months, reason
+
+
+def add_endpoints(clinical: pd.DataFrame) -> pd.DataFrame:
+    for prefix, (status_col, time_col, codes) in ENDPOINTS.items():
+        decoded = [decode_endpoint(st, t, codes) for st, t in zip(clinical[status_col], clinical[time_col], strict=True)]
+        clinical[f"{prefix}_event"] = pd.array([d[0] for d in decoded], dtype="Int8")
+        clinical[f"{prefix}_months"] = pd.array([d[1] for d in decoded], dtype="Float64")
+        clinical[f"{prefix}_eligibility_reason"] = [d[2] for d in decoded]
+        clinical[f"{prefix}_eligible"] = clinical[f"{prefix}_eligibility_reason"].eq("eligible")
+        clinical[f"{prefix}_time_unit"] = "months"
+    return clinical
 
 
 def build_clinical(meta: pd.DataFrame):
     missing = [c for c in REQUIRED_CHARS if c not in meta]
     if missing:
         raise ValueError(f"Missing GEO characteristics: {missing}")
-    outcome = meta["extreme"].str.lower()
-    vital = meta["status.all"].str.lower()
-    if not set(outcome) <= set(OUTCOME_CODES) or not set(vital) <= set(VITAL_CODES):
-        raise ValueError(f"Unknown outcome/vital codes: {set(outcome) - set(OUTCOME_CODES)} {set(vital) - set(VITAL_CODES)}")
-    fup = _num(meta["fup.month"], "fup.month")
-    if (fup < 0).any() or not np.isfinite(fup.dropna()).all():
-        raise ValueError("Negative/non-finite follow-up time")
+    for name in ("extreme", "status.all"):  # source labels may be missing, never silently mapped
+        meta[name] = meta[name].map(lambda v: v if _is_missing(v) else str(v).strip().lower())
+    fusion = parse_number(meta["fusion"], "fusion", 0, 1, integer=True)
     c = pd.DataFrame({
         "sample_id": meta.geo_accession, "geo_accession": meta.geo_accession, "patient_id": meta.title,
         "platform_id": meta.platform_id,
-        "age": _num(meta["age"], "age"), "gleason_score": _num(meta["gleason"], "gleason"),
-        "gleason_primary": _num(meta["major.gleason"], "major.gleason"),
-        "gleason_secondary": _num(meta["minor.gleason"], "minor.gleason"),
-        "diagnosis_year": _num(meta["diag.yr"], "diag.yr"),
-        "cancer_percent": _num(meta["cancer.percent"], "cancer.percent"),
-        "batch": meta["batch"], "tmprss2_erg_fusion": _num(meta["fusion"], "fusion"),
-        "outcome_group": outcome, "vital_status": vital, "followup_months": fup,
+        "age": parse_number(meta["age"], "age", 0, 120, integer=True),
+        "gleason_score": parse_number(meta["gleason"], "gleason", 2, 10, integer=True),
+        "gleason_primary": parse_number(meta["major.gleason"], "major.gleason", 1, 9, integer=True),
+        "gleason_secondary": parse_number(meta["minor.gleason"], "minor.gleason", 1, 9, integer=True),
+        "diagnosis_year": parse_number(meta["diag.yr"], "diag.yr", 1900, 2010, integer=True),
+        "cancer_percent": parse_number(meta["cancer.percent"], "cancer.percent", 0, 100),
+        "batch": meta["batch"], "tmprss2_erg_fusion": fusion,
+        "outcome_group": meta["extreme"], "vital_status": meta["status.all"],
+        "followup_months": parse_number(meta["fup.month"], "fup.month", 0),
     })
-    c["pcsm_event"] = outcome.map(OUTCOME_CODES).astype(int)
-    c["os_event"] = vital.map(VITAL_CODES).astype(int)
-    order = np.arange(len(c))
-    c["split"] = np.where(order < N_TRAIN, "train", "validation")  # relies on deposited sample order
-    c["survival_eligible"] = c.followup_months.notna() & (c.followup_months > 0)
-    c["survival_ineligible_reason"] = np.where(c.followup_months.isna(), "missing_followup",
-                                       np.where(c.followup_months <= 0, "zero_followup", ""))
+    known = c.dropna(subset=["gleason_score", "gleason_primary", "gleason_secondary"])
+    if (known.gleason_primary + known.gleason_secondary != known.gleason_score).any():  # stronger than a range check
+        raise ValueError("Gleason primary + secondary differs from the deposited Gleason score")
+    c = add_endpoints(c)
+    c["split"] = np.where(np.arange(len(c)) < N_TRAIN, "train", "validation")  # relies on deposited sample order
     c["stage"] = "T1-T2 N0 (cohort-level; per-patient stage not in GEO)"
     c["treatment"] = "none (TURP at diagnosis; watchful waiting)"
     c["tissue"] = "FFPE tumor, primary"
@@ -228,9 +271,10 @@ def build_clinical(meta: pd.DataFrame):
 
 
 def build_audit(meta: pd.DataFrame, clinical: pd.DataFrame) -> pd.DataFrame:
-    return pd.DataFrame({"geo_accession": meta.geo_accession, "patient_id": meta.title,
-                         "platform_id": meta.platform_id, "selected": True,
-                         "reason": "cohort is 100% primary FFPE tumor, one sample per patient",
+    """Every GEO profile with its disposition. All 281 are single FFPE primary tumors, so all are selected."""
+    return pd.DataFrame({"sample_id": clinical.sample_id, "geo_accession": meta.geo_accession,
+                         "patient_id": meta.title, "platform_id": meta.platform_id, "selected": True,
+                         "selection_reason": "primary_tumor",
                          "outcome_group": clinical.outcome_group})
 
 
@@ -246,20 +290,28 @@ def validate(expression, clinical, samples, genes, mapping, audit) -> dict:
         raise ValueError("Non-finite expression")
     if len(clinical) != EXPECTED_SAMPLES:
         raise ValueError(f"Expected {EXPECTED_SAMPLES} samples, got {len(clinical)}")
+    endpoint_counts = {}
+    for prefix in ENDPOINTS:  # one definition of events/censored: eligible records only
+        event, months, eligible = clinical[f"{prefix}_event"], clinical[f"{prefix}_months"], clinical[f"{prefix}_eligible"]
+        if clinical.loc[eligible, [f"{prefix}_event", f"{prefix}_months"]].isna().any().any() or not months[eligible].gt(0).all():
+            raise ValueError(f"Eligible {prefix} records need an event and a positive time")
+        endpoint_counts[prefix] = {
+            "eligible": int(eligible.sum()), "events": int(event[eligible].eq(1).sum()),
+            "censored": int(event[eligible].eq(0).sum()),
+            "median_observed_months": float(months[eligible].median()) if eligible.any() else None}
+    p = PRIMARY_ENDPOINT
     counts = {"samples": len(clinical), "patients": int(clinical.patient_id.nunique()),
               "source_features": len(mapping), "retained_feature_rows": len(expression),
-              "unique_gene_ids": int(genes.gene_id.nunique()), "unique_gene_symbols": int(genes.gene_symbol.nunique()),
+              "gene_rows": int(genes.gene_id.nunique()), "unique_gene_symbols": int(genes.gene_symbol.nunique()),
               "features_sharing_gene_id": int((genes.n_probes_same_gene > 1).sum()),
-              "pcsm_events": int(clinical.pcsm_event.sum()), "indolent": int((1 - clinical.pcsm_event).sum()),
-              "deaths_any_cause": int(clinical.os_event.sum()),
+              f"{p}_events": endpoint_counts[p]["events"], f"{p}_censored": endpoint_counts[p]["censored"],
               "train": int((clinical.split == "train").sum()), "validation": int((clinical.split == "validation").sum())}
-    return {"counts": counts,
+    odd = clinical.loc[(clinical.gleason_primary > 5) | (clinical.gleason_secondary > 5), "sample_id"].tolist()
+    return {"gleason_pattern_above_5_samples": odd, "structurally_valid": True, "counts": counts, "primary_endpoint": p, "endpoints": endpoint_counts,
             "excluded_features_by_status": mapping.loc[~mapping.selected, "mapping_status"].value_counts().to_dict(),
             "expression_range": [float(expression.to_numpy().min()), float(expression.to_numpy().max())],
             "missing_clinical_values": {k: int(v) for k, v in clinical.isna().sum().items() if v},
-            "sample_order_aligned": True, "feature_order_aligned": True,
-            "outcome_group_vs_pcsm_event_consistent":
-                bool((clinical.outcome_group.eq("lethal") == clinical.pcsm_event.eq(1)).all())}
+            "sample_order_aligned": True, "feature_order_aligned": True}
 
 
 def validate_export(stage: Path, expression: pd.DataFrame) -> dict:
@@ -300,6 +352,11 @@ def build(cache: SourceCache, output_root: Path, interim_root: Path, anndata_roo
         "mapping": {"source": f"{PLATFORM} platform table (GeneID, Symbol, GB_ACC)",
                     "policy": "Numeric Entrez ID, non-empty symbol, valid RefSeq accession listed in platform REFSEQ field, one-to-one Entrez/symbol identity; exclusions recorded with reasons",
                     "symbol_validation": "platform labels; not claimed HGNC-approved"},
+        "endpoints": {prefix: {"status": st, "months": t, "status_codes": codes}
+                      for prefix, (st, t, codes) in ENDPOINTS.items()},
+        "primary_endpoint": PRIMARY_ENDPOINT,
+        "endpoint_policy": {"unit": "months", "zero_time_policy": "retain but exclude from eligibility pending review",
+                            "missing_policy": "retain nullable event/time and eligibility reason; never assume censored"},
         "outcome": {"endpoint": "PCSM (prostate-cancer-specific mortality)",
                     "event_definition": "pcsm_event = 1 for GEO 'extreme: Lethal', 0 for 'Indolent'",
                     "design_warning": "extreme-groups case-control sampling: lethal/indolent proportions are set by design, not cohort incidence; event rates are not population estimates and standard Cox baseline hazards are biased",
@@ -310,12 +367,23 @@ def build(cache: SourceCache, output_root: Path, interim_root: Path, anndata_roo
         "overlap_warning": "Overlaps the Swedish WW population in Setlur (GSE8402); not independent",
         "limitations": ["Targeted ~6k-gene DASL panel, not genome-wide", "Per-patient stage not deposited",
                         "Log scale taken from GEO text; no raw intensity QC", "PCSM time origin unverified",
-                        "Extreme-groups design"],
+                        "Extreme-groups design",
+                        "One sample (GSM416492) has minor Gleason pattern 6 (3+6=9), outside the usual 1-5 pattern range but consistent with its deposited total; retained as deposited and listed in validation.json"],
         "code_sha256": {p.name: sha256(p) for p in sorted(Path(__file__).parent.glob("*.py"))},
     }
     metadata_out["output_schemas"] = {name: {c: {"dtype": str(f[c].dtype), "nullable": bool(f[c].isna().any())} for c in f.columns}
                                       for name, f in [("clinical.csv", clinical), ("samples.csv", samples), ("genes.csv", genes),
                                                       ("feature_mapping.csv.gz", mapping), ("sample_audit.csv", audit)]}
+    # Rebuild with the published provenance when verifying an existing output pair; every staged
+    # file must still match its published counterpart byte for byte (same rule as the Taylor pipeline).
+    published_metadata = output_root / snapshot / "metadata.json"
+    if published_metadata.is_file() and (anndata_root / snapshot).is_dir():
+        try:
+            published = json.loads(published_metadata.read_text())
+        except ValueError:
+            published = None  # the destination check reports the mismatch
+        if isinstance(published, dict) and isinstance(published.get("code_sha256"), dict):
+            metadata_out["code_sha256"] = published["code_sha256"]
     for root in (output_root, interim_root, anndata_root):
         root.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=".g16560-", dir=output_root))
