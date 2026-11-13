@@ -1,7 +1,7 @@
 [project]
 name = "ds-bu-bioinformatics"
 version = "0.1.0"
-description = "Reproducible Taylor/MSKCC GSE21034 expression and clinical workflow"
+description = "Reproducible prostate cancer expression and clinical workflows (Taylor/MSKCC GSE21034, TCGA-PRAD)"
 readme = "README.md"
 authors = [
     { name = "Mansur Orazkhan", email = "orazkhanmansur@gmail.com" }
@@ -19,6 +19,7 @@ dependencies = [
 [project.scripts]
 taylor-gse21034 = "ds_bu_bioinformatics.taylor_pipeline:main"
 sboner-gse16560 = "ds_bu_bioinformatics.sboner_pipeline:main"
+tcga-prad = "ds_bu_bioinformatics.tcga_pipeline:main"
 
 [build-system]
 requires = ["uv_build>=0.13.0,<0.14.0"]

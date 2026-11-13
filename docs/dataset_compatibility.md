@@ -2,7 +2,7 @@
 
 Checked November 5, 2026. Scope: cohorts visible in the supplied table, excluding Belfast and TCGA.
 
-**Current end-to-end support: Taylor/MSKCC GSE21034 and Sboner GSE16560.** No additional cohort was run through the pipeline in this assessment. The entries below describe feasibility of extending it, not validated support.
+**Current end-to-end support: Taylor/MSKCC GSE21034, TCGA-PRAD and Sboner GSE16560.** TCGA-PRAD (cBioPortal `prad_tcga_pan_can_atlas_2018`) was added on November 11, 2026 through `tcga_pipeline.py`, using the same output contract; see the [TCGA data dictionary](tcga_prad_data_dictionary.md). The rest of this assessment predates it, and Sboner GSE16560 (`sboner_pipeline.py`) was added the same way; no other cohort has been run through the pipeline. The entries below describe feasibility of extending it, not validated support.
 
 ## Why the current command is specific to Taylor
 

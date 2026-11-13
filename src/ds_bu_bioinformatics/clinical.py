@@ -9,14 +9,14 @@ from .sources import CBIO_BASE
 DFS_CODES = {'0:DiseaseFree': 0, '1:Recurred': 1, '1:Recurred/Progressed': 1}
 
 
-def paged(cache, endpoint, prefix, params=None, page_size=1000):
+def paged(cache, endpoint, prefix, params=None, page_size=1000, base=CBIO_BASE):
     records = []
     fingerprints = set()
     expected = None
     for page in range(10000):
         query = urllib.parse.urlencode({**(params or {}), 'pageSize': page_size, 'pageNumber': page})
         name = f'{prefix}_{page:04d}.json'
-        payload = cache.json(name, f'{CBIO_BASE}/{endpoint}?{query}')
+        payload = cache.json(name, f'{base}/{endpoint}?{query}')
         if not isinstance(payload, list):
             raise ValueError(f'Expected list for {endpoint}')
         entry = cache.manifest['sources'][name]
@@ -39,13 +39,13 @@ def paged(cache, endpoint, prefix, params=None, page_size=1000):
     raise ValueError('Pagination safety limit reached')
 
 
-def pivot_clinical(records, kind):
+def pivot_clinical(records, kind, study='prad_mskcc'):
     frame = pd.DataFrame(records)
     identity = 'patientId' if kind == 'PATIENT' else 'sampleId'
     required = [identity, 'patientId', 'clinicalAttributeId', 'value']
     if not set(required).issubset(frame.columns) or frame[list(set(required) - {'value'})].isna().any().any():
         raise ValueError(f'Missing identifiers in {kind} clinical records')
-    if 'studyId' in frame and not frame.studyId.eq('prad_mskcc').all():
+    if 'studyId' in frame and not frame.studyId.eq(study).all():
         raise ValueError('Wrong cBioPortal study')
     mapping = frame[[identity, 'patientId']].loc[:, ~pd.Index([identity, 'patientId']).duplicated()].drop_duplicates()
     if mapping[identity].duplicated().any():

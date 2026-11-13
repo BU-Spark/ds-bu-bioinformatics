@@ -89,7 +89,7 @@ def read_geo(path: Path):
     return meta, expression, processing
 
 
-def write_csv(frame, path: Path, index=False):
+def write_csv(frame, path: Path, index=False, float_format='%.17g'):
     path.parent.mkdir(parents=True, exist_ok=True)
     compression = {'method': 'gzip', 'mtime': 0} if path.suffix == '.gz' else None
     # filename='' avoids embedding staging paths in gzip headers.
@@ -97,6 +97,6 @@ def write_csv(frame, path: Path, index=False):
         import io
         with path.open('wb') as raw, gzip.GzipFile(filename='', fileobj=raw, mode='wb', mtime=0) as gz:
             with io.TextIOWrapper(gz, encoding='utf-8', newline='') as handle:
-                frame.to_csv(handle, index=index, lineterminator='\n', float_format='%.17g')
+                frame.to_csv(handle, index=index, lineterminator='\n', float_format=float_format)
     else:
-        frame.to_csv(path, index=index, lineterminator='\n', float_format='%.17g')
+        frame.to_csv(path, index=index, lineterminator='\n', float_format=float_format)

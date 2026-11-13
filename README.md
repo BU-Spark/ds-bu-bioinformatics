@@ -1,14 +1,20 @@
-# Taylor/MSKCC prostate cancer pipeline
+# Prostate cancer expression and clinical pipelines
 
-Reproducible acquisition, annotation and clinical matching for **GSE21034 /
-GPL10264** and cBioPortal **prad_mskcc**. The pipeline selects primary tumors,
-checks sample-to-patient identities, preserves separate features sharing a gene
-mapping, and exports aligned CSV and AnnData (`.h5ad`) datasets.
+Reproducible acquisition, annotation and clinical matching for prostate cancer
+cohorts. Each pipeline selects primary tumors, checks sample-to-patient identities,
+preserves separate features sharing a gene, and exports aligned CSV and AnnData
+(`.h5ad`) datasets with the same file layout.
 
-**Supported datasets: Taylor/MSKCC (GSE21034) and Sboner/Swedish Watchful
-Waiting (GSE16560).** Other cohorts require source, annotation and clinical
-adapters; see the preliminary
-[dataset compatibility assessment](docs/dataset_compatibility.md).
+| Cohort | Command | Sources | Guide |
+|---|---|---|---|
+| Taylor/MSKCC | `taylor-gse21034` | GEO **GSE21034 / GPL10264**, cBioPortal **prad_mskcc** | [data dictionary](docs/data_dictionary.md) |
+| Sboner/Swedish WW | `sboner-gse16560` | GEO **GSE16560 / GPL5474** (clinical from GEO sample characteristics) | [Sboner / GSE16560](#sboner--gse16560-gpl5474) |
+| TCGA-PRAD | `tcga-prad` | cBioPortal **prad_tcga_pan_can_atlas_2018** (+ `prad_tcga` for Gleason) | [TCGA data dictionary](docs/tcga_prad_data_dictionary.md); see [TCGA-PRAD](#tcga-prad) |
+
+**Supported datasets: Taylor/MSKCC, TCGA-PRAD and Sboner/GSE16560.** Other cohorts require source,
+annotation and clinical adapters; see the preliminary
+[dataset compatibility assessment](docs/dataset_compatibility.md). The sections
+below describe Taylor unless they say otherwise.
 
 ### Sboner / GSE16560 (GPL5474)
 
@@ -156,14 +162,57 @@ report counts unique Entrez genes; `retained_feature_rows` counts expression row
 Legacy counts are comparisons, not selection targets. Structural validity does
 not resolve the remaining expression-scale or DFS-definition limitations.
 
+## TCGA-PRAD
+
+```bash
+uv run --locked tcga-prad                                   # snapshot tcga-prad-v1
+uv run --locked tcga-prad --module-file modules.csv         # also writes module_coverage.csv
+uv run --offline --locked tcga-prad --offline --snapshot tcga-prad-v1   # rebuild from cache
+```
+
+Inputs are the cBioPortal datahub RSEM matrix (`data_mrna_seq_v2_rsem.txt`, ~77 MB),
+the PATIENT/SAMPLE clinical records and sample inventory from the cBioPortal API, and
+Gleason fields from the Firehose Legacy study. All of them are cached and checksummed
+the same way as Taylor's. Outputs go to `data/processed/<snapshot>/` and
+`data/anndata/<snapshot>/`, using the Taylor file names. Two names differ:
+
+- `feature_audit.csv` replaces `feature_mapping.csv.gz`, because there is no RefSeq mapping step.
+- `qc_summary.md` is added as a readable summary.
+
+TCGA-specific policies (CampLab client meetings and the 11/06 team meeting):
+
+- **Expression:** values are **log2(RSEM + 1)**. PanCanAtlas batch correction leaves
+  small negative values, and these are clipped to 0 first. The unclipped RSEM values are
+  in the h5ad layer `rsem`. Rows with any missing value (batch-correction gaps) are
+  removed, not imputed. No rows are collapsed: `feature_id` is the Entrez ID, or
+  `<entrez>_row<N>` when an ID repeats in the source.
+- **Samples:** barcode characters 1–12 are the patient and 14–15 the sample type. The
+  pipeline:
+  1. keeps type `01` (primary tumor);
+  2. keeps one sample per patient (the lowest barcode, which is outcome-independent);
+  3. excludes expression QC outliers (|z| > 3 on median expression or genes detected).
+
+  The barcode patient must match the cBioPortal inventory, and cBioPortal `SAMPLE_TYPE`
+  must be `Primary`.
+- **Endpoints:** **PFI** (`pfi_*`, from `PFS_STATUS`/`PFS_MONTHS`) is primary. OS, DSS
+  and DFI follow the same nullable event/time/eligibility pattern as Taylor `dfs_*`, and
+  unknown status codes fail. PFI is not relabeled BCR or DFS.
+
+The November 11, 2026 `tcga-prad-v1` build contains **484 primary tumors (one per
+patient; 9 QC outliers excluded), 19,088 feature rows, 19,064 unique genes and 91
+PFI events** (median observed time 25.8 months). Offline rebuilds are byte-identical,
+including the h5ad. The [reference manifest](docs/provenance/tcga-prad-v1-manifest.json)
+records the inputs.
+
 ## Tests and report
 
 ```bash
 uv run --locked python -m unittest discover -s tests -v
 uv run --locked jupyter notebook notebooks/taylor_gse21034_report.ipynb
+uv run --locked jupyter notebook notebooks/tcga_prad_report.ipynb   # TCGA-PRAD
 ```
 
-The 32 tests use synthetic inputs and mocked network responses. They cover sample
+The 44 tests (32 Taylor, 12 TCGA-PRAD) use synthetic inputs and mocked network responses. They cover sample
 identity/order, mapping ambiguity, separate features with repeated gene labels,
 nullable clinical outcomes, malformed inputs, cache corruption, pagination,
 interrupted acquisition, output protection and CSV/H5AD round trips. GitHub
@@ -182,7 +231,8 @@ uv run --locked jupyter nbconvert --to notebook --execute \
 ## Repository layout
 
 - `src/ds_bu_bioinformatics/`: CLI, acquisition, parsing, annotation, clinical
-  matching, validation and AnnData export.
+  matching, validation and AnnData export. `tcga_pipeline.py` holds the TCGA-PRAD
+  pipeline and reuses the shared cache, clinical paging, CSV and AnnData writers.
 - `tests/`: synthetic fixtures and automated tests.
 - `notebooks/`: local inspection report; generated cell outputs are not committed.
 - `docs/`: data dictionary, cohort compatibility assessment and input provenance.

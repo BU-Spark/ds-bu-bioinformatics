@@ -1,1 +1,1 @@
-"""Taylor/MSKCC GSE21034 expression and clinical pipeline."""
+"""Prostate cancer expression and clinical pipelines: Taylor/MSKCC GSE21034 and TCGA-PRAD."""
