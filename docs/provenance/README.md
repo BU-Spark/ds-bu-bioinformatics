@@ -1,4 +1,4 @@
-# Frozen Taylor input provenance
+# Frozen cohort input provenance
 
 `taylor-v2-manifest.json` is an unchanged copy of the raw-input manifest used for
 the verified Taylor build. It records 58 GEO, cBioPortal and MyGene files/responses,
@@ -52,3 +52,21 @@ build, get the complete `data/raw/tcga-prad-v2/` directory from a collaborator, 
 cmp docs/provenance/tcga-prad-v2-manifest.json data/raw/tcga-prad-v2/manifest.json
 uv run --offline --locked tcga-prad --offline --snapshot tcga-prad-v2
 ```
+
+## Cambridge
+
+`cambridge-v2-manifest.json` records the Cambridge GSE70768 Series Matrix,
+GPL10558 annotation and the publication supplementary ZIP from Europe PMC
+(PMC4588396). It contains requests/hashes, not source payloads. The clinical table
+is `mmc2.xlsx` inside the ZIP. See [Cambridge policies](../cambridge.md) for the
+subject joins, preservation of GEO values and reconciliation against the paper.
+Use the complete `data/raw/cambridge-v2/` directory for offline reproduction.
+
+## Stockholm
+
+`stockholm-v1-manifest.json` records the Stockholm GSE70769 Series Matrix,
+GPL10558 annotation and publication clinical supplementary ZIP (PMC4588396).
+Source payloads remain under `data/raw/stockholm-v1/`. The publication is shared
+with Cambridge, but Stockholm clinical subjects are selected independently by
+`STKHLM` identifiers and verified primary-RP specimen type. See the
+[Stockholm guide](../stockholm.md) for the two unresolved missing outcomes.

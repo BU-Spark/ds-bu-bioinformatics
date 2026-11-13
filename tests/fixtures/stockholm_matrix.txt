@@ -1,0 +1,18 @@
+!Series_geo_accession	"GSE70769"
+!Sample_title	"tumour tissue_robotic radical prostatetctomy_STKHLM1"	"tumour tissue_robotic radical prostatectomy_STKHLM2"	"tumour tissue_robotic radical prostatetctomy_STKHLM3"	"tumour tissue_robotic radical prostatetctomy_STKHLM4"
+!Sample_geo_accession	"GSM1"	"GSM2"	"GSM3"	"GSM4"
+!Sample_platform_id	"GPL10558"	"GPL10558"	"GPL10558"	"GPL10558"
+!Sample_data_processing	"log2 transformed and quantile normalized"	"log2 transformed and quantile normalized"	"log2 transformed and quantile normalized"	"log2 transformed and quantile normalized"
+!Sample_characteristics_ch1	"biochemical relapse (bcr): Y"	"biochemical relapse (bcr): N"	"biochemical relapse (bcr): N"	"biochemical relapse (bcr): N/A"
+!Sample_characteristics_ch1	"time to bcr (months): 4"	"time to bcr (months): N/A"	"time to bcr (months): UNKNOWN"	"time to bcr (months): N/A"
+!Sample_characteristics_ch1	"total follow up (months): 10"	"total follow up (months): 12"	"total follow up (months): UNKNOWN"	"total follow up (months): N/A"
+!series_matrix_table_begin
+"ID_REF"	"GSM1"	"GSM2"	"GSM3"	"GSM4"
+"ILMN_1"	2	4	6	8
+"ILMN_2"	8	10	12	14
+"ILMN_3"	1	3		7
+"ILMN_4"	5	7	9	11
+"ILMN_5"	3	5	7	9
+"ILMN_6"	4	6	8	10
+"ILMN_7"	5	7	9	11
+!series_matrix_table_end

@@ -2,7 +2,7 @@
 
 Checked November 5, 2026. Scope: cohorts visible in the supplied table, excluding Belfast and TCGA.
 
-**Current end-to-end support: Taylor/MSKCC GSE21034 and TCGA-PRAD.** TCGA-PRAD (cBioPortal `prad_tcga_pan_can_atlas_2018`) was added on November 11, 2026 through `tcga_pipeline.py`, using the same output contract; see the [TCGA data dictionary](tcga_prad_data_dictionary.md). The rest of this assessment predates it, and no other cohort has been run through the pipeline. The entries below describe feasibility of extending it, not validated support.
+**Current end-to-end support includes Taylor/MSKCC, TCGA-PRAD, [Cambridge](cambridge.md), and [Stockholm](stockholm.md).** The original assessment below predates the TCGA-PRAD, Cambridge, and Stockholm adapters.
 
 ## Why the current command is specific to Taylor
 
@@ -14,7 +14,7 @@ Checked November 5, 2026. Scope: cohorts visible in the supplied table, excludin
 
 ## Cohort assessment
 
-All cohorts below except Taylor require code changes. Priorities are engineering judgments based on the inspected records.
+Apart from Taylor and the subsequently added Cambridge/Stockholm adapters, cohorts below require code changes. Priorities are engineering judgments based on the inspected records.
 
 | Cohort | Accession / source | Assessment and required work |
 |---|---|---|
