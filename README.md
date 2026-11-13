@@ -107,9 +107,9 @@ If pipeline code changes and existing output metadata differs, keep the raw
 snapshot and choose new output roots. CSV/gzip outputs are deterministic;
 checksum manifests allow file-level comparisons. H5AD also has semantic reload
 checks. Code hashes in metadata intentionally change when implementation changes.
-`code_sha256` covers every module in the package, so any code change (including
-TCGA-only changes) makes a rerun into an existing output folder fail with
-"Existing outputs differ"; pass a new `--output-root`/`--anndata-root` instead.
+Taylor records the current package code hashes on a fresh export. When rerunning
+with both published CSV and AnnData exports present, Taylor uses their original
+code provenance for verification and still requires every rebuilt file to match.
 
 ## Interpretation and policies
 
