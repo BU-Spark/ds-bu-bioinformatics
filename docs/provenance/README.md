@@ -70,3 +70,21 @@ Source payloads remain under `data/raw/stockholm-v1/`. The publication is shared
 with Cambridge, but Stockholm clinical subjects are selected independently by
 `STKHLM` identifiers and verified primary-RP specimen type. See the
 [Stockholm guide](../stockholm.md) for the two unresolved missing outcomes.
+
+## Mortensen and Long
+
+`mortensen-v1-manifest.json` records GSE46602 expression and GPL570 annotation.
+`long-v1-manifest.json` records GSE54460 metadata and the original FPKM supplement.
+These snapshots were acquired from empty caches on November 13, 2026; manifests
+record original requests, retrieval timestamps, byte sizes and checksums. Payloads
+remain under `data/raw/<snapshot>/`. Exact-input offline reproduction requires
+those complete raw folders, not just these reference manifests. No raw sequencing
+or CEL files are needed by these processed-data adapters.
+
+## CIT
+
+`cit-v1-manifest.json` records the BioStudies inventory, SDRF and all 141
+CEL inputs. CEL sizes were verified against the BioStudies inventory, and the
+complete payloads were hashed before normalization. The pinned macOS R package
+environment is recorded in `env/cit-osx-64.lock`. A raw-cache rebuild also
+requires that R environment; see the [CIT guide](../cit.md).

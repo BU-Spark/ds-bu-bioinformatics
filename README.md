@@ -9,9 +9,11 @@ preserves separate features sharing a gene, and exports aligned CSV and AnnData
 |---|---|---|---|
 | Taylor/MSKCC | `taylor-gse21034` | GEO **GSE21034 / GPL10264**, cBioPortal **prad_mskcc** | [data dictionary](docs/data_dictionary.md) |
 | TCGA-PRAD | `tcga-prad` | cBioPortal **prad_tcga_pan_can_atlas_2018** (+ `prad_tcga` for Gleason) | [TCGA data dictionary](docs/tcga_prad_data_dictionary.md); see [TCGA-PRAD](#tcga-prad) |
-
 | Cambridge / CamCap | `cambridge-gse70768` | GEO **GSE70768 / GPL10558**, Europe PMC **PMC4588396** | [Cambridge guide](docs/cambridge.md) |
 | Stockholm | `stockholm-gse70769` | GEO **GSE70769 / GPL10558**, Europe PMC **PMC4588396** | [Stockholm guide](docs/stockholm.md) |
+| Mortensen / Aarhus | `mortensen-gse46602` | GEO **GSE46602 / GPL570** | [Mortensen guide](docs/mortensen.md) |
+| Long FFPE RNA-seq | `long-gse54460` | GEO **GSE54460**, supplementary FPKM matrix | [Long guide](docs/long.md) |
+| CIT / Kamoun | `cit-e-mtab-6128` | BioStudies **E-MTAB-6128**; raw CEL + SDRF | [CIT guide and R setup](docs/cit.md) |
 
 ## Quick start
 
@@ -51,6 +53,20 @@ uv run --locked stockholm-gse70769
 This creates the separate `stockholm-v1` snapshot: 94 primary tumors, with 92
 eligible for BCR analysis (45 events, 47 censored). Two samples with missing
 clinical outcomes remain in expression and H5AD; see the [Stockholm guide](docs/stockholm.md).
+
+For Mortensen and Long:
+
+```bash
+uv run --locked mortensen-gse46602
+uv run --locked long-gse54460
+```
+
+Mortensen retains 36 tumors with 22 BCR events. Long retains 100 patients after
+outcome-independent replicate selection: 49 source-coded recurrences, of which
+40 are survival-eligible; nine zero-month events remain flagged for review.
+Both export separate features and CSV/H5AD with full selection/error audits.
+See the [Mortensen](docs/mortensen.md) and [Long](docs/long.md) guides, especially
+Long's unresolved clinical-time discrepancies and zero-month events.
 
 The commands and policies below describe Taylor unless stated otherwise.
 

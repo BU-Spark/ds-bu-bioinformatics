@@ -1,3 +1,11 @@
+> CIT now has a tested CEL-to-RMA adapter; see [CIT](cit.md) for the pinned R
+> environment and verified expression-cohort counts.
+
+> November 13, 2026 update: Mortensen and Long now have executable adapters on
+> the working `add-datasets` branch. See [Mortensen](mortensen.md) and [Long](long.md)
+> for validation and the explicitly retained Long clinical-source limitations.
+> The earlier feasibility assessment below is historical.
+
 # Dataset compatibility assessment
 
 Checked November 5, 2026. Scope: cohorts visible in the supplied table, excluding Belfast and TCGA.

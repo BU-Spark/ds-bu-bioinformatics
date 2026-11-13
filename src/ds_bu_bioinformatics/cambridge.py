@@ -21,7 +21,7 @@ PLATFORM_URL = 'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL10558&targ
 MISSING = {'', 'NA', 'N/A', 'UNKNOWN'}
 
 
-def read_matrix(path: Path, series=SERIES):
+def read_matrix(path: Path, series=SERIES, platform='GPL10558', allow_empty=False):
     headers, characteristics = {}, []
     required = {'!Series_geo_accession', '!Sample_geo_accession', '!Sample_title', '!Sample_platform_id'}
     processing = []
@@ -49,11 +49,11 @@ def read_matrix(path: Path, series=SERIES):
         values = [headers['!Sample_title'], headers['!Sample_platform_id'], *characteristics, *processing]
         if not n or len(set(gsms)) != n or any(not x for x in gsms) or any(len(v) != n for v in values):
             raise ValueError('Invalid Illumina metadata lengths/accessions')
-        if set(headers['!Sample_platform_id']) != {'GPL10558'} or not processing:
-            raise ValueError('Expected GPL10558 and source processing text')
+        if set(headers['!Sample_platform_id']) != {platform} or not processing:
+            raise ValueError(f'Expected {platform} and source processing text')
         records = []
         for i, gsm in enumerate(gsms):
-            rec = {'sample_id': gsm, 'geo_accession': gsm, 'title': headers['!Sample_title'][i], 'platform_id': 'GPL10558'}
+            rec = {'sample_id': gsm, 'geo_accession': gsm, 'title': headers['!Sample_title'][i], 'platform_id': platform}
             # Characteristic keys can change between columns within a GEO row.
             for vals in characteristics:
                 if not vals[i].strip():
@@ -82,7 +82,7 @@ def read_matrix(path: Path, series=SERIES):
             data.append(parsed)
         else:
             raise ValueError('Truncated Illumina matrix')
-    if not ids or len(set(ids)) != len(ids):
+    if (not ids and not allow_empty) or len(set(ids)) != len(ids):
         raise ValueError('Empty matrix or duplicate Illumina features')
     expression = pd.DataFrame(data, index=pd.Index(ids, name='feature_id'), columns=gsms, dtype=float)
     if np.isinf(expression.to_numpy()).any():
