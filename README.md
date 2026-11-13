@@ -107,6 +107,9 @@ If pipeline code changes and existing output metadata differs, keep the raw
 snapshot and choose new output roots. CSV/gzip outputs are deterministic;
 checksum manifests allow file-level comparisons. H5AD also has semantic reload
 checks. Code hashes in metadata intentionally change when implementation changes.
+`code_sha256` covers every module in the package, so any code change (including
+TCGA-only changes) makes a rerun into an existing output folder fail with
+"Existing outputs differ"; pass a new `--output-root`/`--anndata-root` instead.
 
 ## Interpretation and policies
 
@@ -144,12 +147,13 @@ not resolve the remaining expression-scale or DFS-definition limitations.
 ## TCGA-PRAD
 
 ```bash
-uv run --locked tcga-prad                                   # snapshot tcga-prad-v1
+uv run --locked tcga-prad                                   # snapshot tcga-prad-v2
 uv run --locked tcga-prad --module-file modules.csv         # also writes module_coverage.csv
-uv run --offline --locked tcga-prad --offline --snapshot tcga-prad-v1   # rebuild from cache
+uv run --offline --locked tcga-prad --offline --snapshot tcga-prad-v2   # rebuild from cache
 ```
 
-Inputs are the cBioPortal datahub RSEM matrix (`data_mrna_seq_v2_rsem.txt`, ~77 MB),
+Inputs are the cBioPortal datahub RSEM matrix (`data_mrna_seq_v2_rsem.txt`, ~77 MB, pinned to
+datahub commit `86690e1`),
 the PATIENT/SAMPLE clinical records and sample inventory from the cBioPortal API, and
 Gleason fields from the Firehose Legacy study. All of them are cached and checksummed
 the same way as Taylor's. Outputs go to `data/processed/<snapshot>/` and
@@ -162,8 +166,8 @@ TCGA-specific policies (CampLab client meetings and the 11/06 team meeting):
 
 - **Expression:** values are **log2(RSEM + 1)**. PanCanAtlas batch correction leaves
   small negative values, and these are clipped to 0 first. The unclipped RSEM values are
-  in the h5ad layer `rsem`. Rows with any missing value (batch-correction gaps) are
-  removed, not imputed. No rows are collapsed: `feature_id` is the Entrez ID, or
+  in the h5ad layer `rsem`. Rows with a missing value in any selected sample
+  (batch-correction gaps) are removed, not imputed. No rows are collapsed: `feature_id` is the Entrez ID, or
   `<entrez>_row<N>` when an ID repeats in the source.
 - **Samples:** barcode characters 1–12 are the patient and 14–15 the sample type. The
   pipeline:
@@ -175,13 +179,18 @@ TCGA-specific policies (CampLab client meetings and the 11/06 team meeting):
   must be `Primary`.
 - **Endpoints:** **PFI** (`pfi_*`, from `PFS_STATUS`/`PFS_MONTHS`) is primary. OS, DSS
   and DFI follow the same nullable event/time/eligibility pattern as Taylor `dfs_*`, and
-  unknown status codes fail. PFI is not relabeled BCR or DFS.
+  unknown status codes fail. PFI is not relabeled BCR or DFS. Event counts in
+  `validation.json` include eligible records only.
+- **Covariates:** `age` and `gleason_score` fail on non-numeric or out-of-range values,
+  the same as endpoints; only missing-value tokens become blank.
 
-The November 11, 2026 `tcga-prad-v1` build contains **484 primary tumors (one per
+The November 11, 2026 `tcga-prad-v2` build contains **484 primary tumors (one per
 patient; 9 QC outliers excluded), 19,088 feature rows, 19,064 unique genes and 91
 PFI events** (median observed time 25.8 months). Offline rebuilds are byte-identical,
-including the h5ad. The [reference manifest](docs/provenance/tcga-prad-v1-manifest.json)
-records the inputs.
+including the h5ad. The [reference manifest](docs/provenance/tcga-prad-v2-manifest.json)
+records the inputs. `tcga-prad-v2` replaces `tcga-prad-v1`: the inputs and data files are
+identical, but v1's cached RSEM request used the unpinned datahub `master` URL, so the
+current code cannot rebuild it.
 
 ## Tests and report
 
@@ -191,7 +200,7 @@ uv run --locked jupyter notebook notebooks/taylor_gse21034_report.ipynb
 uv run --locked jupyter notebook notebooks/tcga_prad_report.ipynb   # TCGA-PRAD
 ```
 
-The 44 tests (32 Taylor, 12 TCGA-PRAD) use synthetic inputs and mocked network responses. They cover sample
+The 49 tests (32 Taylor, 17 TCGA-PRAD) use synthetic inputs and mocked network responses. They cover sample
 identity/order, mapping ambiguity, separate features with repeated gene labels,
 nullable clinical outcomes, malformed inputs, cache corruption, pagination,
 interrupted acquisition, output protection and CSV/H5AD round trips. GitHub

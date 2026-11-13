@@ -11,11 +11,12 @@ import pandas as pd
 from ds_bu_bioinformatics.anndata_export import write_anndata
 from ds_bu_bioinformatics.sources import SourceCache, sha256
 from ds_bu_bioinformatics.tcga_pipeline import (
-    CBIO_API, EXPR_URL, LEGACY_STUDY, STUDY, build, clean_expression, decode_endpoint, match_clinical,
-    read_export, read_rsem, select_samples, validate)
+    DATAHUB_COMMIT, EXPR_URL, LEGACY_STUDY, STUDY, build, clean_expression, decode_endpoint, log2_expression,
+    match_clinical, parse_number, read_export, read_rsem, select_samples, validate)
 
 FIXTURES = Path(__file__).parent / 'fixtures'
 CODES = {'0:CENSORED': 0, '1:PROGRESSION': 1}
+SELECTED = ['TCGA-AA-0001-01', 'TCGA-AA-0002-01', 'TCGA-AA-0005-01']  # final cohort for the fixture
 
 
 def clinical_records():
@@ -89,14 +90,15 @@ class ExpressionTest(unittest.TestCase):
         self.raw, self.features = read_rsem(FIXTURES / 'tcga_rsem.txt')
 
     def test_feature_ids_keep_repeated_entrez_rows_separate(self):
-        self.assertEqual(self.features.feature_id.tolist(), ['354', '102', '103', '104_row4', '104_row5', '105', '106'])
+        self.assertEqual(self.features.feature_id.tolist(), ['354', '102', '103', '104_row4', '104_row5', '105', '106', '107'])
         self.assertEqual(self.features.gene_id.tolist()[3:5], ['104', '104'])
         self.assertEqual(self.features.gene_symbol.tolist()[3:5], ['OLDSYM', 'NEWSYM'])
         self.assertTrue(pd.isna(self.features.gene_symbol.iloc[5]))
-        self.assertEqual(self.raw.shape, (7, 5))
+        self.assertEqual(self.raw.shape, (8, 5))
 
     def test_missing_values_removed_negative_clipped_log2(self):
-        expression, kept, audit, stats = clean_expression(self.raw, self.features)
+        expression, kept, audit, stats = clean_expression(self.raw, self.features, SELECTED)
+        self.assertEqual(expression.columns.tolist(), SELECTED)
         self.assertNotIn('103', expression.index)
         self.assertEqual(audit.set_index('feature_id').loc['103', 'reason'], 'missing_values')
         self.assertEqual(stats['negative_rsem_values_clipped'], 1)
@@ -104,6 +106,16 @@ class ExpressionTest(unittest.TestCase):
         self.assertEqual(expression.loc['106', 'TCGA-AA-0001-01'], 0.0)   # log2(0 + 1)
         self.assertEqual(expression.loc['354', 'TCGA-AA-0001-01'], 10.0)  # log2(1023 + 1)
         np.testing.assert_array_equal(expression.loc['104_row4'], np.log2(8).round(4))
+
+    def test_missing_value_filter_uses_selected_samples_only(self):
+        # 107 is missing only in the normal sample TCGA-AA-0003-11, which is not selected.
+        _, _, audit, stats = clean_expression(self.raw, self.features, SELECTED)
+        audit = audit.set_index('feature_id')
+        self.assertEqual(audit.loc['107', 'reason'], 'selected')
+        self.assertEqual(audit.loc['103', 'missing_samples'], 1)
+        self.assertEqual(stats['samples_with_missing_values'], 1)
+        _, _, audit, _ = clean_expression(self.raw, self.features, ['TCGA-AA-0001-01', 'TCGA-AA-0005-01'])
+        self.assertTrue(audit.selected.all())
 
     def read_variant(self, transform):
         with tempfile.TemporaryDirectory() as temp:
@@ -116,7 +128,8 @@ class ExpressionTest(unittest.TestCase):
                                 ('barcode', lambda s: s.replace('TCGA-AA-0002-01', 'SAMPLE2')),
                                 ('duplicate sample', lambda s: s.replace('TCGA-AA-0002-01', 'TCGA-AA-0001-01')),
                                 ('entrez', lambda s: s.replace('GENEB\t102', 'GENEB\t')),
-                                ('value', lambda s: s.replace('\t2047\t', '\tabc\t'))]:
+                                ('value', lambda s: s.replace('\t2047\t', '\tabc\t')),
+                                ('infinite', lambda s: s.replace('\t2047\t', '\tinf\t'))]:
             with self.subTest(name), self.assertRaises(ValueError):
                 self.read_variant(transform)
 
@@ -133,11 +146,19 @@ class SampleTest(unittest.TestCase):
         self.assertEqual(audit['TCGA-AA-0013-01'], 'qc_outlier')
         self.assertEqual((audit == 'primary_tumor').sum(), 13)
 
+    def test_qc_ignores_features_missing_in_candidates(self):
+        names = [f'TCGA-AA-{i:04d}-01' for i in range(10)]
+        expression = pd.DataFrame(np.full((5, 10), 8.0), columns=names)
+        expression.iloc[0, 0] = np.nan  # would change that sample's median if it were used
+        audit = select_samples(expression, 3.0).set_index('sample_id')
+        self.assertTrue(audit.median_log2.eq(8.0).all())
+        self.assertTrue(audit.selected.all())
+
 
 class ClinicalTest(unittest.TestCase):
     def setUp(self):
         raw, features = read_rsem(FIXTURES / 'tcga_rsem.txt')
-        self.expression = clean_expression(raw, features)[0]
+        self.expression = log2_expression(raw)
         self.audit = select_samples(self.expression)
         self.records = clinical_records()
 
@@ -160,6 +181,18 @@ class ClinicalTest(unittest.TestCase):
         self.assertNotIn('legacy_patient__OTHER_FIELD', clinical)
         self.assertIn('patient__PFS_STATUS', clinical)
         self.assertIn('sample__SAMPLE_TYPE', clinical)
+
+    def test_invalid_age_or_gleason_fails(self):
+        for attribute, value in [('AGE', 'sixty'), ('AGE', '-1'), ('GLEASON_SCORE', '7.5'), ('GLEASON_SCORE', '12')]:
+            patient, sample, inventory, legacy = clinical_records()
+            records = patient if attribute == 'AGE' else legacy
+            next(r for r in records if r['clinicalAttributeId'] == attribute)['value'] = value
+            with self.subTest(attribute=attribute, value=value), self.assertRaisesRegex(ValueError, 'Invalid'):
+                match_clinical(self.audit, patient, sample, inventory, legacy)
+
+    def test_parse_number_keeps_missing_tokens_missing(self):
+        parsed = parse_number(pd.Series(['7', '[Not Available]', None, ' 8 ']), 'x', (2, 10), integer=True)
+        self.assertEqual(parsed.tolist(), [7.0, pd.NA, pd.NA, 8.0])
 
     def test_inventory_disagreement_fails(self):
         patient, sample, inventory, legacy = self.records
@@ -201,6 +234,11 @@ class SourceTest(unittest.TestCase):
             write_anndata(expression, clinical, genes, {}, Path(temp) / 'x.h5ad', layers={'rsem': expression[['S2', 'S1']]})
 
 
+    def test_expression_url_pinned_to_datahub_commit(self):
+        self.assertRegex(DATAHUB_COMMIT, r'^[0-9a-f]{40}$')
+        self.assertIn(f'/datahub/{DATAHUB_COMMIT}/', EXPR_URL)
+
+
 class EndToEndTest(unittest.TestCase):
     def test_download_export_offline_rebuild_and_anndata(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -211,14 +249,16 @@ class EndToEndTest(unittest.TestCase):
                 report = build(tcga_cache(root / 'raw' / 'fixture'), root / 'out', z_threshold=3.0, module_file=modules)
             self.assertTrue(report['export_round_trip_valid'])
             self.assertTrue(report['anndata_round_trip_valid'])
-            self.assertEqual(report['counts'], {'primary_profiles': 3, 'pfi_events': 1, 'pfi_censored': 2, 'gene_rows': 5})
+            # TCGA-AA-0005-01 has PFI time 0 (ineligible), so it is not counted as censored.
+            self.assertEqual(report['counts'], {'primary_profiles': 3, 'pfi_events': 1, 'pfi_censored': 1, 'gene_rows': 6})
+            self.assertEqual(report['counts']['pfi_events'], report['endpoints']['pfi']['events'])
             self.assertEqual(report['eligible_pfi_profiles'], 2)
-            self.assertEqual(report['retained_feature_rows'], 6)
+            self.assertEqual(report['retained_feature_rows'], 7)
 
             out = root / 'out' / 'fixture'
             expression, clinical, samples, genes, feature_audit, audit = read_export(out)
             self.assertEqual(expression.columns.tolist(), ['TCGA-AA-0001-01', 'TCGA-AA-0002-01', 'TCGA-AA-0005-01'])
-            self.assertEqual(genes.feature_id.tolist(), ['354', '102', '104_row4', '104_row5', '105', '106'])
+            self.assertEqual(genes.feature_id.tolist(), ['354', '102', '104_row4', '104_row5', '105', '106', '107'])
             self.assertEqual(samples.sample_type_code.tolist(), ['01', '01', '01'])
             coverage = pd.read_csv(out / 'module_coverage.csv').set_index('module')
             self.assertEqual(coverage.loc['AR', ['genes', 'found', 'lost_to_missing_values']].tolist(), [3, 1, 1])
