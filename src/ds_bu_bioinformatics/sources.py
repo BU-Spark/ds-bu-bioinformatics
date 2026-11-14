@@ -1,4 +1,4 @@
-"""Immutable, checksummed HTTP inputs shared by the Taylor and TCGA-PRAD pipelines."""
+"""Immutable, checksummed HTTP inputs for cohort pipelines."""
 from __future__ import annotations
 import hashlib
 import gzip
@@ -8,6 +8,7 @@ import time
 import urllib.error
 import urllib.request
 import zlib
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -34,13 +35,18 @@ def validate_download(path: Path, name: str) -> None:
             with gzip.open(path, 'rb') as handle:
                 while handle.read(1024 * 1024):
                     pass
+        elif name.endswith('.zip'):
+            with zipfile.ZipFile(path) as archive:
+                if archive.testzip() is not None:
+                    raise ValueError('Corrupt ZIP member')
         elif name.endswith('.json'):
             json.loads(path.read_text(encoding='utf-8'))
-        elif name == 'GPL10264.soft.txt':
+        elif name.startswith('GPL') and name.endswith('.soft.txt'):
             content = path.read_text(encoding='utf-8')
-            if '^PLATFORM = GPL10264' not in content or '!platform_table_end' not in content:
-                raise ValueError('Expected a complete GPL10264 SOFT record')
-    except (ValueError, OSError, EOFError, UnicodeError, zlib.error) as error:
+            platform = name.split('.')[0]
+            if f'^PLATFORM = {platform}\n' not in content or '!platform_table_end' not in content:
+                raise ValueError(f'Expected a complete {platform} SOFT record')
+    except (ValueError, OSError, EOFError, UnicodeError, zlib.error, zipfile.BadZipFile) as error:
         raise DownloadError(f'Invalid downloaded payload for {name}: {error}') from error
 
 
@@ -57,14 +63,18 @@ def write_json(path: Path, value) -> None:
 
 
 class SourceCache:
-    def __init__(self, root: Path, offline: bool = False, accessions=('GSE21034', 'GPL10264', 'prad_mskcc'),
+    def __init__(self, root: Path, offline: bool = False, accessions=None,
                  user_agent: str = 'Taylor-GSE21034/2.0'):
         self.root = root
         self.offline = offline
         self.user_agent = user_agent
         self.manifest_path = root / 'manifest.json'
         self.manifest = json.loads(self.manifest_path.read_text()) if self.manifest_path.exists() else {
-            'schema_version': 1, 'accessions': list(accessions), 'sources': {}}
+            'schema_version': 1,
+            'accessions': list(accessions) if accessions is not None else ['GSE21034', 'GPL10264', 'prad_mskcc'],
+            'sources': {}}
+        if accessions is not None and self.manifest['accessions'] != list(accessions):
+            raise ValueError('Cached cohort accessions differ; use a new snapshot')
 
     def fetch(self, name: str, url: str, body: bytes | None = None) -> Path:
         path = self.root / name

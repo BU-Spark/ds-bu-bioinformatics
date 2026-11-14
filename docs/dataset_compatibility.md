@@ -1,8 +1,16 @@
+> CIT now has a tested CEL-to-RMA adapter; see [CIT](cit.md) for the pinned R
+> environment and verified expression-cohort counts.
+
+> November 13, 2026 update: Mortensen and Long now have executable adapters on
+> the working `add-datasets` branch. See [Mortensen](mortensen.md) and [Long](long.md)
+> for validation and the explicitly retained Long clinical-source limitations.
+> The earlier feasibility assessment below is historical.
+
 # Dataset compatibility assessment
 
 Checked November 5, 2026. Scope: cohorts visible in the supplied table, excluding Belfast and TCGA.
 
-**Current end-to-end support: Taylor/MSKCC GSE21034, TCGA-PRAD and Sboner GSE16560.** TCGA-PRAD (cBioPortal `prad_tcga_pan_can_atlas_2018`) was added on November 11, 2026 through `tcga_pipeline.py`, using the same output contract; see the [TCGA data dictionary](tcga_prad_data_dictionary.md). The rest of this assessment predates it, and Sboner GSE16560 (`sboner_pipeline.py`) was added the same way; no other cohort has been run through the pipeline. The entries below describe feasibility of extending it, not validated support.
+**Current end-to-end support includes Taylor/MSKCC, TCGA-PRAD, Sboner/GSE16560, [Cambridge](cambridge.md), [Stockholm](stockholm.md), [Mortensen](mortensen.md), [Long](long.md), and [CIT](cit.md).** These adapters share the CSV/AnnData output layout while preserving cohort-specific endpoints and limitations. See the [TCGA data dictionary](tcga_prad_data_dictionary.md) and the Sboner section in the [README](../README.md#sboner--gse16560-gpl5474). The November 5 assessment below is historical; consult the current cohort guides for implemented behavior.
 
 ## Why the current command is specific to Taylor
 
@@ -14,7 +22,7 @@ Checked November 5, 2026. Scope: cohorts visible in the supplied table, excludin
 
 ## Cohort assessment
 
-All cohorts below except Taylor require code changes. Priorities are engineering judgments based on the inspected records.
+Apart from Taylor and the subsequently added Cambridge/Stockholm adapters, cohorts below require code changes. Priorities are engineering judgments based on the inspected records.
 
 | Cohort | Accession / source | Assessment and required work |
 |---|---|---|

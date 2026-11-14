@@ -10,11 +10,14 @@ preserves separate features sharing a gene, and exports aligned CSV and AnnData
 | Taylor/MSKCC | `taylor-gse21034` | GEO **GSE21034 / GPL10264**, cBioPortal **prad_mskcc** | [data dictionary](docs/data_dictionary.md) |
 | Sboner/Swedish WW | `sboner-gse16560` | GEO **GSE16560 / GPL5474** (clinical from GEO sample characteristics) | [Sboner / GSE16560](#sboner--gse16560-gpl5474) |
 | TCGA-PRAD | `tcga-prad` | cBioPortal **prad_tcga_pan_can_atlas_2018** (+ `prad_tcga` for Gleason) | [TCGA data dictionary](docs/tcga_prad_data_dictionary.md); see [TCGA-PRAD](#tcga-prad) |
+| Cambridge / CamCap | `cambridge-gse70768` | GEO **GSE70768 / GPL10558**, Europe PMC **PMC4588396** | [Cambridge guide](docs/cambridge.md) |
+| Stockholm | `stockholm-gse70769` | GEO **GSE70769 / GPL10558**, Europe PMC **PMC4588396** | [Stockholm guide](docs/stockholm.md) |
+| Mortensen / Aarhus | `mortensen-gse46602` | GEO **GSE46602 / GPL570** | [Mortensen guide](docs/mortensen.md) |
+| Long FFPE RNA-seq | `long-gse54460` | GEO **GSE54460**, supplementary FPKM matrix | [Long guide](docs/long.md) |
+| CIT / Kamoun | `cit-e-mtab-6128` | BioStudies **E-MTAB-6128**; raw CEL + SDRF | [CIT guide and R setup](docs/cit.md) |
 
-**Supported datasets: Taylor/MSKCC, TCGA-PRAD and Sboner/GSE16560.** Other cohorts require source,
-annotation and clinical adapters; see the preliminary
-[dataset compatibility assessment](docs/dataset_compatibility.md). The sections
-below describe Taylor unless they say otherwise.
+Supported cohorts are listed above. See the [dataset compatibility assessment](docs/dataset_compatibility.md)
+for remaining cohorts and source limitations. The sections below describe Taylor unless they say otherwise.
 
 ### Sboner / GSE16560 (GPL5474)
 
@@ -46,7 +49,7 @@ Requirements: Git, Python 3.12+, and [uv](https://docs.astral.sh/uv/).
 The lockfile fixes dependency versions; `.python-version` selects Python 3.12.
 
 ```bash
-git clone --branch mansur_orazkhan https://github.com/BU-Spark/ds-bu-bioinformatics.git
+git clone --branch add-datasets https://github.com/BU-Spark/ds-bu-bioinformatics.git
 cd ds-bu-bioinformatics
 uv sync --locked
 uv run --locked taylor-gse21034
@@ -57,6 +60,43 @@ and MyGene mappings, validates them, and writes the outputs below. First-time
 acquisition needs network access and depends on upstream service availability.
 Failed or invalid downloads retry up to three times and are not cached as valid
 inputs. No manual source download is required when the services are available.
+
+For Cambridge, after installing dependencies, run:
+
+```bash
+uv run --locked cambridge-gse70768
+```
+
+This creates the `cambridge-v2` snapshot in separate folders under the same data
+roots. It keeps all 112 primary tumors, with BCR outcomes reconciled against the
+original publication clinical table (19 events, 93 censored). See the
+[Cambridge guide](docs/cambridge.md) before analysis.
+
+For Stockholm, run:
+
+```bash
+uv run --locked stockholm-gse70769
+```
+
+This creates the separate `stockholm-v1` snapshot: 94 primary tumors, with 92
+eligible for BCR analysis (45 events, 47 censored). Two samples with missing
+clinical outcomes remain in expression and H5AD; see the [Stockholm guide](docs/stockholm.md).
+
+For Mortensen and Long:
+
+```bash
+uv run --locked mortensen-gse46602
+uv run --locked long-gse54460
+```
+
+Mortensen retains 36 tumors with 22 BCR events. Long retains 100 patients after
+outcome-independent replicate selection: 49 source-coded recurrences, of which
+40 are survival-eligible; nine zero-month events remain flagged for review.
+Both export separate features and CSV/H5AD with full selection/error audits.
+See the [Mortensen](docs/mortensen.md) and [Long](docs/long.md) guides, especially
+Long's unresolved clinical-time discrepancies and zero-month events.
+
+The commands and policies below describe Taylor unless stated otherwise.
 
 ## Output layout
 
@@ -225,7 +265,7 @@ uv run --locked jupyter notebook notebooks/taylor_gse21034_report.ipynb
 uv run --locked jupyter notebook notebooks/tcga_prad_report.ipynb   # TCGA-PRAD
 ```
 
-The 49 tests (32 Taylor, 17 TCGA-PRAD) use synthetic inputs and mocked network responses. They cover sample
+The tests use synthetic inputs and mocked network responses. They cover sample
 identity/order, mapping ambiguity, separate features with repeated gene labels,
 nullable clinical outcomes, malformed inputs, cache corruption, pagination,
 interrupted acquisition, output protection and CSV/H5AD round trips. GitHub
