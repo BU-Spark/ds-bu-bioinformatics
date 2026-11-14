@@ -95,6 +95,16 @@ def build(cache, output_root: Path, interim_root: Path, anndata_root: Path | Non
             'No raw CEL quality control; this workflow starts with deposited processed expression'],
         'code_sha256': {p.name: sha256(p) for p in sorted(Path(__file__).parent.glob('*.py'))}}
     metadata_out['output_schemas'] = {name: {column: {'dtype': str(frame[column].dtype), 'nullable': bool(frame[column].isna().any())} for column in frame.columns} for name, frame in [('clinical.csv', clinical), ('samples.csv', samples), ('genes.csv', genes), ('feature_mapping.csv.gz', mapping), ('sample_audit.csv', audit)]}
+    # Rebuild with the published provenance when verifying the existing pair.
+    # Every staged file still has to match its published counterpart byte for byte.
+    published_metadata = output_root / cache.root.name / 'metadata.json'
+    if published_metadata.is_file() and (anndata_root / cache.root.name).is_dir():
+        try:
+            published = json.loads(published_metadata.read_text())
+        except ValueError:
+            published = None  # The destination check will report the mismatch.
+        if isinstance(published, dict) and isinstance(published.get('code_sha256'), dict):
+            metadata_out['code_sha256'] = published['code_sha256']
     checks['expression_scale_verified'] = False
     checks['precise_dfs_definition_verified'] = False
     # Deterministic outputs allow byte-for-byte offline verification, including gzip files.

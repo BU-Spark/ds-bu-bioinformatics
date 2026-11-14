@@ -18,9 +18,16 @@ dependencies = [
 ]
 
 [project.scripts]
+cit-e-mtab-6128 = "ds_bu_bioinformatics.cit_pipeline:main"
+mortensen-gse46602 = "ds_bu_bioinformatics.mortensen_pipeline:main"
+long-gse54460 = "ds_bu_bioinformatics.long_pipeline:main"
+stockholm-gse70769 = "ds_bu_bioinformatics.stockholm_pipeline:main"
+cambridge-gse70768 = "ds_bu_bioinformatics.cambridge_pipeline:main"
 taylor-gse21034 = "ds_bu_bioinformatics.taylor_pipeline:main"
+sboner-gse16560 = "ds_bu_bioinformatics.sboner_pipeline:main"
 tcga-prad = "ds_bu_bioinformatics.tcga_pipeline:main"
 module-scores = "ds_bu_bioinformatics.module_scores:main"
+check-outputs = "ds_bu_bioinformatics.output_check:main"
 
 [build-system]
 requires = ["uv_build>=0.13.0,<0.14.0"]

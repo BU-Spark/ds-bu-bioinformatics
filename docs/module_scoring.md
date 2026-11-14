@@ -20,7 +20,9 @@ For each dataset and module:
 3. Standardize each gene, then take PC1. The sign is set so that a higher score means higher
    module expression. Scores are scaled to SD 1 within the dataset.
 4. Fit a Cox model on the dataset's own endpoint (eligible records only), giving a hazard ratio
-   per SD of score, plus Harrell's C-index. Endpoints are not relabeled or pooled.
+   per SD of score, plus Harrell's C-index from the fitted model's risk predictions.
+   This respects both harmful and protective associations. The C-index is measured on
+   the fitting data; it is not a held-out performance estimate. Endpoints are not relabeled or pooled.
 
 Outputs go to `data/analysis/module_scores/`: `<snapshot>_scores.csv` (sample × module),
 `summary.csv`, `summary.md` and `hazard_ratios.png`.
@@ -29,33 +31,38 @@ Outputs go to `data/analysis/module_scores/`: `<snapshot>_scores.csv` (sample ×
 
 ## Results
 
-| Dataset | Endpoint (eligible, events) | Module | Genes used | PC1 variance | HR per SD (95% CI) | p | C-index |
-|---|---|---|---:|---:|---|---:|---:|
-| tcga-prad-v2 | PFI (484, 91) | androgen_response | 97/101 | 17% | 0.71 (0.59–0.86) | 0.00039 | 0.37 |
-| tcga-prad-v2 | PFI (484, 91) | e2f_targets | 186/200 | 30% | 1.75 (1.46–2.09) | 1.1e-09 | 0.67 |
-| tcga-prad-v2 | PFI (484, 91) | emt | 194/200 | 35% | 0.98 (0.79–1.22) | 0.87 | 0.49 |
-| tcga-prad-v2 | PFI (484, 91) | g2m_checkpoint | 183/200 | 28% | 1.75 (1.45–2.12) | 6.3e-09 | 0.67 |
-| tcga-prad-v2 | PFI (484, 91) | interferon_gamma | 195/200 | 32% | 1.11 (0.90–1.36) | 0.34 | 0.54 |
-| taylor-v2 | DFS (131, 27) | androgen_response | 101/101 | 33% | 0.82 (0.56–1.19) | 0.29 | 0.42 |
-| taylor-v2 | DFS (131, 27) | e2f_targets | 199/200 | 37% | 0.72 (0.49–1.06) | 0.1 | 0.39 |
-| taylor-v2 | DFS (131, 27) | emt | 200/200 | 30% | 0.97 (0.64–1.46) | 0.87 | 0.47 |
-| taylor-v2 | DFS (131, 27) | g2m_checkpoint | 199/200 | 36% | 0.70 (0.48–1.03) | 0.068 | 0.39 |
-| taylor-v2 | DFS (131, 27) | interferon_gamma | 200/200 | 27% | 0.73 (0.47–1.11) | 0.14 | 0.38 |
-| cambridge-v2 | BCR (112, 19) | androgen_response | 96/101 | 20% | 0.83 (0.54–1.30) | 0.42 | 0.45 |
-| cambridge-v2 | BCR (112, 19) | e2f_targets | 180/200 | 21% | 1.56 (0.96–2.55) | 0.076 | 0.60 |
-| cambridge-v2 | BCR (112, 19) | emt | 194/200 | 26% | 0.80 (0.49–1.29) | 0.36 | 0.41 |
-| cambridge-v2 | BCR (112, 19) | g2m_checkpoint | 177/200 | 19% | 1.67 (1.02–2.74) | 0.041 | 0.63 |
-| cambridge-v2 | BCR (112, 19) | interferon_gamma | 191/200 | 21% | 0.62 (0.35–1.08) | 0.094 | 0.36 |
-| stockholm-v1 | BCR (92, 45) | androgen_response | 96/101 | 14% | 0.70 (0.51–0.96) | 0.029 | 0.41 |
-| stockholm-v1 | BCR (92, 45) | e2f_targets | 180/200 | 23% | 1.60 (1.28–1.99) | 3e-05 | 0.66 |
-| stockholm-v1 | BCR (92, 45) | emt | 194/200 | 20% | 1.15 (0.86–1.54) | 0.35 | 0.54 |
-| stockholm-v1 | BCR (92, 45) | g2m_checkpoint | 177/200 | 22% | 1.61 (1.29–2.01) | 2.2e-05 | 0.65 |
-| stockholm-v1 | BCR (92, 45) | interferon_gamma | 191/200 | 25% | 0.89 (0.65–1.21) | 0.45 | 0.46 |
-| sboner-v1 | PCSM (281, 165) | androgen_response | 72/101 | 14% | 0.95 (0.82–1.10) | 0.49 | 0.46 |
-| sboner-v1 | PCSM (281, 165) | e2f_targets | 120/200 | 12% | 1.42 (1.21–1.67) | 2.7e-05 | 0.60 |
-| sboner-v1 | PCSM (281, 165) | emt | 171/200 | 15% | 1.04 (0.88–1.23) | 0.66 | 0.51 |
-| sboner-v1 | PCSM (281, 165) | g2m_checkpoint | 139/200 | 10% | 1.42 (1.20–1.68) | 5.6e-05 | 0.58 |
-| sboner-v1 | PCSM (281, 165) | interferon_gamma | 142/200 | 9% | 1.02 (0.87–1.19) | 0.81 | 0.51 |
+The historical C-index column has been removed: it used a fixed score direction,
+which reversed the fitted model ranking for protective modules. Rerun `module-scores`
+to regenerate corrected C-indices. Hazard ratios, confidence intervals and p-values
+are unaffected by this correction.
+
+| Dataset | Endpoint (eligible, events) | Module | Genes used | PC1 variance | HR per SD (95% CI) | p |
+|---|---|---|---:|---:|---|---:|
+| tcga-prad-v2 | PFI (484, 91) | androgen_response | 97/101 | 17% | 0.71 (0.59–0.86) | 0.00039 |
+| tcga-prad-v2 | PFI (484, 91) | e2f_targets | 186/200 | 30% | 1.75 (1.46–2.09) | 1.1e-09 |
+| tcga-prad-v2 | PFI (484, 91) | emt | 194/200 | 35% | 0.98 (0.79–1.22) | 0.87 |
+| tcga-prad-v2 | PFI (484, 91) | g2m_checkpoint | 183/200 | 28% | 1.75 (1.45–2.12) | 6.3e-09 |
+| tcga-prad-v2 | PFI (484, 91) | interferon_gamma | 195/200 | 32% | 1.11 (0.90–1.36) | 0.34 |
+| taylor-v2 | DFS (131, 27) | androgen_response | 101/101 | 33% | 0.82 (0.56–1.19) | 0.29 |
+| taylor-v2 | DFS (131, 27) | e2f_targets | 199/200 | 37% | 0.72 (0.49–1.06) | 0.1 |
+| taylor-v2 | DFS (131, 27) | emt | 200/200 | 30% | 0.97 (0.64–1.46) | 0.87 |
+| taylor-v2 | DFS (131, 27) | g2m_checkpoint | 199/200 | 36% | 0.70 (0.48–1.03) | 0.068 |
+| taylor-v2 | DFS (131, 27) | interferon_gamma | 200/200 | 27% | 0.73 (0.47–1.11) | 0.14 |
+| cambridge-v2 | BCR (112, 19) | androgen_response | 96/101 | 20% | 0.83 (0.54–1.30) | 0.42 |
+| cambridge-v2 | BCR (112, 19) | e2f_targets | 180/200 | 21% | 1.56 (0.96–2.55) | 0.076 |
+| cambridge-v2 | BCR (112, 19) | emt | 194/200 | 26% | 0.80 (0.49–1.29) | 0.36 |
+| cambridge-v2 | BCR (112, 19) | g2m_checkpoint | 177/200 | 19% | 1.67 (1.02–2.74) | 0.041 |
+| cambridge-v2 | BCR (112, 19) | interferon_gamma | 191/200 | 21% | 0.62 (0.35–1.08) | 0.094 |
+| stockholm-v1 | BCR (92, 45) | androgen_response | 96/101 | 14% | 0.70 (0.51–0.96) | 0.029 |
+| stockholm-v1 | BCR (92, 45) | e2f_targets | 180/200 | 23% | 1.60 (1.28–1.99) | 3e-05 |
+| stockholm-v1 | BCR (92, 45) | emt | 194/200 | 20% | 1.15 (0.86–1.54) | 0.35 |
+| stockholm-v1 | BCR (92, 45) | g2m_checkpoint | 177/200 | 22% | 1.61 (1.29–2.01) | 2.2e-05 |
+| stockholm-v1 | BCR (92, 45) | interferon_gamma | 191/200 | 25% | 0.89 (0.65–1.21) | 0.45 |
+| sboner-v1 | PCSM (281, 165) | androgen_response | 72/101 | 14% | 0.95 (0.82–1.10) | 0.49 |
+| sboner-v1 | PCSM (281, 165) | e2f_targets | 120/200 | 12% | 1.42 (1.21–1.67) | 2.7e-05 |
+| sboner-v1 | PCSM (281, 165) | emt | 171/200 | 15% | 1.04 (0.88–1.23) | 0.66 |
+| sboner-v1 | PCSM (281, 165) | g2m_checkpoint | 139/200 | 10% | 1.42 (1.20–1.68) | 5.6e-05 |
+| sboner-v1 | PCSM (281, 165) | interferon_gamma | 142/200 | 9% | 1.02 (0.87–1.19) | 0.81 |
 
 Sboner was built from William's `william_clavier` branch; Cambridge and Stockholm from `add-datasets`.
 Sboner's endpoint columns don't follow the shared pattern yet, so its PCSM endpoint is read from

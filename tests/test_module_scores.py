@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from ds_bu_bioinformatics.module_scores import load_modules, main, module_matrix, pca_score, score_dataset
+from ds_bu_bioinformatics.module_scores import load_modules, main, module_matrix, pca_score, score_dataset, survival
 
 MODULES = {'prolif': [f'P{i}' for i in range(10)], 'tiny': ['P0', 'P1', 'ABSENT']}
 
@@ -97,6 +97,17 @@ class ModuleScoreTest(unittest.TestCase):
         scores, summary = score_dataset(processed, MODULES)
         self.assertTrue(summary.expression_transform.str.startswith('log2').all())
         self.assertGreater(np.corrcoef(scores.prolif, factor)[0, 1], 0.9)
+
+    def test_concordance_uses_fitted_risk_direction_for_protective_modules(self):
+        processed, factor = write_dataset(self.root)
+        clinical = pd.read_csv(processed / 'clinical.csv')
+        score = pd.Series(factor)
+        harmful = survival(score, clinical.bcr_months, clinical.bcr_event)
+        protective = survival(-score, clinical.bcr_months, clinical.bcr_event)
+        self.assertGreater(harmful['hazard_ratio_per_sd'], 1.0)
+        self.assertLess(protective['hazard_ratio_per_sd'], 1.0)
+        self.assertGreater(protective['concordance'], 0.6)
+        self.assertAlmostEqual(harmful['concordance'], protective['concordance'])
 
     def test_shared_followup_fallback_for_sboner(self):
         processed, _ = write_dataset(self.root, name='sboner-v1', endpoint_style='sboner')

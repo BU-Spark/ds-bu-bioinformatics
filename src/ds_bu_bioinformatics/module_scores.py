@@ -104,7 +104,6 @@ def endpoint(clinical: pd.DataFrame, metadata: dict, dataset: str):
 
 def survival(score: pd.Series, months: pd.Series, event: pd.Series) -> dict:
     from lifelines import CoxPHFitter
-    from lifelines.utils import concordance_index
     frame = pd.DataFrame({'score': score.to_numpy(), 'months': months.to_numpy(dtype=float),
                           'event': event.to_numpy(dtype=float)})
     with warnings.catch_warnings():
@@ -113,8 +112,8 @@ def survival(score: pd.Series, months: pd.Series, event: pd.Series) -> dict:
     row = fit.summary.loc['score']
     return {'hazard_ratio_per_sd': float(row['exp(coef)']), 'hr_ci_low': float(row['exp(coef) lower 95%']),
             'hr_ci_high': float(row['exp(coef) upper 95%']), 'p_value': float(row['p']),
-            # A higher score predicting earlier events gives a concordance above 0.5.
-            'concordance': float(concordance_index(frame.months, -frame.score, frame.event))}
+            # Use fitted risk direction, including modules with a protective coefficient.
+            'concordance': float(fit.concordance_index_)}
 
 
 def score_dataset(processed: Path, modules: dict[str, list[str]]):

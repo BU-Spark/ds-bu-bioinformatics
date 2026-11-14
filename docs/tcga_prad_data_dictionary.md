@@ -1,6 +1,6 @@
 # TCGA-PRAD output column guide
 
-Outputs of `uv run --locked tcga-prad` (snapshot `tcga-prad-v1`). The layout and naming follow the
+Outputs of `uv run --locked tcga-prad` (snapshot `tcga-prad-v2`). The layout and naming follow the
 Taylor guide in [data_dictionary.md](data_dictionary.md): the same file names, `feature_id`-keyed
 expression, `patient__`/`sample__` prefixed source fields, and nullable endpoint columns built the
 same way as Taylor's `dfs_*`. Field descriptions come from the cached cBioPortal attribute
@@ -36,8 +36,10 @@ Counts below come from the November 11, 2026 build.
 - Values are **log2(RSEM + 1)**, rounded to 4 decimals. The source values are PanCanAtlas batch-corrected
   RSEM counts. Correction leaves 40,717 small negative values (minimum −0.98); these are clipped to 0 before
   the log transform. The unclipped source values are kept in the AnnData layer `rsem`.
-- 1,443 source rows have a missing value in at least one of 33 samples (batch-correction gaps). They are
-  removed, not imputed, so every sample is kept.
+- 1,443 source rows have a missing value in at least one of 33 selected samples (batch-correction gaps).
+  They are removed, not imputed, so every sample is kept. The filter only looks at the final selected samples,
+  so a gap in an excluded sample does not remove a row. Sample QC (median expression, genes detected) uses
+  the rows with no missing value across the primary tumors kept before QC.
 - No rows are collapsed. Rows that share an Entrez ID or a symbol stay separate, as in Taylor:
   - 50 source rows share an Entrez ID with another row, for example 2258/FGF13 twice and 3192/HNRNPU vs NCRNA00201.
     Those rows hold different values (correlation 0.04–0.76), so all of them are kept. 47 of them remain
@@ -106,9 +108,9 @@ with other cohorts.
 
 | Column | Meaning | Missing |
 |---|---|---:|
-| `age` | Numeric `patient__AGE` (years at diagnosis) | 0 |
+| `age` | Numeric `patient__AGE` (years at diagnosis). Missing tokens become blank; any other non-numeric value or one outside 0–120 stops the build | 0 |
 | `path_t_group` | T category (T2/T3/T4) taken from `patient__PATH_T_STAGE` | 7 |
-| `gleason_score` | Numeric `legacy_patient__GLEASON_SCORE` | 0 |
+| `gleason_score` | Integer `legacy_patient__GLEASON_SCORE`. Missing tokens become blank; any other non-integer value or one outside 2–10 stops the build | 0 |
 
 ### Gleason (TCGA Firehose Legacy, `prad_tcga`)
 
@@ -190,12 +192,13 @@ One row per module: `genes`, `found` (symbol present in `genes.csv`), `lost_to_m
 ## validation.json, metadata.json, qc_summary.md, checksums.sha256
 
 - `validation.json` holds the structural checks (alignment, unique IDs, finite values, valid event codes), plus:
-  - counts per endpoint
+  - counts per endpoint (eligible records only; `counts.pfi_events`/`pfi_censored` equal
+    `endpoints.pfi.events`/`censored`)
   - feature and sample dispositions
   - clinical missingness
   - export and AnnData round-trip results
 - `metadata.json` holds:
-  - the source URLs and the raw-manifest hash
+  - the source URLs (the RSEM file is pinned to cBioPortal datahub commit `86690e1`) and the raw-manifest hash
   - the expression transform
   - the endpoint code maps and cBioPortal definitions
   - sample policy, field provenance and limitations

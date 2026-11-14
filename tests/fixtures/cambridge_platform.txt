@@ -1,0 +1,11 @@
+^PLATFORM = GPL10558
+!platform_table_begin
+ID	Entrez_Gene_ID	Symbol	RefSeq_ID	Species
+ILMN_1	10	A	NM_1	Homo sapiens
+ILMN_2	10	A	NM_2	Homo sapiens
+ILMN_3	20	B	NM_3	Homo sapiens
+ILMN_4	30	C	NM_4	Homo sapiens
+ILMN_5	40;50	D;E	NM_5	Homo sapiens
+ILMN_6	60	F	NM_6	Homo sapiens
+ILMN_7	60	G	NM_7	Homo sapiens
+!platform_table_end
