@@ -106,6 +106,24 @@ class OutputCheckTest(unittest.TestCase):
                 errors = check_dataset(*make_dataset(Path(temp), edit=edit))['errors']
                 self.assertTrue(any(message in e for e in errors), errors)
 
+    def test_endpoint_time_units_must_be_months_for_every_row(self):
+        for value in ('days', '', None):
+            for index in (0, 2):
+                with self.subTest(value=value, index=index), tempfile.TemporaryDirectory() as temp:
+                    def edit(tables):
+                        tables['clinical.csv'].loc[index, 'bcr_time_unit'] = value
+                    errors = check_dataset(*make_dataset(Path(temp), edit=edit))['errors']
+                    self.assertTrue(any('time_unit must be months' in e for e in errors), errors)
+
+    def test_endpoint_times_must_be_finite_when_present(self):
+        for value in (np.inf, -np.inf):
+            for index in (0, 2):
+                with self.subTest(value=value, index=index), tempfile.TemporaryDirectory() as temp:
+                    def edit(tables):
+                        tables['clinical.csv'].loc[index, 'bcr_months'] = value
+                    errors = check_dataset(*make_dataset(Path(temp), edit=edit))['errors']
+                    self.assertTrue(any('months has non-finite values' in e for e in errors), errors)
+
     def test_checksum_and_missing_file_fail(self):
         processed, anndata_dir = make_dataset(self.data)
         (processed / 'clinical.csv').write_text((processed / 'clinical.csv').read_text().replace('months', 'Months', 1))

@@ -1,0 +1,43 @@
+{
+  "accessions": [
+    "GSE54460",
+    "GPL11154"
+  ],
+  "schema_version": 1,
+  "sources": {
+    "GSE54460_FPKM.txt.gz": {
+      "body": null,
+      "bytes": 7291352,
+      "method": "GET",
+      "path": "GSE54460_FPKM.txt.gz",
+      "resolved_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE54nnn/GSE54460/suppl/GSE54460_FPKM-genes-TopHat2-106samples-12-4-13.txt.gz",
+      "response_metadata": {
+        "Content-Length": "7291352",
+        "Content-Type": "application/x-gzip",
+        "ETag": null,
+        "Last-Modified": "Fri, 07 Feb 2014 12:12:31 GMT",
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-13T16:24:03.430914+00:00",
+      "sha256": "ec856532768476afc071338b711b59edf9f9646097d3c781f5a2eec5c524aa4f",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE54nnn/GSE54460/suppl/GSE54460_FPKM-genes-TopHat2-106samples-12-4-13.txt.gz"
+    },
+    "GSE54460_series_matrix.txt.gz": {
+      "body": null,
+      "bytes": 8998,
+      "method": "GET",
+      "path": "GSE54460_series_matrix.txt.gz",
+      "resolved_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE54nnn/GSE54460/matrix/GSE54460_series_matrix.txt.gz",
+      "response_metadata": {
+        "Content-Length": "8998",
+        "Content-Type": "application/x-gzip",
+        "ETag": null,
+        "Last-Modified": "Mon, 09 Nov 2026 07:42:24 GMT",
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-13T16:24:01.303410+00:00",
+      "sha256": "6977c0436590a578f24a65bc94b8f995514a79236153bc9c648abf87e927274f",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE54nnn/GSE54460/matrix/GSE54460_series_matrix.txt.gz"
+    }
+  }
+}

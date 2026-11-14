@@ -89,6 +89,10 @@ def check_endpoints(clinical: pd.DataFrame, check: Check) -> dict:
                       f'clinical.csv: {prefix}_event has values other than 0, 1 or missing')
         check.require(clinical[f'{prefix}_months'].isna().eq(months.isna()).all(),
                       f'clinical.csv: {prefix}_months has non-numeric values')
+        check.require(np.isfinite(months.dropna()).all(),
+                      f'clinical.csv: {prefix}_months has non-finite values')
+        check.require(clinical[f'{prefix}_time_unit'].eq('months').fillna(False).all(),
+                      f'clinical.csv: {prefix}_time_unit must be months for every row')
         check.require(eligible.eq(reason.eq('eligible')).all(),
                       f'clinical.csv: {prefix}_eligible disagrees with {prefix}_eligibility_reason')
         check.require(event[eligible].notna().all() and months[eligible].gt(0).all(),

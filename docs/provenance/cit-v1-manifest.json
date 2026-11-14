@@ -1,0 +1,1453 @@
+{
+  "accessions": [
+    "E-MTAB-6128",
+    "A-GEOD-16686"
+  ],
+  "schema_version": 1,
+  "sources": {
+    "E-MTAB-6128.json": {
+      "body": null,
+      "bytes": 291219,
+      "method": "GET",
+      "path": "E-MTAB-6128.json",
+      "resolved_url": "https://www.ebi.ac.uk/biostudies/api/v1/studies/E-MTAB-6128",
+      "response_metadata": {
+        "Content-Length": "291219",
+        "Content-Type": "application/json;charset=UTF-8",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-13T18:24:21.699813+00:00",
+      "sha256": "a64e67824df8dd2466d264aad458eb67c682a46c9290280b63557a2158690fdf",
+      "url": "https://www.ebi.ac.uk/biostudies/api/v1/studies/E-MTAB-6128"
+    },
+    "E-MTAB-6128.sdrf.txt": {
+      "body": null,
+      "bytes": 73520,
+      "method": "GET",
+      "path": "E-MTAB-6128.sdrf.txt",
+      "resolved_url": "https://ftp.ebi.ac.uk/biostudies/fire/E-MTAB-/128/E-MTAB-6128/Files/E-MTAB-6128.sdrf.txt",
+      "response_metadata": {
+        "Content-Length": "73520",
+        "Content-Type": "text/plain; charset=UTF-8",
+        "ETag": "\"11f30-60d1f223f8780\"",
+        "Last-Modified": "Fri, 22 Dec 2023 20:33:50 GMT",
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-13T18:24:23.244557+00:00",
+      "sha256": "7c1dba9a71ebd9e671e8d4620307ba911317b2ed2be18d30536808f102247288",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/E-MTAB-6128.sdrf.txt"
+    },
+    "OCT_001_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 62364393,
+      "method": "GET",
+      "path": "OCT_001_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:09.910429+00:00",
+      "sha256": "91b9811d06185b6217b35d152258bfc5f4c0a033dc1abbda88852c473a3ea6a2",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_001_HuGene2.CEL"
+    },
+    "OCT_002_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 61978920,
+      "method": "GET",
+      "path": "OCT_002_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:33.804858+00:00",
+      "sha256": "0659352c2b5ec4ef6a42ec0e4b690424eb94cfae8833dd13c09aba4eefd26dc2",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_002_HuGene2.CEL"
+    },
+    "OCT_004_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 62104808,
+      "method": "GET",
+      "path": "OCT_004_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:51.628456+00:00",
+      "sha256": "bdeb54cf2abb1ae6a2a37baede45b9c7e385e01acdcb485603061ec78627854b",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_004_HuGene2.CEL"
+    },
+    "OCT_006_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 62032256,
+      "method": "GET",
+      "path": "OCT_006_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:05.866740+00:00",
+      "sha256": "b19b9eb6fdf627b91e09bddb5b0f7020d22df62d6f17296c6f606a19c8e79449",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_006_HuGene2.CEL"
+    },
+    "OCT_007_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 62175672,
+      "method": "GET",
+      "path": "OCT_007_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:29.707033+00:00",
+      "sha256": "dc72ac738edb4c6485966cfd9941d094c80b7d9c2021781e4541be7af9dbd6d8",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_007_HuGene2.CEL"
+    },
+    "OCT_008_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 62408184,
+      "method": "GET",
+      "path": "OCT_008_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:20.752512+00:00",
+      "sha256": "b904341e683348a211f072d5660abade7b2aabf4f0a3ef60b18495a6cf30a625",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_008_HuGene2.CEL"
+    },
+    "OCT_011_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 62303533,
+      "method": "GET",
+      "path": "OCT_011_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:42.392500+00:00",
+      "sha256": "efeab675172546045f8003571c866e035e7c30e0fad4bd67d254bb6b5f6963fa",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_011_HuGene2.CEL"
+    },
+    "OCT_013_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 62516046,
+      "method": "GET",
+      "path": "OCT_013_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:16:24.903413+00:00",
+      "sha256": "a604feb8c0ba0f660bd01096bb087a961f2be13da935ce471b51649dc20ddacd",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_013_HuGene2.CEL"
+    },
+    "OCT_014_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 61983417,
+      "method": "GET",
+      "path": "OCT_014_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:15:36.729363+00:00",
+      "sha256": "d0c1ab0ad5d8f645cc69abba8d7e558dc78bf39723b5c5fd0a802b3f0d4099c2",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_014_HuGene2.CEL"
+    },
+    "OCT_015_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26100089,
+      "method": "GET",
+      "path": "OCT_015_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:10.212278+00:00",
+      "sha256": "e0548f18896b365251217cb278b8516f6d398dbb4f1c2ae952d3ec65befdddb7",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_015_HuGene2.CEL"
+    },
+    "OCT_017_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26111985,
+      "method": "GET",
+      "path": "OCT_017_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:11.383663+00:00",
+      "sha256": "ebffe63f32e3794aade74c81bae667d9959abf2a90882aff508e674827360366",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_017_HuGene2.CEL"
+    },
+    "OCT_018_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26090065,
+      "method": "GET",
+      "path": "OCT_018_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:05.780284+00:00",
+      "sha256": "2dd227f6c7f3b805fd857709fc75c79dae8d0d93d41f102f72b3f066c7c85bd9",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_018_HuGene2.CEL"
+    },
+    "OCT_019_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26101049,
+      "method": "GET",
+      "path": "OCT_019_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:20.427596+00:00",
+      "sha256": "35ca1e5c0d47aaac6772832ec38cb67690bd7f254d27b639f5ac854e9f118166",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_019_HuGene2.CEL"
+    },
+    "OCT_020_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26075561,
+      "method": "GET",
+      "path": "OCT_020_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:26.749464+00:00",
+      "sha256": "6bbc83958e7be6765f90b0c854b8e3d56382c82c644a2298807f3f04ac1c354b",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_020_HuGene2.CEL"
+    },
+    "OCT_021_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26101165,
+      "method": "GET",
+      "path": "OCT_021_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:58.217106+00:00",
+      "sha256": "7523330b383c352ec34e15f801289f959593ba943c8732779045de26160c1218",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_021_HuGene2.CEL"
+    },
+    "OCT_022_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26086529,
+      "method": "GET",
+      "path": "OCT_022_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:48.163319+00:00",
+      "sha256": "dc9307e1bbbcfd50193449ced5ddd047f41e5178675dedbce4c0aa70166ca0bd",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_022_HuGene2.CEL"
+    },
+    "OCT_024_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26089157,
+      "method": "GET",
+      "path": "OCT_024_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:00.211519+00:00",
+      "sha256": "f0494512a646aaa87f74c0424b5adf9a152b259fd3c87b74ea9f59ca5ab1f53c",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_024_HuGene2.CEL"
+    },
+    "OCT_027_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26096469,
+      "method": "GET",
+      "path": "OCT_027_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:01.416992+00:00",
+      "sha256": "ee417eb2f82d6f5a4693e3d310aa88455a5e699756f1972c8daba200c7b68469",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_027_HuGene2.CEL"
+    },
+    "OCT_028_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26088381,
+      "method": "GET",
+      "path": "OCT_028_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:14:41.863805+00:00",
+      "sha256": "01f0e37703551b17d6dd8f522720a5486e9d41db331bf31233bde5a5d20f7e0f",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_028_HuGene2.CEL"
+    },
+    "OCT_029_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26082397,
+      "method": "GET",
+      "path": "OCT_029_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:15:39.503381+00:00",
+      "sha256": "a158f657514d3c4da4473887cfd9ceb608eb132b438ade4abc97b790d15442bd",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_029_HuGene2.CEL"
+    },
+    "OCT_032_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26100541,
+      "method": "GET",
+      "path": "OCT_032_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:28.622867+00:00",
+      "sha256": "508858db2f7d811bc63230867548fe84be3111fb6fafab3f567c3355e2906382",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_032_HuGene2.CEL"
+    },
+    "OCT_034_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26107561,
+      "method": "GET",
+      "path": "OCT_034_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:35.013440+00:00",
+      "sha256": "d817e623d5108521579c34ea4ede0fdd2d53b0de2481f03c47cae091b9990e4d",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_034_HuGene2.CEL"
+    },
+    "OCT_035_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26092153,
+      "method": "GET",
+      "path": "OCT_035_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:28.648973+00:00",
+      "sha256": "7b084c9cec705e050a0d3d795554fc999e4ce80b6b2151caa89b658420ea1103",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_035_HuGene2.CEL"
+    },
+    "OCT_036_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26121349,
+      "method": "GET",
+      "path": "OCT_036_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:07.762228+00:00",
+      "sha256": "a882721941da611a5787e6b084eb449f772e561a8677885a13d306d6f254ff77",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_036_HuGene2.CEL"
+    },
+    "OCT_041_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26152517,
+      "method": "GET",
+      "path": "OCT_041_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:36.281413+00:00",
+      "sha256": "59d531a143a15923502b201f983860113c87f94b2e9abf8f2fff0d86a68fc531",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_041_HuGene2.CEL"
+    },
+    "OCT_043_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26126613,
+      "method": "GET",
+      "path": "OCT_043_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:15:36.474365+00:00",
+      "sha256": "940e6061879b89fd6dc87e41fc366ccfd3e3d6d4f63e6b4cbc27934df2a2e6fd",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_043_HuGene2.CEL"
+    },
+    "OCT_045_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26090981,
+      "method": "GET",
+      "path": "OCT_045_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:02.585701+00:00",
+      "sha256": "de445cb511a412cc962b64058079f24af77697b3e987fffed2a8dbfe8ea2363b",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_045_HuGene2.CEL"
+    },
+    "OCT_047_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26099641,
+      "method": "GET",
+      "path": "OCT_047_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:30.407279+00:00",
+      "sha256": "c87acbada4cb1de44d7b68c91f29710824158e03793ddbf4363c78bb34eddb25",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_047_HuGene2.CEL"
+    },
+    "OCT_050_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26079813,
+      "method": "GET",
+      "path": "OCT_050_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:29.383311+00:00",
+      "sha256": "82efa973701221c667b7cfa6f68b0e491ad2d9def560b63ad9c94ab2931989d9",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_050_HuGene2.CEL"
+    },
+    "OCT_051_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26116357,
+      "method": "GET",
+      "path": "OCT_051_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:48.478638+00:00",
+      "sha256": "18db41dd66d5897c7804614e927a9a58b362fff462dc5e05589b745620f7c6bc",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_051_HuGene2.CEL"
+    },
+    "OCT_052_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26080005,
+      "method": "GET",
+      "path": "OCT_052_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:23.713336+00:00",
+      "sha256": "d1c3eb17a4fe5521bf5ac460c4326811b42a53054f4385deae79d0cd31033f8c",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_052_HuGene2.CEL"
+    },
+    "OCT_053_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26098857,
+      "method": "GET",
+      "path": "OCT_053_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:27.562448+00:00",
+      "sha256": "f0620ff6da7609ac8e9acb716a2c39781d5c07f7bce308d505ee819ff17b5dfa",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_053_HuGene2.CEL"
+    },
+    "OCT_054_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26092429,
+      "method": "GET",
+      "path": "OCT_054_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:24.634469+00:00",
+      "sha256": "6328d884f93f650a909f92ef4ce4f01fa5e0930d5375a6da29b2fdcf5fab3cf6",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_054_HuGene2.CEL"
+    },
+    "OCT_055_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26087253,
+      "method": "GET",
+      "path": "OCT_055_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:16.804543+00:00",
+      "sha256": "027c5c62865a6c67ff92537852c45c72d65858ee6480ce46d6bb067f5a699457",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_055_HuGene2.CEL"
+    },
+    "OCT_056_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26086577,
+      "method": "GET",
+      "path": "OCT_056_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:57.411558+00:00",
+      "sha256": "0e2c01352f9fc936a4aa876351c489594e68edb67f8564d6b9ae2525f48ae6c9",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_056_HuGene2.CEL"
+    },
+    "OCT_057_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26095069,
+      "method": "GET",
+      "path": "OCT_057_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:15:30.525379+00:00",
+      "sha256": "53f7ab8bedfedc54a04597be3f98919b623287cc7a8345c2578a01678fccf204",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_057_HuGene2.CEL"
+    },
+    "OCT_058_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26094949,
+      "method": "GET",
+      "path": "OCT_058_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:14.203790+00:00",
+      "sha256": "f3642a6377469b648f923cc200058f8f512f121b27e2662f0894c451a6e0d49b",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_058_HuGene2.CEL"
+    },
+    "OCT_060_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26083769,
+      "method": "GET",
+      "path": "OCT_060_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:40.266759+00:00",
+      "sha256": "65e8f7ba2c5921a323f0ddf2b520380d547613062a38ff8b96f97ca9a1357dd6",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_060_HuGene2.CEL"
+    },
+    "OCT_062_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26115669,
+      "method": "GET",
+      "path": "OCT_062_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:28.600074+00:00",
+      "sha256": "9f425254c1a5e00dea9ba220a090c53c1356e7add527285428cee4427ef27fcb",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_062_HuGene2.CEL"
+    },
+    "OCT_063_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26088157,
+      "method": "GET",
+      "path": "OCT_063_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:38.418484+00:00",
+      "sha256": "5a141705ca4f0240d2474f78450705a9d93b01eb90887054a74b34351d66ee27",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_063_HuGene2.CEL"
+    },
+    "OCT_066_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26098813,
+      "method": "GET",
+      "path": "OCT_066_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:13.192234+00:00",
+      "sha256": "d9e9a077044685d062ec8b4ccf7d998f6b7a89caae62bdbd446b92f3c838cd4f",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_066_HuGene2.CEL"
+    },
+    "OCT_069_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26102301,
+      "method": "GET",
+      "path": "OCT_069_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:11.725822+00:00",
+      "sha256": "578b7d7c8e48d7fbfc331a29a3b2025de19cae2fb7b66019e57d5a2fc21c320c",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_069_HuGene2.CEL"
+    },
+    "OCT_070_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26095829,
+      "method": "GET",
+      "path": "OCT_070_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:09.322587+00:00",
+      "sha256": "2ca2894b8786c6a667f106cd27a07848ff6d3a1892d619865611d73256c1d5f1",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_070_HuGene2.CEL"
+    },
+    "OCT_071_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26090341,
+      "method": "GET",
+      "path": "OCT_071_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:08.736096+00:00",
+      "sha256": "99edfbf186ea30b0718c2c369cd526c9f4e4aa3da15b87587342fe4115be07d1",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_071_HuGene2.CEL"
+    },
+    "OCT_072_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26098569,
+      "method": "GET",
+      "path": "OCT_072_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:36.443109+00:00",
+      "sha256": "af6d8d25540e4fe84896516a1859d5b65c46030b6679a9a067251035bdcf2168",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_072_HuGene2.CEL"
+    },
+    "OCT_073_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26095281,
+      "method": "GET",
+      "path": "OCT_073_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:04.826484+00:00",
+      "sha256": "2b36aaca1e227d7b1e13988c761a9b00bdad9054faff8ecd6610559d3e94a622",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_073_HuGene2.CEL"
+    },
+    "OCT_077_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26080041,
+      "method": "GET",
+      "path": "OCT_077_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:51.550842+00:00",
+      "sha256": "f164a1251324a9195b404150bd5f1881371961fdb4677d393e7ee98d4e9aa5c9",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_077_HuGene2.CEL"
+    },
+    "OCT_083_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26105769,
+      "method": "GET",
+      "path": "OCT_083_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:03.221609+00:00",
+      "sha256": "edc722452f1b1356ad01ae413de97a1576df80930fe9de0f492e10e334856bd6",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_083_HuGene2.CEL"
+    },
+    "OCT_085_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26095609,
+      "method": "GET",
+      "path": "OCT_085_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:10.614006+00:00",
+      "sha256": "20f178b9ac7521597aa7ed85e7174f0b148208b5951fb75ad7edd14f0d8c5d94",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_085_HuGene2.CEL"
+    },
+    "OCT_086_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26092333,
+      "method": "GET",
+      "path": "OCT_086_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:26.266020+00:00",
+      "sha256": "adfe9e1abc853c8304d4f11ba23c86996097e5e565d17e6869f970945ee1a724",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_086_HuGene2.CEL"
+    },
+    "OCT_087_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26111665,
+      "method": "GET",
+      "path": "OCT_087_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:25.509169+00:00",
+      "sha256": "e944796b782bde3787a736735f2bdb3b1bd134952f5c331287450206b82bbd52",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_087_HuGene2.CEL"
+    },
+    "OCT_088_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26145153,
+      "method": "GET",
+      "path": "OCT_088_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:59.090543+00:00",
+      "sha256": "89f1cb9c2906be80ed7f860c92b2dfb9645c6808075b4892b40f6eadec12b4f0",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_088_HuGene2.CEL"
+    },
+    "OCT_090_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26099105,
+      "method": "GET",
+      "path": "OCT_090_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:14:41.540386+00:00",
+      "sha256": "cbe7a3793adc59cc397fa0137b9893e140c52454cf3eb8dd428cea6fc8ec5c99",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_090_HuGene2.CEL"
+    },
+    "OCT_091_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26143189,
+      "method": "GET",
+      "path": "OCT_091_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:46.752598+00:00",
+      "sha256": "e247a357d0ea26cdfc2e536626e787f728d3b88d00812f7fe207af52f948847d",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_091_HuGene2.CEL"
+    },
+    "OCT_092_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26111993,
+      "method": "GET",
+      "path": "OCT_092_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:04.351752+00:00",
+      "sha256": "91897857b58956f7ffd435d5c74c9b80f1665f8f0edd2432c5e52d06983a2224",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_092_HuGene2.CEL"
+    },
+    "OCT_095_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26114537,
+      "method": "GET",
+      "path": "OCT_095_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:14:59.840581+00:00",
+      "sha256": "b8a1447f8140537980d898d6d9012efa55bbc99d72ec53d326010646c1b78914",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_095_HuGene2.CEL"
+    },
+    "OCT_101_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26095261,
+      "method": "GET",
+      "path": "OCT_101_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:05.082861+00:00",
+      "sha256": "337cd31be13ede76caf927c27f7f5dd89d60add014c3643422bcf7030cc60faf",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_101_HuGene2.CEL"
+    },
+    "OCT_103_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26101353,
+      "method": "GET",
+      "path": "OCT_103_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:25.803663+00:00",
+      "sha256": "1b004a095be0e0756381001f5e0d6c974de3720adf2c605a3d19a5c88fa22955",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_103_HuGene2.CEL"
+    },
+    "OCT_108_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26096801,
+      "method": "GET",
+      "path": "OCT_108_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:10.115439+00:00",
+      "sha256": "1d4885bf7939d81e8dadbfceea28ec8c5fcf98021e0fe539aeb8f51def35fc84",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_108_HuGene2.CEL"
+    },
+    "OCT_111_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26083757,
+      "method": "GET",
+      "path": "OCT_111_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:10.134820+00:00",
+      "sha256": "e0eee45d43c4eba9c3b14e3a4238e044c74f51cdd12acae25f179a86dde4d3b7",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_111_HuGene2.CEL"
+    },
+    "OCT_112_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26085933,
+      "method": "GET",
+      "path": "OCT_112_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:05.084852+00:00",
+      "sha256": "9d90479524df42d5ab582099c2ec421647869c302b7ad0b5d2413c9f9d5da3ff",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_112_HuGene2.CEL"
+    },
+    "OCT_113_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26090789,
+      "method": "GET",
+      "path": "OCT_113_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:46.329096+00:00",
+      "sha256": "ed3b07191c467cd3e618aa8b93a8230e9926f9fe8730eef29fe6f8bee84e4f9c",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_113_HuGene2.CEL"
+    },
+    "OCT_115_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26098125,
+      "method": "GET",
+      "path": "OCT_115_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:03.342448+00:00",
+      "sha256": "6b8995cd33e87b439a6ead0e1c0846f9e7fffe0c4aadbaccc4e5dde5ab12d907",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_115_HuGene2.CEL"
+    },
+    "OCT_119_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26124841,
+      "method": "GET",
+      "path": "OCT_119_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:02.732759+00:00",
+      "sha256": "b5077098765523d52201f16cf81a07be204df58822624d3955f004b422ecad52",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_119_HuGene2.CEL"
+    },
+    "OCT_120_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26088277,
+      "method": "GET",
+      "path": "OCT_120_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:14:58.876057+00:00",
+      "sha256": "fe6904d86a8032c03b2893700d6b8812803b47ce19858ae96d408048b4408628",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_120_HuGene2.CEL"
+    },
+    "OCT_121_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26096953,
+      "method": "GET",
+      "path": "OCT_121_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:15:28.768790+00:00",
+      "sha256": "64d01e41687cb01e45e5d9ef5a2cafe97123bb25046c095cb4638f94205eb3ae",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_121_HuGene2.CEL"
+    },
+    "OCT_123_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26115897,
+      "method": "GET",
+      "path": "OCT_123_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:37.722605+00:00",
+      "sha256": "a609f1da40ff934500fc8c163f0c4cf3cc7d4ce6bd8ebd17e82730cc6803dc74",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_123_HuGene2.CEL"
+    },
+    "OCT_124_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26112825,
+      "method": "GET",
+      "path": "OCT_124_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:45.832898+00:00",
+      "sha256": "a2ccd06c4f783adda5bbf5332111649ebfc570d6db4165c969d6ad49e73764e7",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_124_HuGene2.CEL"
+    },
+    "OCT_126_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26132749,
+      "method": "GET",
+      "path": "OCT_126_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:34.700456+00:00",
+      "sha256": "00d68e2e32e7fad46a97c35edc5e0bb5d6ae39ab87cf0e580ce62d4ccbec8e0b",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_126_HuGene2.CEL"
+    },
+    "OCT_129_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26127425,
+      "method": "GET",
+      "path": "OCT_129_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:53.348814+00:00",
+      "sha256": "674906d3ec9ad57a937e1877095acc9bdc2d39dde7fcd8326da2fc4dc15709e3",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_129_HuGene2.CEL"
+    },
+    "OCT_132_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26110693,
+      "method": "GET",
+      "path": "OCT_132_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:52.868227+00:00",
+      "sha256": "432650cc419d0a8c1046874344f768110dffb9b636e8065ce87ed907b0093bfc",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_132_HuGene2.CEL"
+    },
+    "OCT_133_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26095417,
+      "method": "GET",
+      "path": "OCT_133_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:23.507837+00:00",
+      "sha256": "8358d432a4d189341a2855d90e693a2f67f310ac313bdada114c602a9f600022",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_133_HuGene2.CEL"
+    },
+    "OCT_134_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26096185,
+      "method": "GET",
+      "path": "OCT_134_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:47.020437+00:00",
+      "sha256": "4570eddfa2bc44e70b13d399109e699c5cc88cdca3444edad1ea3216e7853b74",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_134_HuGene2.CEL"
+    },
+    "OCT_135_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26119237,
+      "method": "GET",
+      "path": "OCT_135_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:15.822128+00:00",
+      "sha256": "277076681503da074bb3f2436b9f6238c268728761d4e2c8e57c19478f396710",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_135_HuGene2.CEL"
+    },
+    "OCT_139_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26099861,
+      "method": "GET",
+      "path": "OCT_139_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:12.152860+00:00",
+      "sha256": "034af257dece298aa734578680ea43a13bd73e81713a92040e63121292b92d88",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_139_HuGene2.CEL"
+    },
+    "OCT_140_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26101989,
+      "method": "GET",
+      "path": "OCT_140_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:02.234831+00:00",
+      "sha256": "009dc24b257f554d7f70acf394680f1270eccf9d5fec66a7d31f313026c46631",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_140_HuGene2.CEL"
+    },
+    "OCT_148_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26097385,
+      "method": "GET",
+      "path": "OCT_148_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:34.327895+00:00",
+      "sha256": "228787a102ad4d9008ba48e35cbf491df9fb13567f03638a86e0715a9a3cd44c",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_148_HuGene2.CEL"
+    },
+    "OCT_151_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26124821,
+      "method": "GET",
+      "path": "OCT_151_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:11.389712+00:00",
+      "sha256": "ac5f03b94c6f880c68bbf790c8f033b266e3c646d377095056049d4ce3a8c086",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_151_HuGene2.CEL"
+    },
+    "OCT_153_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26121677,
+      "method": "GET",
+      "path": "OCT_153_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:23.876861+00:00",
+      "sha256": "d754808764f73b063273a6eeb06cad426713311bb43916c4cf65992022625816",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_153_HuGene2.CEL"
+    },
+    "OCT_155_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26106365,
+      "method": "GET",
+      "path": "OCT_155_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:59.776860+00:00",
+      "sha256": "cdfdeec449c20557e4371ddc2e6597eb5fb8e28136299a2623fc6a20f9c6b628",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_155_HuGene2.CEL"
+    },
+    "OCT_156_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26111229,
+      "method": "GET",
+      "path": "OCT_156_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:01.541182+00:00",
+      "sha256": "9c48af89f571febb843bfededaf201c5355544d3a5b6a513510bff9bcb377387",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_156_HuGene2.CEL"
+    },
+    "OCT_165_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26108273,
+      "method": "GET",
+      "path": "OCT_165_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:40.769208+00:00",
+      "sha256": "4950b419f1c99235eeda997055946bdee8c23b63171f37e6a7c884d32c9b0e29",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_165_HuGene2.CEL"
+    },
+    "OCT_166_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26102541,
+      "method": "GET",
+      "path": "OCT_166_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:31.301543+00:00",
+      "sha256": "982d354b851cfaa4ba20765dd58cb81f367aa7479f16a535146dd2f64e896a1f",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_166_HuGene2.CEL"
+    },
+    "OCT_167_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26110621,
+      "method": "GET",
+      "path": "OCT_167_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:47.852494+00:00",
+      "sha256": "dd6fe443cd5d23f00bcf9538a4c41eb7e527a539afbbe11955e3f9e038bbb8ad",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_167_HuGene2.CEL"
+    },
+    "OCT_172_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26114517,
+      "method": "GET",
+      "path": "OCT_172_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:49.604141+00:00",
+      "sha256": "b04677dcbd666d18701c7d0448e457fb827c98c188b8cad3c1d5cd49398a861a",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_172_HuGene2.CEL"
+    },
+    "OCT_178_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26093897,
+      "method": "GET",
+      "path": "OCT_178_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:42.438070+00:00",
+      "sha256": "8ff604022e911231ea8616c2d9052af3c428bc7143a31e7dafc81a6ea6498ed5",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_178_HuGene2.CEL"
+    },
+    "OCT_179_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26116665,
+      "method": "GET",
+      "path": "OCT_179_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:43.834548+00:00",
+      "sha256": "35e56c1212291e4552a69696dcdb63c6811d64498743083d52fd917b9eb7fdec",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_179_HuGene2.CEL"
+    },
+    "OCT_180_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26118973,
+      "method": "GET",
+      "path": "OCT_180_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:03.789813+00:00",
+      "sha256": "5b78f2cc785109ca2105b00526ea7ea37d2014f10162d6dfb306b9ea709ee00e",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_180_HuGene2.CEL"
+    },
+    "OCT_182_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26116353,
+      "method": "GET",
+      "path": "OCT_182_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:00.271265+00:00",
+      "sha256": "c5e9547fd26ceb12f9c5fc4cad05db61c79770704a612c2e0056be932c4422b5",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_182_HuGene2.CEL"
+    },
+    "OCT_185_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26102625,
+      "method": "GET",
+      "path": "OCT_185_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:32.875135+00:00",
+      "sha256": "727ddf53cb0b7246167f4a00a44ff32259efaa5daf4d716930be5b9ba10c7351",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_185_HuGene2.CEL"
+    },
+    "OCT_186_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26093577,
+      "method": "GET",
+      "path": "OCT_186_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:15.659382+00:00",
+      "sha256": "1252c4d4559c4b91294eef463b9828594e20bef13e5413eb959205bb63ba72d0",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_186_HuGene2.CEL"
+    },
+    "OCT_191_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26097385,
+      "method": "GET",
+      "path": "OCT_191_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:42.479260+00:00",
+      "sha256": "1e10e8f0f0fa6455bce0742240d9c2cd112e929b6382d5feca26d80d7cdfdee2",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_191_HuGene2.CEL"
+    },
+    "OCT_199_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26098341,
+      "method": "GET",
+      "path": "OCT_199_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:33.156758+00:00",
+      "sha256": "4990c6ed0c6023c207b901852e20ac354da9584bcba3961d4bc901317f1566fd",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_199_HuGene2.CEL"
+    },
+    "OCT_200_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26110973,
+      "method": "GET",
+      "path": "OCT_200_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:24.192944+00:00",
+      "sha256": "fea986816917f133f8b19ec1c127dd3ae51f2755bef9ca5de5d6e07922054a8e",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_200_HuGene2.CEL"
+    },
+    "OCT_214_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26095321,
+      "method": "GET",
+      "path": "OCT_214_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:43.787240+00:00",
+      "sha256": "0de4591728e16090a2f1917d1cdd75110400fa3f413652f1f64ce47124084b03",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_214_HuGene2.CEL"
+    },
+    "OCT_215_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26077149,
+      "method": "GET",
+      "path": "OCT_215_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:50.277471+00:00",
+      "sha256": "08a342dd09b5c098d6dcd754ca2ccd99eb8534283daa783e36ad768ced3fcd33",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_215_HuGene2.CEL"
+    },
+    "OCT_216_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26081565,
+      "method": "GET",
+      "path": "OCT_216_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:44.650302+00:00",
+      "sha256": "e1a75c717b534504cf4f096c42abdd3fa04d376ee015fe06cd92bb2ba6323d75",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_216_HuGene2.CEL"
+    },
+    "OCT_219_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26084709,
+      "method": "GET",
+      "path": "OCT_219_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:45.750652+00:00",
+      "sha256": "4f42ae74534bcf1abb022714fe624d99ebc05dccd08ff3157797b0752f0490b9",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_219_HuGene2.CEL"
+    },
+    "OCT_223_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26102565,
+      "method": "GET",
+      "path": "OCT_223_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:26.293729+00:00",
+      "sha256": "4cba980fa98637d091b559507c7068bc51db77a20d0be121bbcfe44f2794392b",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_223_HuGene2.CEL"
+    },
+    "OCT_232_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26092913,
+      "method": "GET",
+      "path": "OCT_232_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:59.034349+00:00",
+      "sha256": "c8524ac5a85f844207153f8f30590677307a6f47dffd4f7e78231887e1cb8387",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_232_HuGene2.CEL"
+    },
+    "OCT_233_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26094393,
+      "method": "GET",
+      "path": "OCT_233_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:12.882587+00:00",
+      "sha256": "23aac33abe8e03f30e8139ab54c490aae3c73e1e417d3ac7d5e223808c97374f",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_233_HuGene2.CEL"
+    },
+    "OCT_249_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26116617,
+      "method": "GET",
+      "path": "OCT_249_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:46.278435+00:00",
+      "sha256": "c65888b4a2db4de04aa20e41891265aef55c31151fb6d279322e7c081a9d54df",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_249_HuGene2.CEL"
+    },
+    "OCT_253_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26088233,
+      "method": "GET",
+      "path": "OCT_253_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:40.230150+00:00",
+      "sha256": "4f35c517c9d3bd2579400e083f61a8d38a80e75228fa6b4aff4fe93f5de7157c",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_253_HuGene2.CEL"
+    },
+    "OCT_257_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 62119143,
+      "method": "GET",
+      "path": "OCT_257_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:36.381362+00:00",
+      "sha256": "95bf7fe8de5b3374cf98388ab293f8d23160fbf6ffa8f286e67ba771f6b8afb1",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_257_HuGene2.CEL"
+    },
+    "OCT_258_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26093589,
+      "method": "GET",
+      "path": "OCT_258_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:30.126973+00:00",
+      "sha256": "ac51449cfcbe2f57bff31a6160e5cecd041fc69bc570d2ae0c4f8ca48234ff93",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_258_HuGene2.CEL"
+    },
+    "OCT_267_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26118705,
+      "method": "GET",
+      "path": "OCT_267_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:08.576850+00:00",
+      "sha256": "e2833cc66bc3e09b7544c274ec50975fd2ecb2775ab6f1c73dbd564cf90c8fe0",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_267_HuGene2.CEL"
+    },
+    "OCT_270_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26111789,
+      "method": "GET",
+      "path": "OCT_270_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:43.862174+00:00",
+      "sha256": "abf8c0cd9f6c51846aabfb4a89db488217b3a0f9406728265f38a8d74cc46aed",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_270_HuGene2.CEL"
+    },
+    "OCT_272_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26113605,
+      "method": "GET",
+      "path": "OCT_272_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:16.354662+00:00",
+      "sha256": "2074614b633f43725690b026a785a950b2687720144f6d3df38754b979178e59",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_272_HuGene2.CEL"
+    },
+    "OCT_273_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26120505,
+      "method": "GET",
+      "path": "OCT_273_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:15.810729+00:00",
+      "sha256": "d997478f91baadebdb6461027711a4d48b6cf74a9f99f96917074d2139869d60",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_273_HuGene2.CEL"
+    },
+    "OCT_275_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26108905,
+      "method": "GET",
+      "path": "OCT_275_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:38.261066+00:00",
+      "sha256": "219dee4bbd0fb48c2b4a44f09537a997bca113bb87610537642968ef04a564f1",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_275_HuGene2.CEL"
+    },
+    "OCT_278_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26100833,
+      "method": "GET",
+      "path": "OCT_278_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:56.992897+00:00",
+      "sha256": "cab4432bfb3fc856a1341218d811a0099ea6efd135bbfe72ce7b3f11f8cf3ad5",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_278_HuGene2.CEL"
+    },
+    "OCT_280_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26101513,
+      "method": "GET",
+      "path": "OCT_280_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:07.313535+00:00",
+      "sha256": "71fbf9263d2a6f9511111c9e063021dff54be6d2718f7fe3a26c54ffe058d172",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_280_HuGene2.CEL"
+    },
+    "OCT_283_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26104193,
+      "method": "GET",
+      "path": "OCT_283_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:06.078911+00:00",
+      "sha256": "ddac092daaa6fc7c7e10e98fb41353a58a05a9c02fb559a61ae36596f5e29afd",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_283_HuGene2.CEL"
+    },
+    "OCT_285_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26105125,
+      "method": "GET",
+      "path": "OCT_285_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:37.376539+00:00",
+      "sha256": "c8956e9eb185048ff810be9da554f28e15dfa01c5a8d13ef4c89029e18aa5705",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_285_HuGene2.CEL"
+    },
+    "OCT_287_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26124061,
+      "method": "GET",
+      "path": "OCT_287_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:50.354953+00:00",
+      "sha256": "74a2ede9d4c7599347bed816cbd57f2c06e762651e10df7d5fe28c336377d00a",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_287_HuGene2.CEL"
+    },
+    "OCT_291_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26120757,
+      "method": "GET",
+      "path": "OCT_291_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:26.826174+00:00",
+      "sha256": "681d033c7e383bd205b3ee2d05a0ad6dcc7e5f1b24303063bbadd8e03317f23c",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_291_HuGene2.CEL"
+    },
+    "OCT_292_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26113533,
+      "method": "GET",
+      "path": "OCT_292_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:17:15.926258+00:00",
+      "sha256": "d0a8b774171df87291e093419395c719a54f4fb1be42839368de5e458c02cca7",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_292_HuGene2.CEL"
+    },
+    "OCT_294_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26115645,
+      "method": "GET",
+      "path": "OCT_294_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:21.101494+00:00",
+      "sha256": "d4995a09921be1d3ee63a8b9697248699eefa1e3bc7583234e193877af2cf239",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_294_HuGene2.CEL"
+    },
+    "OCT_298_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26110089,
+      "method": "GET",
+      "path": "OCT_298_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:18:47.894735+00:00",
+      "sha256": "66505250666a074d9a0f2346c9f5f3b90917b75acc0d93984fd7d126cbbe73b7",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_298_HuGene2.CEL"
+    },
+    "OCT_300_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26114913,
+      "method": "GET",
+      "path": "OCT_300_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:26.565582+00:00",
+      "sha256": "003154735c669afa56cf941c23d5002cadd0d7c4a7f19edbca45cd97daba9169",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_300_HuGene2.CEL"
+    },
+    "OCT_302_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26098929,
+      "method": "GET",
+      "path": "OCT_302_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:29.913424+00:00",
+      "sha256": "964174e2bb626bba7a8dd14e78bc85e7a4d7ddaf6489da3a7c524179a3ed0bb4",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_302_HuGene2.CEL"
+    },
+    "OCT_304_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26139997,
+      "method": "GET",
+      "path": "OCT_304_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:19:38.812216+00:00",
+      "sha256": "ae8510d60bcad2bdc13483def651b63b62b980a4fff9031d615510934b554eed",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_304_HuGene2.CEL"
+    },
+    "OCT_306_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26147129,
+      "method": "GET",
+      "path": "OCT_306_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:32.489615+00:00",
+      "sha256": "a149e6da64d131798f0fbb0acf80652494c372592b75e8ade38128fb43099ae0",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_306_HuGene2.CEL"
+    },
+    "OCT_308_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26141705,
+      "method": "GET",
+      "path": "OCT_308_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:14:50.386128+00:00",
+      "sha256": "909a05430f434e6afadbfb858f37ef6676746d65abef3bb1ec71d7bae04867cf",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_308_HuGene2.CEL"
+    },
+    "OCT_314_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26098481,
+      "method": "GET",
+      "path": "OCT_314_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:43.202355+00:00",
+      "sha256": "8e413749389ae92af6e8fb1b717b140c6172bfe58df6a2b51cdf0d390e2dc101",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_314_HuGene2.CEL"
+    },
+    "OCT_316_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26099245,
+      "method": "GET",
+      "path": "OCT_316_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:52.141823+00:00",
+      "sha256": "584e9421a6fd964d1ffe44d418c7e56e71fa739d0e53ba2761f25f3a0169c94b",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_316_HuGene2.CEL"
+    },
+    "OCT_317_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26108713,
+      "method": "GET",
+      "path": "OCT_317_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:02.545631+00:00",
+      "sha256": "48d4b4445c2049854ffdbbd1ff390d4c9c636540f4aec53216fb6701fa69afe3",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_317_HuGene2.CEL"
+    },
+    "OCT_318_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26096681,
+      "method": "GET",
+      "path": "OCT_318_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:22:41.893703+00:00",
+      "sha256": "d336f069cf26a0cdfaf3b067fb3e8af752c59aa1fb3e12881914fcaa5d675e5e",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_318_HuGene2.CEL"
+    },
+    "OCT_319_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26095897,
+      "method": "GET",
+      "path": "OCT_319_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:22.489503+00:00",
+      "sha256": "2554cfe484a6068aa04716d5757dab9bf9601cc2b8f7978abcbb9533151832b8",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_319_HuGene2.CEL"
+    },
+    "OCT_320_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26092077,
+      "method": "GET",
+      "path": "OCT_320_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:20:46.302794+00:00",
+      "sha256": "61916ba55332c6b340c2059250af22d7abd730cdb9189d7d24c46016a51a849f",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_320_HuGene2.CEL"
+    },
+    "OCT_321_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26094765,
+      "method": "GET",
+      "path": "OCT_321_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:25.920003+00:00",
+      "sha256": "54c619ed9190bb105fc140d0fc27553f1ecb2b2b47ee0e4e4bf8b56edb80f220",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_321_HuGene2.CEL"
+    },
+    "OCT_322_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26096985,
+      "method": "GET",
+      "path": "OCT_322_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:51.263554+00:00",
+      "sha256": "5c759792e407a5054870a224dbdceab46491aaf86a20f861a094fd9220652dd7",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_322_HuGene2.CEL"
+    },
+    "OCT_323_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26119129,
+      "method": "GET",
+      "path": "OCT_323_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:21:42.565173+00:00",
+      "sha256": "94ba7bb29becec4cd11391a2815684a70c3ce044f94c38b2bc32f197d94c0a41",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_323_HuGene2.CEL"
+    },
+    "OCT_324_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26118285,
+      "method": "GET",
+      "path": "OCT_324_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:24.672575+00:00",
+      "sha256": "ed7e2fbff27a5a5251239f042b2b9184cb165a7ad5a6ae15c550d5ee237d71cb",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_324_HuGene2.CEL"
+    },
+    "OCT_325_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26120377,
+      "method": "GET",
+      "path": "OCT_325_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:17.391825+00:00",
+      "sha256": "cda760c7661399a7961e8b3a7271583d3330085596c290111bae722e3da5a013",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_325_HuGene2.CEL"
+    },
+    "OCT_327_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26124105,
+      "method": "GET",
+      "path": "OCT_327_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:09.738626+00:00",
+      "sha256": "4064b9b38b6185fc6bef99b22834502cf8fa8cb09cfdbd6997aa68ae200c5649",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_327_HuGene2.CEL"
+    },
+    "OCT_328_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26102881,
+      "method": "GET",
+      "path": "OCT_328_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:59.326448+00:00",
+      "sha256": "c45416b1dfd12fdde70b6b4b86741f35c1c8f1046535141e81d1ce94c9f0a5c1",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_328_HuGene2.CEL"
+    },
+    "OCT_329_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26120061,
+      "method": "GET",
+      "path": "OCT_329_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:29.284639+00:00",
+      "sha256": "d4bd49f80ce5fa2c6c1231b654f34250290c4ae47075713d660a094870187b55",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_329_HuGene2.CEL"
+    },
+    "OCT_330_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26135685,
+      "method": "GET",
+      "path": "OCT_330_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:24:19.039184+00:00",
+      "sha256": "82d12c3ba3d4035afbe45d935989bb95c8d3178b1b37e8f14c118101100284ef",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_330_HuGene2.CEL"
+    },
+    "OCT_331_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26110353,
+      "method": "GET",
+      "path": "OCT_331_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:13.923111+00:00",
+      "sha256": "e229db321df297f9275eefffc057ae8bb6748dd51113f4650bca759005ba4570",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_331_HuGene2.CEL"
+    },
+    "OCT_332_HuGene2.CEL": {
+      "acquisition": "parallel BioStudies download; timestamp from completed file mtime",
+      "body": null,
+      "bytes": 26139773,
+      "method": "GET",
+      "path": "OCT_332_HuGene2.CEL",
+      "retrieved_at_utc": "2026-11-13T18:23:11.739645+00:00",
+      "sha256": "9b48027c0a69bd6d28387473a7cb8cdb54216f953c219a2d02a71dfe7d93ec8c",
+      "url": "https://www.ebi.ac.uk/biostudies/files/E-MTAB-6128/OCT_332_HuGene2.CEL"
+    }
+  }
+}

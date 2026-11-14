@@ -36,12 +36,17 @@ STUDY = 'prad_tcga_pan_can_atlas_2018'
 LEGACY_STUDY = 'prad_tcga'
 CBIO_API = 'https://www.cbioportal.org/api'
 EXPR_NAME = 'data_mrna_seq_v2_rsem.txt'
-EXPR_URL = f'https://media.githubusercontent.com/media/cBioPortal/datahub/master/public/{STUDY}/{EXPR_NAME}'
+# Last datahub commit touching the RSEM file (2026-01-30); its Git LFS pointer records
+# sha256 b7c66db9...0179, 77,127,361 bytes. Pinned so a datahub update cannot change the input.
+DATAHUB_COMMIT = '86690e1ed9752b1dcd50b5657f5f05eafa4b6b78'
+EXPR_URL = f'https://media.githubusercontent.com/media/cBioPortal/datahub/{DATAHUB_COMMIT}/public/{STUDY}/{EXPR_NAME}'
 PLATFORM_ID = 'IlluminaHiSeq_RNASeqV2'
 DETECTED_LOG2 = 1.0   # a feature counts as detected in a sample above log2(RSEM + 1) = 1
 DECIMALS = 4          # stored precision of log2 expression
 PAGE_SIZE = 10000
 BARCODE = r'TCGA-[A-Z0-9]{2}-[A-Z0-9]{4}-\d{2}[A-Z]?'
+AGE_RANGE = (0, 120)      # years at diagnosis
+GLEASON_RANGE = (2, 10)   # Gleason sum
 MISSING_TOKENS = {'', 'NA', 'N/A', '[Not Available]', '[Not Applicable]', '[Unknown]', '[Discrepancy]'}
 
 # Endpoint prefix -> (status attribute, months attribute, explicit status code map). Unknown codes fail.
@@ -76,6 +81,8 @@ def read_rsem(path: Path):
         values = frame[samples].astype(float)
     except ValueError as error:
         raise ValueError(f'Non-numeric RSEM value: {error}') from error
+    if np.isinf(values.to_numpy()).any():
+        raise ValueError('Infinite RSEM values')
     gene_id = entrez.astype('int64').astype(str).to_numpy(dtype=object)
     source_row = np.arange(1, len(frame) + 1)
     repeated = pd.Series(gene_id).duplicated(keep=False).to_numpy()
@@ -92,30 +99,37 @@ def read_rsem(path: Path):
     return values, features
 
 
-def clean_expression(raw: pd.DataFrame, features: pd.DataFrame):
-    """Drop rows with missing values, clip negatives to 0, log2(x + 1). Returns (expr, raw kept, audit, stats)."""
-    if np.isinf(raw.to_numpy()).any():
-        raise ValueError('Infinite RSEM values')
-    n_missing = raw.isna().sum(axis=1)
+def log2_expression(raw: pd.DataFrame) -> pd.DataFrame:
+    """Clip negative RSEM values to 0, then log2(x + 1), rounded. Missing values stay missing."""
+    return np.log2(raw.clip(lower=0) + 1).round(DECIMALS)
+
+
+def clean_expression(raw: pd.DataFrame, features: pd.DataFrame, samples):
+    """Restrict to the selected samples, then drop features with a missing value in any of them.
+
+    Returns (log2 expression, raw RSEM for the kept features, feature audit, stats).
+    """
+    values = raw[list(samples)]
     audit = features.copy()
-    audit['missing_samples'] = n_missing.to_numpy()
+    audit['missing_samples'] = values.isna().sum(axis=1).to_numpy()
     audit['selected'] = audit.missing_samples.eq(0)
     audit['reason'] = np.where(audit.selected, 'selected', 'missing_values')
-    kept = raw.loc[audit.loc[audit.selected, 'feature_id'].astype(str)]
+    kept = values.loc[audit.loc[audit.selected, 'feature_id'].astype(str)]
     if kept.empty:
         raise ValueError('No features without missing values')
-    negative = int((kept < 0).sum().sum())
-    expression = np.log2(kept.clip(lower=0) + 1).round(DECIMALS)
-    stats = {'source_features': len(raw), 'source_profiles': raw.shape[1],
+    stats = {'source_features': len(raw), 'source_profiles': raw.shape[1], 'selected_profiles': values.shape[1],
              'features_missing_values': int((~audit.selected).sum()),
-             'samples_with_missing_values': int(raw.isna().any(axis=0).sum()),
-             'negative_rsem_values_clipped': negative}
-    return expression, kept, audit, stats
+             'samples_with_missing_values': int(values.isna().any(axis=0).sum()),
+             'negative_rsem_values_clipped': int((kept < 0).sum().sum())}
+    return log2_expression(kept), kept, audit, stats
 
 
 # ----------------------------------------------------------------------------- samples
 def select_samples(expression: pd.DataFrame, z_threshold: float = 3.0) -> pd.DataFrame:
-    """Sample audit for every expression column: barcode rule, one per patient, QC outliers."""
+    """Sample audit for every expression column: barcode rule, one per patient, QC outliers.
+
+    QC metrics use the features with no missing value across the primary tumors kept so far.
+    """
     audit = pd.DataFrame({'sample_id': expression.columns.astype(str)})
     audit['patient_id'] = audit.sample_id.str[:12]
     audit['sample_type_code'] = audit.sample_id.str[13:15]
@@ -126,6 +140,9 @@ def select_samples(expression: pd.DataFrame, z_threshold: float = 3.0) -> pd.Dat
     audit.loc[extra, ['selected', 'selection_reason']] = [False, 'extra_primary_for_patient']
 
     kept = audit.loc[audit.selected, 'sample_id']
+    expression = expression.loc[expression[kept].notna().all(axis=1)]
+    if expression.empty:
+        raise ValueError('No features without missing values for sample QC')
     median = expression[kept].median()
     detected = (expression[kept] > DETECTED_LOG2).sum()
 
@@ -158,6 +175,19 @@ def decode_endpoint(status, raw_time, codes):
     reason = ('missing_status' if missing_status else 'missing_time' if missing_time
               else 'zero_time_requires_review' if months == 0 else 'eligible')
     return event, months, reason
+
+
+def parse_number(values: pd.Series, name: str, bounds, integer: bool = False) -> pd.Series:
+    """Missing tokens become NA; any other value must be a finite number within bounds, or this fails."""
+    present = values.map(lambda x: None if _missing(x) else str(x).strip())
+    number = pd.to_numeric(present, errors='coerce')
+    low, high = bounds
+    bad = present.notna() & ~(np.isfinite(number) & number.between(low, high))
+    if integer:
+        bad |= present.notna() & (number % 1 != 0)
+    if bad.any():
+        raise ValueError(f'Invalid {name} values: {sorted(set(present[bad]))[:5]}')
+    return number.astype('Float64')
 
 
 def _column(frame: pd.DataFrame, name: str) -> pd.Series:
@@ -227,11 +257,12 @@ def match_clinical(audit, patient_records, sample_records, inventory_records, le
     missing_endpoint = [c for c in ENDPOINTS[PRIMARY_ENDPOINT][:2] if f'patient__{c}' not in clinical]
     if missing_endpoint:
         raise ValueError(f'Primary endpoint fields absent: {missing_endpoint}')
-    clinical['age'] = pd.to_numeric(_column(clinical, 'patient__AGE'), errors='coerce').astype('Float64')
+    clinical['age'] = parse_number(_column(clinical, 'patient__AGE'), 'age', AGE_RANGE)
     t_stage = _column(clinical, 'patient__PATH_T_STAGE').astype('string')
     clinical['path_t_group'] = t_stage.str.extract(r'(T\d)', expand=False)
-    score = pd.to_numeric(_column(clinical, 'legacy_patient__GLEASON_SCORE'), errors='coerce')
-    clinical['gleason_score'] = score.astype('Float64').astype('Int8')
+    score = parse_number(_column(clinical, 'legacy_patient__GLEASON_SCORE'), 'Gleason score', GLEASON_RANGE,
+                         integer=True)
+    clinical['gleason_score'] = score.astype('Int8')
     clinical = add_endpoints(clinical)
     samples = clinical[['sample_id', 'cbio_sample_id', 'patient_id', 'sample_type_code']].copy()
     samples['platform_id'] = PLATFORM_ID
@@ -273,8 +304,9 @@ def validate(expression, clinical, samples, genes, feature_audit, audit):
                                    'censored': int(event[eligible].eq(0).sum()),
                                    'median_observed_months': float(months[eligible].median()) if eligible.any() else None}
     p = PRIMARY_ENDPOINT
-    counts = {'primary_profiles': len(samples), f'{p}_events': int(clinical[f'{p}_event'].eq(1).sum()),
-              f'{p}_censored': int(clinical[f'{p}_event'].eq(0).sum()), 'gene_rows': int(genes.gene_id.nunique())}
+    # Event/censored counts are for eligible records only, the same as endpoints[p].
+    counts = {'primary_profiles': len(samples), f'{p}_events': endpoint_counts[p]['events'],
+              f'{p}_censored': endpoint_counts[p]['censored'], 'gene_rows': int(genes.gene_id.nunique())}
     return {'structurally_valid': True, 'counts': counts, 'primary_endpoint': p, 'endpoints': endpoint_counts,
             'retained_feature_rows': len(genes), 'source_profiles': len(audit),
             'source_features': int(feature_audit.feature_id.nunique()),
@@ -333,9 +365,11 @@ def qc_summary(checks: dict, stats: dict, z_threshold: float) -> str:
     lines = ['# TCGA-PRAD QC summary', '',
              '## Expression',
              f"- Source matrix: {stats['source_features']:,} features x {stats['source_profiles']} samples",
-             f"- Removed {stats['features_missing_values']:,} features with missing values "
-             f"(in {stats['samples_with_missing_values']} samples; PanCanAtlas batch-correction gaps); all samples kept",
-             f"- Clipped {stats['negative_rsem_values_clipped']:,} negative batch-corrected RSEM values to 0 before log2(x + 1)",
+             f"- Removed {stats['features_missing_values']:,} features with a missing value in any of the "
+             f"{stats['selected_profiles']} selected samples ({stats['samples_with_missing_values']} samples have "
+             'gaps; PanCanAtlas batch correction); no samples removed for missing values',
+             f"- Clipped {stats['negative_rsem_values_clipped']:,} negative batch-corrected RSEM values (selected samples, "
+             'retained features) to 0 before log2(x + 1)',
              f"- Final: {checks['retained_feature_rows']:,} feature rows, {checks['counts']['gene_rows']:,} unique Entrez genes; "
              'rows sharing a gene ID or symbol are kept separately',
              '', '## Samples']
@@ -367,12 +401,14 @@ def build_metadata(cache, attributes, z_threshold, stats, module_file, clinical,
         'snapshot': cache.root.name, 'source_manifest_sha256': sha256(cache.manifest_path),
         'expression': {
             'orientation': 'features_by_samples', 'source_file': EXPR_NAME, 'source_url': EXPR_URL,
+            'source_commit': f'cBioPortal/datahub@{DATAHUB_COMMIT}',
             'feature_key': 'Entrez gene ID; when an ID repeats in the source, <entrez>_row<source data row>',
             'source_scale': 'RSEM normalized counts, PanCanAtlas batch-corrected (EB++); can be slightly negative',
             'transformations': f'clip negative values to 0, then log2(x + 1), rounded to {DECIMALS} decimals',
             'raw_values': "AnnData layer 'rsem': deposited RSEM values for retained features, unclipped",
             'aggregation': 'none; rows sharing an Entrez ID or symbol are kept separately',
-            'feature_filter': 'features with a missing value in any sample are removed (all samples kept)',
+            'feature_filter': 'features with a missing value in any selected sample are removed (no samples removed); '
+                              'sample QC uses features with no missing value across the QC candidates',
             'negative_rsem_values_clipped': stats['negative_rsem_values_clipped']},
         'endpoints': {prefix: {'status': f'patient__{s}', 'months': f'patient__{t}', 'status_codes': codes,
                                'definitions': {k: attribute_map[k] for k in (s, t) if k in attribute_map}}
@@ -391,9 +427,11 @@ def build_metadata(cache, attributes, z_threshold, stats, module_file, clinical,
             'patient__*': f'{STUDY} PATIENT clinical records, pivoted by patientId',
             'sample__*': f'{STUDY} SAMPLE clinical records, pivoted by sampleId',
             'legacy_patient__GLEASON_*': f'{LEGACY_STUDY} (Firehose Legacy) PATIENT Gleason records, matched on patientId',
-            'age': 'numeric patient__AGE (years at diagnosis)',
+            'age': f'numeric patient__AGE (years at diagnosis); missing tokens -> NA, other non-numeric or '
+                   f'outside {AGE_RANGE} fails',
             'path_t_group': 'T category (T2/T3/T4) extracted from patient__PATH_T_STAGE',
-            'gleason_score': 'numeric legacy_patient__GLEASON_SCORE',
+            'gleason_score': f'integer legacy_patient__GLEASON_SCORE; missing tokens -> NA, other non-integer or '
+                             f'outside {GLEASON_RANGE} fails',
             '<endpoint>_*': 'derived from the endpoint status/months fields listed under endpoints'},
         'clinical_attributes': attributes,
         'limitations': [
@@ -436,12 +474,10 @@ def build(cache, output_root: Path, anndata_root: Path | None = None, z_threshol
     anndata_root = anndata_root if anndata_root is not None else output_root.parent / 'anndata'
     expression_path, attributes, patient, sample, inventory, legacy = acquire(cache)
     raw, features = read_rsem(expression_path)
-    expression_all, raw_kept, feature_audit, stats = clean_expression(raw, features)
-    audit = select_samples(expression_all, z_threshold)
+    audit = select_samples(log2_expression(raw), z_threshold)
     clinical, samples, audit, dup_stats = match_clinical(audit, patient, sample, inventory, legacy)
-    order = samples.sample_id.tolist()
-    expression = expression_all[order]
-    rsem = raw_kept[order]
+    # The missing-value filter runs on the final selected samples only.
+    expression, rsem, feature_audit, stats = clean_expression(raw, features, samples.sample_id.tolist())
     genes = feature_audit.loc[feature_audit.selected, ['feature_id', 'gene_id', 'gene_symbol', 'source_row']].reset_index(drop=True)
     genes['mean_log2'] = expression.mean(axis=1).round(DECIMALS).to_numpy()
     genes['pct_samples_expressed'] = ((expression > DETECTED_LOG2).mean(axis=1) * 100).round(1).to_numpy()
@@ -490,7 +526,7 @@ def build(cache, output_root: Path, anndata_root: Path | None = None, z_threshol
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--data-dir', type=Path, default=Path('data'))
-    parser.add_argument('--snapshot', default='tcga-prad-v1', help='Immutable input snapshot name; use a new name to refresh sources')
+    parser.add_argument('--snapshot', default='tcga-prad-v2', help='Immutable input snapshot name; use a new name to refresh sources')
     parser.add_argument('--offline', action='store_true', help='Forbid HTTP; require all inputs and matching checksums')
     parser.add_argument('--output-root', type=Path, help='Alternate processed root, useful for offline verification')
     parser.add_argument('--anndata-root', type=Path, help='Alternate AnnData output root (default: data/anndata)')

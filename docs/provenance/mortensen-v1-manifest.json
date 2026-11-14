@@ -1,0 +1,43 @@
+{
+  "accessions": [
+    "GSE46602",
+    "GPL570"
+  ],
+  "schema_version": 1,
+  "sources": {
+    "GPL570.soft.txt": {
+      "body": null,
+      "bytes": 85646369,
+      "method": "GET",
+      "path": "GPL570.soft.txt",
+      "resolved_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL570&targ=self&form=text&view=full",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "geo/text",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-13T16:24:12.467844+00:00",
+      "sha256": "4bd2256fae7fe004b609b700612c631a7353b3d8a3ec84c7b5ca6714e71e5f72",
+      "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL570&targ=self&form=text&view=full"
+    },
+    "GSE46602_series_matrix.txt.gz": {
+      "body": null,
+      "bytes": 11663959,
+      "method": "GET",
+      "path": "GSE46602_series_matrix.txt.gz",
+      "resolved_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE46nnn/GSE46602/matrix/GSE46602_series_matrix.txt.gz",
+      "response_metadata": {
+        "Content-Length": "11663959",
+        "Content-Type": "application/x-gzip",
+        "ETag": null,
+        "Last-Modified": "Fri, 30 Oct 2026 05:58:26 GMT",
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-13T16:24:05.038504+00:00",
+      "sha256": "9cb469d8e4f06b621bc8a168b58b82eb14cc48aaf7bb53362e9cfdd0c79264f6",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE46nnn/GSE46602/matrix/GSE46602_series_matrix.txt.gz"
+    }
+  }
+}
