@@ -8,12 +8,40 @@ preserves separate features sharing a gene, and exports aligned CSV and AnnData
 | Cohort | Command | Sources | Guide |
 |---|---|---|---|
 | Taylor/MSKCC | `taylor-gse21034` | GEO **GSE21034 / GPL10264**, cBioPortal **prad_mskcc** | [data dictionary](docs/data_dictionary.md) |
+| Sboner/Swedish WW | `sboner-gse16560` | GEO **GSE16560 / GPL5474** (clinical from GEO sample characteristics) | [Sboner / GSE16560](#sboner--gse16560-gpl5474) |
 | TCGA-PRAD | `tcga-prad` | cBioPortal **prad_tcga_pan_can_atlas_2018** (+ `prad_tcga` for Gleason) | [TCGA data dictionary](docs/tcga_prad_data_dictionary.md); see [TCGA-PRAD](#tcga-prad) |
 | Cambridge / CamCap | `cambridge-gse70768` | GEO **GSE70768 / GPL10558**, Europe PMC **PMC4588396** | [Cambridge guide](docs/cambridge.md) |
 | Stockholm | `stockholm-gse70769` | GEO **GSE70769 / GPL10558**, Europe PMC **PMC4588396** | [Stockholm guide](docs/stockholm.md) |
 | Mortensen / Aarhus | `mortensen-gse46602` | GEO **GSE46602 / GPL570** | [Mortensen guide](docs/mortensen.md) |
 | Long FFPE RNA-seq | `long-gse54460` | GEO **GSE54460**, supplementary FPKM matrix | [Long guide](docs/long.md) |
 | CIT / Kamoun | `cit-e-mtab-6128` | BioStudies **E-MTAB-6128**; raw CEL + SDRF | [CIT guide and R setup](docs/cit.md) |
+
+Supported cohorts are listed above. See the [dataset compatibility assessment](docs/dataset_compatibility.md)
+for remaining cohorts and source limitations. The sections below describe Taylor unless they say otherwise.
+
+### Sboner / GSE16560 (GPL5474)
+
+```bash
+uv run --locked sboner-gse16560                      # snapshot sboner-v2
+uv run --locked sboner-gse16560 --offline            # rebuild from cached, checksummed inputs
+```
+
+Same output layout and reproducibility rules as Taylor (`data/raw|interim|processed|anndata/<snapshot>/`),
+reusing the shared source cache, CSV writer, AnnData export and output protection.
+Differences: GPL5474 supplies Entrez ID/symbol/RefSeq itself, so annotation is validated
+rather than looked up in MyGene (6,144 probes, all retained as separate features, 6,100
+unique genes); clinical data come only from GEO sample characteristics. All 281 samples
+(one FFPE primary tumor per patient) are kept. Endpoints follow the shared contract (`<e>_event`, `_months`, `_eligible`, `_eligibility_reason`,
+`_time_unit`): primary `pcsm` (prostate-cancer-specific mortality, encoded from the deposited
+extreme-groups label: 165 lethal events, 116 indolent) and `os` (all-cause death, 206 events), both
+with `followup_months`. Missing outcomes stay missing and ineligible; age, Gleason, diagnosis year,
+percent cancer and fusion are parsed strictly (bad values stop the build; Gleason primary + secondary
+must equal the deposited score). One sample, GSM416492, has minor Gleason pattern 6 (3+6=9); it is
+retained as deposited and listed in `validation.json`. **Caveats:** lethal/indolent
+proportions are set by the sampling design, not cohort incidence; the time origin is not
+stated in GEO; the cohort overlaps the Swedish WW population in Setlur (GSE8402); the DASL
+panel is targeted (~6k genes). Code: `src/ds_bu_bioinformatics/sboner_pipeline.py`; tests:
+`tests/test_sboner_pipeline.py`.
 
 ## Quick start
 
