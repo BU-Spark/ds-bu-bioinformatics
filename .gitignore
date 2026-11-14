@@ -10,6 +10,7 @@ __pycache__/
 .codex-build/
 
 /data/anndata/
+/data/analysis/
 /data/processed-averaged/
 /data/processed-features/
 

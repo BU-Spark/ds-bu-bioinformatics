@@ -302,6 +302,19 @@ log2. Decide how to transform them before PCA module scoring. Endpoints also dif
 (DFS, PFI, BCR) and are not relabeled, so compare module scores within each
 dataset's own endpoint.
 
+## PCA module scoring
+
+```bash
+uv run --locked module-scores                                   # every snapshot, placeholder modules
+uv run --locked module-scores --modules camplab_modules.csv     # gene,module CSV
+```
+
+For each dataset and module this computes a PC1 score per sample and tests it against that
+dataset's own endpoint, using a Cox model (hazard ratio per SD) and the C-index. Results go to
+`data/analysis/module_scores/`. The current modules are MSigDB Hallmark placeholders
+([modules/README.md](modules/README.md)) until the CampLab lists are shared. See
+[first results and open questions](docs/module_scoring.md).
+
 ## Tests and report
 
 ```bash
