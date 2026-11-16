@@ -1,0 +1,61 @@
+{
+  "accessions": [
+    "GSE70769",
+    "GPL10558",
+    "PMC4588396"
+  ],
+  "schema_version": 1,
+  "sources": {
+    "GPL10558.soft.txt": {
+      "body": null,
+      "bytes": 75786263,
+      "method": "GET",
+      "path": "GPL10558.soft.txt",
+      "resolved_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL10558&targ=self&form=text&view=full",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "geo/text",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-06T19:16:25.411429+00:00",
+      "sha256": "573703e669b9cdd7e8b16dfa92e2474ce65a02676179cf3e31c353a16ff95f4e",
+      "url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL10558&targ=self&form=text&view=full"
+    },
+    "GSE70769_series_matrix.txt.gz": {
+      "body": null,
+      "bytes": 23538238,
+      "method": "GET",
+      "path": "GSE70769_series_matrix.txt.gz",
+      "resolved_url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70769/matrix/GSE70769_series_matrix.txt.gz",
+      "response_metadata": {
+        "Content-Length": "23538238",
+        "Content-Type": "application/x-gzip",
+        "ETag": null,
+        "Last-Modified": "Wed, 02 Sep 2026 06:39:03 GMT",
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-06T19:15:29.832343+00:00",
+      "sha256": "af36625dc15124ee0b529654bf50f1b29fe9e2d4e78306ebc99b7c4f0a3a902d",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE70nnn/GSE70769/matrix/GSE70769_series_matrix.txt.gz"
+    },
+    "PMC4588396_supplementary.zip": {
+      "body": null,
+      "bytes": 5147767,
+      "method": "GET",
+      "path": "PMC4588396_supplementary.zip",
+      "resolved_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4588396/supplementaryFiles",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/zip",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-06T19:16:08.439641+00:00",
+      "sha256": "4cf105cb0980f6611507db8fb247cdc26604d03d87006704b2edc9e3941fa4ff",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4588396/supplementaryFiles"
+    }
+  }
+}

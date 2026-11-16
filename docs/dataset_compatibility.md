@@ -1,0 +1,51 @@
+> CIT now has a tested CEL-to-RMA adapter; see [CIT](cit.md) for the pinned R
+> environment and verified expression-cohort counts.
+
+> November 13, 2026 update: Mortensen and Long now have executable adapters on
+> the working `add-datasets` branch. See [Mortensen](mortensen.md) and [Long](long.md)
+> for validation and the explicitly retained Long clinical-source limitations.
+> The earlier feasibility assessment below is historical.
+
+# Dataset compatibility assessment
+
+Checked November 5, 2026. Scope: cohorts visible in the supplied table, excluding Belfast and TCGA.
+
+**Current end-to-end support includes Taylor/MSKCC, TCGA-PRAD, Sboner/GSE16560, [Cambridge](cambridge.md), [Stockholm](stockholm.md), [Mortensen](mortensen.md), [Long](long.md), and [CIT](cit.md).** These adapters share the CSV/AnnData output layout while preserving cohort-specific endpoints and limitations. See the [TCGA data dictionary](tcga_prad_data_dictionary.md) and the Sboner section in the [README](../README.md#sboner--gse16560-gpl5474). The November 5 assessment below is historical; consult the current cohort guides for implemented behavior.
+
+## Why the current command is specific to Taylor
+
+- `sources.py`: fixed GSE21034/GPL10264 URLs and `prad_mskcc` API.
+- `expression.py:38`: rejects any accession other than GSE21034; also requires GPL10264, sample_id and tumor_type.
+- `annotation.py`: requires the GPL10264 ID/GB_ACC schema and version-stripped RefSeq mapping. Other platforms need their own annotation adapters.
+- `clinical.py`: requires Taylor sample/patient joins and cBioPortal DFS fields/status codes. Other cohorts need explicit endpoint, event, censoring-time and identity mappings.
+- The feature-preserving selection and AnnData writer can be reused once inputs conform to the internal schema. Clinical validation/reporting must also become endpoint-aware before supporting metastasis or PCa-specific mortality.
+
+## Cohort assessment
+
+Apart from Taylor and the subsequently added Cambridge/Stockholm adapters, cohorts below require code changes. Priorities are engineering judgments based on the inspected records.
+
+| Cohort | Accession / source | Assessment and required work |
+|---|---|---|
+| Taylor / MSKCC | [GSE21034](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE21034) | Supported and tested, including feature-preserving CSV/H5AD exports. Source outcome is DFS; do not silently relabel it BCR. |
+| Cambridge / CamCap | [GSE70768](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE70768) | First-priority extension. GPL10558 / ILMN probe IDs; processed Series Matrix and BCR/follow-up metadata. Select appropriate primary tumors and map event time versus censoring follow-up. Deposited series includes benign samples and tumors without usable outcomes. |
+| Stockholm | [GSE70769](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE70769) | First-priority extension sharing Cambridge's GPL10558 annotation adapter. Matrix contains BCR Y/N, time-to-BCR and total follow-up fields. Missing outcomes remain missing. |
+| Mortensen / Aarhus | [GSE46602](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE46602) | First-priority extension. GPL570 Affymetrix probe IDs; matrix contains tissue, bcr and bcr_free_time. Exclude benign samples and verify time units/definition. Inspected headers have 36 tumors with YES/NO BCR status, plus 14 NA records. |
+| Long | [GSE54460](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE54460) | Good next candidate. Supplementary FPKM expression table, not Taylor's microarray matrix. Sample metadata has BCR, months to BCR, total follow-up and patient-related identifiers. There are 106 samples from 100 patients; define a reproducible replicate policy without averaging different gene features. Preserve FPKM scale and validate its gene identifiers. |
+| CIT | [E-MTAB-6128](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-6128) | Promising after adding an ArrayExpress/BioStudies loader and HuGene 2.0 ST annotation. Repository explicitly describes bcr event and months to bcr or last news. Study description says 132 patients; sample section lists 141 samples, so eligibility and repeated samples need reconciliation. Processed expression availability and sample-level SDRF joins need further inspection. |
+| CancerMap | [GSE94767](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE94767) | Expression extension feasible (GPL5175), but full matrix headers contain donor/tissue metadata without BCR event/time. Obtain and join external clinical data. Repeated regions per donor require an explicit selection policy. Deposited processing describes gene-level summaries; preserving deposited rows cannot recover already-combined probes. |
+| CPC-GENE | [GSE107299](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE107299) | More involved: GPL16686/GPL17586, multiple batches and a combined processed TSV. Reconcile arrays with unique tumors and external clinical endpoints. Deposited processing already summarizes probes to Entrez genes and averages a specified technical replicate; these prior operations cannot be undone from the supplied processed matrix. |
+| Erho / Mayo | [GSE46691](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE46691) | Expression feasible using a supplementary quantile-normalized PSR matrix and GPL5188 annotation. Inspected sample has a metastatic-event label. Full event/censoring-time availability and clinical linkage remain unverified. Use a metastasis endpoint rather than Taylor DFS rules. |
+| Karnes / Mayo | [GSE62116](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE62116) | GPL5188 matrix available; matrix headers provide grade/PSA/age/stage but no event/time fields. Obtain external clinical linkage. Series describes a case-cohort design; patient overlap and sampling design need to be retained for downstream analyses. |
+| Den / Thomas Jefferson | [GSE72291](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE72291) | GPL5188 matrix available; inspected complete headers have grade/age/stage/PSA without BCR/metastasis event/time. External clinical linkage and treatment-aware endpoint definitions required. |
+| Klein / Cleveland | [GSE62667](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE62667) | GPL5188 matrix available; complete headers have clinical covariates without endpoint/time. External clinical linkage required. Reconcile deposited samples with analysis eligibility. |
+| Sboner / Swedish watchful waiting | [GSE16560](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE16560) | **Supported and tested** (`sboner-gse16560`): GPL5474 DASL platform annotation validated, 6,144 probes kept as separate features, 281 samples. Endpoint is PCSM encoded from the deposited lethal/indolent extreme-groups label, not a validated time-to-event construction; targeted panel and untreated cohort differ from RP/BCR cohorts. Overlaps GSE8402 (Setlur). |
+| Nakagawa / Mayo | [GSE10645](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE10645) | Two DASL panels (GPL5858/GPL5873): 1,192 GEO records for 596 cases. Both probe-level and gene-level supplementary tables are listed; choose probe-level inputs when preserving original features. Clinical metadata includes recurrence/systemic progression/follow-up in years and PCa-specific death. Explicit patient/panel joins, endpoint construction and unit conversion required. |
+| Moscow / EMB-RAS | [GSE229904](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE229904) | Supplementary mRNA and miRNA count matrices. Use mRNA, select tumor tissue and map count-matrix identifiers. Inspected sample includes BCR status but no follow-up time; time-to-event usability remains unverified. Do not treat status alone as survival data. |
+| DKFZ / EOPC | [EGA EGAD00001004791](https://www.ega-archive.org/datasets/EGAD00001004791) | Requires source/access work plus an RNA-seq and clinical adapter. EGA describes 96 patients and 9 controls with some multi-area sampling, and requires an access request. Check availability of usable processed research supplements before assuming controlled raw reads are necessary. |
+| CPGEA | [Primary publication](https://www.nature.com/articles/s41586-020-2135-x) | Requires a new repository/RNA-seq loader and verified clinical linkage. The 208-patient cohort size must not be assumed to be an expression sample count: the paper reports RNA-seq on 134 tumors. It deposits data under PRJCA001124; raw sequencing and individual-identifying mutation calls are controlled. Verify processed-expression access and usable BCR follow-up separately. |
+
+## Evidence and limits
+
+Read local pipeline source; fetched GEO Series SOFT metadata for all 13 non-Taylor GEO accessions above and one Sample SOFT record per series. Also read the Series Matrix headers and first expression row for GSE70768, GSE70769, GSE46602, GSE94767, GSE16560, GSE62116, GSE72291 and GSE62667. Inspected E-MTAB-6128 through the BioStudies API, plus the primary CPGEA publication and EGA EOPC record. No full expression imports or annotation round trips were performed for additional cohorts. Sample-record observations are not evidence that every sample has complete clinical data.
+
+Suggested extension order: Cambridge + Stockholm (shared platform), Mortensen, Long, then CIT. Add the other cohorts after resolving their clinical linkage, endpoint or access requirements. Preserve separate feature IDs throughout; distinguish upstream gene summaries from original probes.
