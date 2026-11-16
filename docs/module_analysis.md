@@ -67,19 +67,25 @@ Outputs are under `data/`, which Git ignores.
    errors are derived from the 95% CIs. Reported: pooled HR, 95% CI, p, BH q across modules, I²,
    τ², and the number of datasets whose estimate has the same sign as the pooled one.
 
-Endpoints are not relabeled: TCGA uses PFI, Taylor DFS, Cambridge and Stockholm BCR. The pooled
-estimate therefore answers "does the module track disease progression in general", not one endpoint.
+Endpoints are not relabeled: TCGA uses PFI, Taylor DFS, Cambridge and Stockholm BCR, and Belfast
+metastasis. The pooled estimate therefore answers "does the module track disease progression in
+general", not one endpoint.
 
 ### Clinical covariates
 
 Each cohort names and codes covariates differently, so the mapping is explicit in `COVARIATES`:
 
-| Covariate | Coding | TCGA-PRAD | Taylor | Cambridge | Stockholm |
-|---|---|---|---|---|---|
-| `grade_group` | ISUP grade group 1–5 from Gleason primary + secondary (3+4 = 2, 4+3 = 3) | `legacy_patient__GLEASON_PATTERN_PRIMARY/SECONDARY` | `sample__GLEASON_SCORE_1/2` | `geo__tumour_gleason` (`7=3+4`) | `geo__tumour_gleason` |
-| `pt3_plus` | 1 for pathological T3/T4, 0 for T0–T2, missing for Tx | `path_t_group` | `patient__PATH_T_STAGE` | `geo__pathology_stage` | `geo__pathology_stage` |
-| `age` | Years | `age` | — | `geo__age_at_diag` | — |
-| `n1` | 1 for N1, 0 for N0, missing for Nx | `patient__PATH_N_STAGE` | — | — | — |
+| Covariate | Coding | TCGA-PRAD | Taylor | Cambridge | Stockholm | Belfast |
+|---|---|---|---|---|---|---|
+| `grade_group` | ISUP grade group 1–5 from Gleason primary + secondary (3+4 = 2, 4+3 = 3) | `legacy_patient__GLEASON_PATTERN_PRIMARY/SECONDARY` | `sample__GLEASON_SCORE_1/2` | `geo__tumour_gleason` (`7=3+4`) | `geo__tumour_gleason` | — |
+| `gleason_8_plus` | 1 for total Gleason 8–10, 0 for ≤7; used where only the total score is recorded | — | — | — | — | `geo__gleason_grade` |
+| `pt3_plus` | 1 for pathological T3/T4, 0 for T0–T2, missing for Tx | `path_t_group` | `patient__PATH_T_STAGE` | `geo__pathology_stage` | `geo__pathology_stage` | — |
+| `ct3_plus` | 1 for clinical T3/T4, 0 for T1–T2, missing for Unknown | — | — | — | — | `geo__t_stage` |
+| `age` | Years | `age` | — | `geo__age_at_diag` | — | `geo__patient_age_years` |
+| `n1` | 1 for N1, 0 for N0, missing for Nx | `patient__PATH_N_STAGE` | — | — | — | — |
+
+Belfast is a biopsy cohort, so it records only the total Gleason score (no grade group) and clinical
+rather than pathological T stage; see [belfast.md](belfast.md).
 
 Rules:
 
@@ -95,8 +101,8 @@ Rules:
 
 ## First results with the CampLab modules
 
-Run on November 16, 2026 on `tcga-prad-v2`, `taylor-v2`, `cambridge-v2` and `stockholm-v1`
-(133–135 of 166 modules scored per dataset).
+Run on November 16, 2026 on `tcga-prad-v2`, `taylor-v2`, `cambridge-v2`, `stockholm-v1` and
+`belfast-v1` (130–135 of 166 modules scored per dataset).
 
 Clinical models:
 
@@ -106,6 +112,7 @@ Clinical models:
 | taylor-v2 | DFS | grade group, pT3+ | 130 (27) | 9.0 ⚠ | 0.83 |
 | cambridge-v2 | BCR | age, grade group, pT3+ | 111 (19) | 4.8 ⚠ | 0.76 |
 | stockholm-v1 | BCR | grade group, pT3+ | 89 (44) | 14.7 | 0.76 |
+| belfast-v1 | Metastasis | age, Gleason 8+, clinical T3+ | 223 (22) | 5.5 ⚠ | 0.61 |
 
 Modules with BH q < 0.05:
 
@@ -113,48 +120,53 @@ Modules with BH q < 0.05:
 |---|---:|---:|
 | tcga-prad-v2 | 29 | 0 |
 | stockholm-v1 | 21 | 0 |
+| belfast-v1 | 2 | 0 |
 | cambridge-v2 | 1 | 0 |
 | taylor-v2 | 0 | 0 |
 
-Top modules by random-effects meta-analysis (all 4 datasets):
+Top modules by random-effects meta-analysis (all 5 datasets):
 
 | Module | Pooled HR per SD (95% CI) | q | I² | Same direction | Adjusted pooled HR (95% CI) | Adjusted q |
 |---|---|---:|---:|---:|---|---:|
-| L12 · Cycling kinase | 1.66 (1.47–1.87) | 1.7e-14 | 0% | 4/4 | 1.37 (1.12–1.68) | 0.19 |
-| L60 · Neuroendocrine | 0.58 (0.50–0.67) | 1.3e-11 | 0% | 4/4 | 0.83 (0.70–0.98) | 0.61 |
-| L11 · DNA replication | 1.58 (1.40–1.79) | 1.8e-11 | 0% | 4/4 | 1.25 (1.08–1.45) | 0.19 |
-| L16 · Metallothionein | 0.69 (0.59–0.79) | 1.5e-05 | 0% | 4/4 | 0.89 (0.76–1.03) | 0.88 |
-| L59 · AR pathway | 0.70 (0.61–0.81) | 2.3e-05 | 0% | 4/4 | 0.88 (0.76–1.03) | 0.88 |
-| L58 · AR pathway | 0.71 (0.61–0.82) | 8.3e-05 | 0% | 4/4 | 0.95 (0.81–1.12) | 0.88 |
-| L72 · Luminal | 0.71 (0.62–0.82) | 8.3e-05 | 0% | 4/4 | 0.90 (0.76–1.05) | 0.88 |
-| L63 · Stromal remodelling | 0.73 (0.63–0.83) | 8.3e-05 | 4% | 4/4 | 0.90 (0.77–1.04) | 0.88 |
-| L147 · ECM | 1.48 (1.24–1.77) | 0.00029 | 25% | 4/4 | 1.14 (0.98–1.32) | 0.86 |
-| L127 · Autophagy | 1.36 (1.17–1.58) | 0.00048 | 0% | 4/4 | 1.19 (1.01–1.39) | 0.65 |
+| L60 · Neuroendocrine | 0.56 (0.49–0.64) | 2.5e-14 | 0% | 5/5 | 0.75 (0.62–0.92) | 0.30 |
+| L12 · Cycling kinase | 1.61 (1.42–1.82) | 4.3e-12 | 10% | 5/5 | 1.35 (1.13–1.59) | 0.087 |
+| L11 · DNA replication | 1.52 (1.34–1.74) | 1.0e-08 | 9% | 5/5 | 1.22 (1.06–1.41) | 0.30 |
+| L16 · Metallothionein | 0.67 (0.59–0.77) | 9.6e-07 | 0% | 5/5 | 0.86 (0.74–0.99) | 0.59 |
+| L59 · AR pathway | 0.70 (0.62–0.80) | 6.1e-06 | 0% | 5/5 | 0.86 (0.74–0.99) | 0.59 |
+| L72 · Luminal | 0.72 (0.63–0.82) | 3.3e-05 | 0% | 5/5 | 0.88 (0.76–1.02) | 0.73 |
+| L63 · Stromal remodelling | 0.74 (0.65–0.84) | 4.1e-05 | 0% | 5/5 | 0.89 (0.77–1.02) | 0.73 |
+| L64 · AR pathway | 0.74 (0.65–0.84) | 0.00015 | 0% | 5/5 | 0.88 (0.76–1.02) | 0.75 |
+| L61 · PI3K pathway | 0.75 (0.65–0.85) | 0.00032 | 0% | 4/5 | 0.86 (0.74–1.00) | 0.59 |
+| L58 · AR pathway | 0.66 (0.54–0.80) | 0.00037 | 38% | 5/5 | 0.84 (0.64–1.08) | 0.83 |
 
 The full top-20 table, the heatmap and the forest plots are in the run's `analysis/` folder.
 
 ### Findings
 
-- **Proliferation modules predict worse outcome in every cohort.** L12 (cycling kinase) and L11
-  (DNA replication) have pooled HRs of about 1.6 per SD with no measurable heterogeneity
-  (I² = 0%). This matches the Hallmark E2F/G2M positive control in [module_scoring.md](module_scoring.md).
-- **Androgen-receptor, luminal and metallothionein modules are associated with lower risk**
-  (pooled HR about 0.70), consistently across cohorts.
+- **Proliferation predicts worse outcome in every cohort.** L12 (cycling kinase) has a pooled HR of
+  1.61 per SD across 5/5 cohorts and is the strongest module after adjusting for Gleason and stage
+  (adjusted HR 1.35, 95% CI 1.13–1.59, adjusted q = 0.087). L11 (DNA replication) behaves similarly.
+  This matches the Hallmark E2F/G2M positive control in [module_scoring.md](module_scoring.md).
+- **AR pathway, luminal and metallothionein modules are associated with lower risk** in 5/5 cohorts
+  (pooled HR about 0.70).
+- **L60 ("Neuroendocrine") is protective in all five cohorts** (pooled HR 0.56, I² = 0%), including
+  Belfast's metastasis endpoint. Neuroendocrine features are usually linked to aggressive disease, so
+  the module's genes and label should be reviewed with CampLab.
 - **Most of the signal overlaps with Gleason grade and stage.** After adjustment, no module is
-  significant at q < 0.05 in any single dataset. L12 and L11 keep a pooled adjusted effect whose
-  95% CI excludes 1 (HR 1.37 and 1.25), but at adjusted q = 0.19 this is suggestive, not
-  established.
-- **L60 ("Neuroendocrine") is protective in all four cohorts** (HR 0.58). Neuroendocrine features
-  are usually linked to aggressive disease, so the module's genes and label should be reviewed
-  with CampLab.
+  significant at q < 0.05 within a single cohort.
+- **Belfast (metastasis)** is the exception for proliferation: L12 and L11 do not predict metastasis
+  there, while L58 (AR pathway) and L60 do, and add to the clinical model (C-index 0.61 → 0.76 for
+  L58). See [belfast.md](belfast.md).
 
 ### Caveats
 
-- Cambridge (19 events) and Taylor (27 events) have fewer than 10 events per parameter in the
+- Cambridge (19 events), Taylor (27) and Belfast (22) have fewer than 10 events per parameter in the
   adjusted models; their adjusted estimates are unstable.
 - Taylor's expression scale is still unresolved (see [module_scoring.md](module_scoring.md)); rerun
   with `--exclude taylor-v2` to check that conclusions do not depend on it.
-- Endpoints differ by cohort (PFI, DFS, BCR), so pooled estimates mix related but different outcomes.
+- Endpoints differ by cohort (PFI, DFS, BCR, metastasis), so pooled estimates mix related but
+  different outcomes.
+- Belfast covariates are coarser: total Gleason only and clinical rather than pathological T stage.
 - C-indices are in-sample, not held-out performance.
 - PCA scoring uses one probe per gene (highest mean), as implemented in `module-scores`.
 
