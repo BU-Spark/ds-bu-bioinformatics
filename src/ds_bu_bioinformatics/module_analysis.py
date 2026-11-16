@@ -102,6 +102,14 @@ def pt3_plus(series: pd.Series) -> pd.Series:
     return series.map(parse).astype(float)
 
 
+def gleason_8_plus(series: pd.Series) -> pd.Series:
+    """1 for a total Gleason score of 8-10, 0 for 2-7. Used where only the total score is recorded."""
+    scores = number(series)
+    if ((scores < 2) | (scores > 10)).any():
+        raise ValueError(f'Gleason score outside 2-10: {sorted(scores[(scores < 2) | (scores > 10)].unique())}')
+    return (scores >= 8).astype(float).where(scores.notna())
+
+
 def n1(series: pd.Series) -> pd.Series:
     def parse(value):
         if _missing(value) or str(value).strip().upper() == 'NX':
@@ -128,6 +136,10 @@ COVARIATES = {
                   'pt3_plus': (pt3_plus, 'geo__pathology_stage')},
     'stockholm': {'grade_group': (grade_from_text, 'geo__tumour_gleason'),
                   'pt3_plus': (pt3_plus, 'geo__pathology_stage')},
+    # Belfast biopsies: total Gleason only (no patterns, so no grade group) and clinical, not pathological, T stage.
+    'belfast': {'age': (number, 'geo__patient_age_years'),
+                'gleason_8_plus': (gleason_8_plus, 'geo__gleason_grade'),
+                'ct3_plus': (pt3_plus, 'geo__t_stage')},
 }
 
 

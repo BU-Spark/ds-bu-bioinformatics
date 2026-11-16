@@ -9,8 +9,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from ds_bu_bioinformatics.module_analysis import (bh, clinical_covariates, grade_from_patterns, grade_from_text,
-                                                  main, n1, pt3_plus, random_effects)
+from ds_bu_bioinformatics.module_analysis import (bh, clinical_covariates, gleason_8_plus, grade_from_patterns,
+                                                  grade_from_text, main, n1, pt3_plus, random_effects)
 
 
 class ParserTest(unittest.TestCase):
@@ -37,6 +37,18 @@ class ParserTest(unittest.TestCase):
         self.assertTrue(stages.iloc[5:].isna().all())
         self.assertEqual(n1(pd.Series(['N0', 'N1'])).tolist(), [0, 1])
         self.assertTrue(math.isnan(n1(pd.Series(['NX'])).iloc[0]))
+
+    def test_belfast_total_gleason_and_clinical_stage(self):
+        self.assertEqual(gleason_8_plus(pd.Series(['6', '7', '8', '10'])).tolist(), [0, 0, 1, 1])
+        self.assertTrue(math.isnan(gleason_8_plus(pd.Series(['unknown'])).iloc[0]))
+        with self.assertRaises(ValueError):
+            gleason_8_plus(pd.Series(['12']))
+        clinical = pd.DataFrame({'geo__patient_age_years': ['70', '65'], 'geo__gleason_grade': ['9', '7'],
+                                 'geo__t_stage': ['T3', 'Unknown']})
+        covariates = clinical_covariates(clinical, 'belfast-v1')
+        self.assertEqual(list(covariates), ['age', 'gleason_8_plus', 'ct3_plus'])
+        self.assertEqual(covariates.iloc[0].tolist(), [70, 1, 1])
+        self.assertTrue(math.isnan(covariates.ct3_plus.iloc[1]))
 
     def test_unmapped_cohort_has_no_covariates(self):
         self.assertTrue(clinical_covariates(pd.DataFrame({'x': [1]}), 'sboner-v1').empty)
