@@ -1,0 +1,33 @@
+{
+  "study_accession": "PRJCA001124",
+  "source": "REPLACE WITH actual processed-expression and original clinical source citations",
+  "expression_kind": "raw_counts",
+  "expression_scale": "REPLACE WITH verified source counts / TPM / FPKM and processing description",
+  "sample_linkage": "REPLACE WITH evidence linking source expression columns to source patient/area identifiers",
+  "specimen_definition": "REPLACE WITH verified primary-tumor and excluded-specimen definitions",
+  "sample_columns": {
+    "sample_id": "ACTUAL_SOURCE_ASSAY_COLUMN",
+    "patient_id": "ACTUAL_SOURCE_PATIENT_COLUMN",
+    "expression_id": "ACTUAL_SOURCE_EXPRESSION_KEY_COLUMN",
+    "tissue": "ACTUAL_SOURCE_SPECIMEN_COLUMN"
+  },
+  "tumor_values": [
+    "ACTUAL_SOURCE_TUMOR_VALUE"
+  ],
+  "excluded_tissue_values": [
+    "ACTUAL_SOURCE_NORMAL_VALUE"
+  ],
+  "replicate_policy": "error",
+  "primary_endpoint": "bcr",
+  "endpoints": {
+    "bcr": {
+      "definition": "REPLACE WITH verified recurrence definition",
+      "time_origin": "REPLACE WITH verified baseline",
+      "censoring": "REPLACE WITH individual non-event/competing-event policy",
+      "event_column": null,
+      "event_codes": {},
+      "time_column": null,
+      "time_unit": "months"
+    }
+  }
+}

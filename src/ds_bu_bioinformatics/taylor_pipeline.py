@@ -1,5 +1,6 @@
 """Download, audit, and export Taylor/MSKCC GSE21034 GPL10264 + prad_mskcc."""
 from __future__ import annotations
+from .provenance import code_hashes
 import argparse
 import json
 import shutil
@@ -93,7 +94,7 @@ def build(cache, output_root: Path, interim_root: Path, anndata_root: Path | Non
         'limitations': ['Exact deposited log base remains unverified; no extra transformation applied',
             'DFS is not relabeled BCR; precise recurrence definition remains unverified',
             'No raw CEL quality control; this workflow starts with deposited processed expression'],
-        'code_sha256': {p.name: sha256(p) for p in sorted(Path(__file__).parent.glob('*.py'))}}
+        'code_sha256': code_hashes(__name__)}
     metadata_out['output_schemas'] = {name: {column: {'dtype': str(frame[column].dtype), 'nullable': bool(frame[column].isna().any())} for column in frame.columns} for name, frame in [('clinical.csv', clinical), ('samples.csv', samples), ('genes.csv', genes), ('feature_mapping.csv.gz', mapping), ('sample_audit.csv', audit)]}
     # Rebuild with the published provenance when verifying the existing pair.
     # Every staged file still has to match its published counterpart byte for byte.

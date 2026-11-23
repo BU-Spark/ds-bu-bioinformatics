@@ -1,0 +1,167 @@
+module,category,annotation,n_genes
+L1,Biological Process,Hemaglobin,2
+L2,Lineage,Secretory,90
+L3,Biological Process,Hemaglobin,2
+L4,Lineage,Club,30
+L5,Biological Process,Stromal Remodelling,183
+L6,Lineage,Secretory,5
+L7,Immune Response,Hematopoietic differentiation,63
+L8,Immune Response,Hematopoietic differentiation,44
+L9,Immune Response,MHC Class II,82
+L10,Immune Response,cytokine,208
+L11,Cellular Process,DNA replication,166
+L12,Cellular Process,Cycling kinase,150
+L13,Biological Process,Stromal Remodelling,18
+L14,Biological Process,Stromal Remodelling,11
+L15,Lineage,Luminal,2
+L16,Prostatic hemeostasis,Metallotheoin,9
+L17,Biological Process,PD-1 Regulation,21
+L18,Lineage,Luminal,10
+L19,PCa related Pathway,AR pathway,43
+L20,Lineage,Luminal,4
+L21,PCa related Pathway,Rho GTPase Pathway,26
+L22,Cellular Process,Cycling kinase,10
+L23,Biological Process,Nuclear transportation,7
+L24,PCa related Pathway,AR pathway,10
+L25,Cellular Process,Anti-apoptosis,6
+L26,Housekeeping,lncRNA,2
+L27,Housekeeping,Ribosomal,2
+L28,Housekeeping,Ribosomal,31
+L29,Housekeeping,Ribosomal,3
+L30,Housekeeping,Ribosomal,28
+L31,Housekeeping,Ribosomal,3
+L32,Housekeeping,Ribosomal,5
+L33,Housekeeping,Ribosomal,4
+L34,Housekeeping,Ribosomal,4
+L35,Housekeeping,Ribosomal,4
+L36,Housekeeping,Ribosomal,9
+L37,Housekeeping,Translation,22
+L38,Housekeeping,Ribosomal,2
+L39,Housekeeping,Ribosomal,6
+L40,Housekeeping,Ribosomal,12
+L41,Housekeeping,Ribosomal,8
+L42,Housekeeping,Ribosomal,7
+L43,Housekeeping,Ribosomal,2
+L44,Housekeeping,Ribosomal,2
+L45,Housekeeping,Ribosomal,15
+L46,Housekeeping,Ribosomal,4
+L47,Housekeeping,Ribosomal,2
+L48,Housekeeping,Ribosomal,4
+L49,Housekeeping,Ribosomal,4
+L50,Housekeeping,Translation,1
+L51,Housekeeping,Ribosomal,6
+L52,Housekeeping,Ribosomal,6
+L53,Housekeeping,Ribosomal,1
+L54,Housekeeping,Ribosomal,3
+L55,Housekeeping,Ribosomal,9
+L56,Lineage,Club,4
+L57,Lineage,Luminal,4
+L58,PCa related Pathway,AR pathway,24
+L59,PCa related Pathway,AR pathway,248
+L60,Lineage,Neuroendocrine,63
+L61,PCa related Pathway,PI3K pathway,110
+L62,PCa related Pathway,AR pathway,48
+L63,Biological Process,Stromal Remodelling,130
+L64,PCa related Pathway,AR pathway,82
+L65,Cellular Process,ER stress and modifications,172
+L66,Biological Process,Stress Respose,45
+L67,Biological Process,Stress Respose,28
+L68,PCa related Pathway,NFkB pathway,38
+L69,Cellular Process,ER stress and modifications,71
+L70,Biological Process,Stromal Remodelling,69
+L71,Biological Process,ubiquitination,39
+L72,Lineage,Luminal,22
+L73,Cellular Process,Cycling kinase,303
+L74,PCa related Pathway,PI3K pathway,410
+L75,Biological Process,ECM,522
+L76,Biological Process,EMT,460
+L77,PCa related Pathway,AR pathway,567
+L78,Biological Process,EMT,270
+L79,Cellular Process,Golgi vesicle,426
+L80,PCa related Pathway,PI3K pathway,454
+L81,Biological Process,ECM,105
+L82,Biological Process,ECM,74
+L83,Biological Process,EMT,91
+L84,Biological Process,EMT,309
+L85,Biological Process,ubiquitination,324
+L86,Prostatic hemeostasis,steroid synthesis,44
+L87,Lineage,Luminal/Secretory,12
+L88,PCa related Pathway,PPAR pathway,84
+L89,Lineage,Secretory,6
+L90,Cellular Process,Cycling kinase,75
+L91,Lineage,Secretory,64
+L92,PCa related Pathway,WNT Pathway,13
+L93,Immune Response,Ig contamination,2
+L94,Lineage,Basal,9
+L95,PCa related Pathway,TGFB pathway,6
+L96,Biological Process,EMT,11
+L97,Lineage,Luminal,3
+L98,Lineage,Basal,2
+L99,Biological Process,Iron transportation,5
+L100,Immune Response,cytokine,18
+L101,Housekeeping,lncRNA,5
+L102,PCa related Pathway,PI3K pathway,4
+L103,PCa related Pathway,AR pathway,11
+L104,Immune Response,MHC Class I,12
+L105,PCa related Pathway,AR pathway,10
+L106,Lineage,Basal,125
+L107,Lineage,Luminal,64
+L108,Lineage,Cancer stem cell phenotype,101
+L109,Lineage,Cancer stem cell phenotype,31
+L110,PCa related Pathway,PI3K pathway,112
+L111,PCa related Pathway,PI3K pathway,112
+L112,Biological Process,ECM,249
+L113,PCa related Pathway,PI3K pathway,185
+L114,Biological Process,ECM,41
+L115,Biological Process,ECM,58
+L116,Biological Process,ECM,94
+L117,Lineage,Basal,17
+L118,Biological Process,ECM,10
+L119,Immune Response,Interfron,5
+L120,Immune Response,Interfron,26
+L121,Lineage,Luminal,6
+L122,Biological Process,Motor,48
+L123,Biological Process,ECM,106
+L124,Biological Process,Morphogenesis,34
+L125,Biological Process,ECM,112
+L126,PCa related Pathway,AR pathway,272
+L127,Cellular Process,Autophage,358
+L128,Cellular Process,Cytoskeleton,65
+L129,Cellular Process,Proteasome,61
+L130,Cellular Process,Proteasome,212
+L131,Cellular Process,Spliceosome,248
+L132,Cellular Process,ER stress and modifications,274
+L133,PCa related Pathway,AR pathway,290
+L134,Cellular Process,Proteasome,83
+L135,Biological Process,Heatshock,20
+L136,Biological Process,Glutathione,77
+L137,Lineage,Secretory,248
+L138,Biological Process,ubiquitination,173
+L139,Housekeeping,Ribosomal,74
+L140,Biological Process,ubiquitination,47
+L141,PCa related Pathway,PI3K pathway,47
+L142,Cellular Process,Proteasome,46
+L143,Cellular Process,Lysosome,103
+L144,PCa related Pathway,MYC pathway,10
+L145,Cellular Process,Cytoskeleton Reformation,9
+L146,Housekeeping,GAPDH,2
+L147,Biological Process,ECM,33
+L148,Housekeeping,Ribosomal,49
+L149,Prostatic hemeostasis,Androgen Independent proliferation,77
+L150,Prostatic hemeostasis,Prostanoid synthesis,66
+L151,Lineage,Luminal,44
+L152,Prostatic hemeostasis,Prostanoid synthesis,105
+L153,Prostatic hemeostasis,Prostanoid synthesis,30
+L154,Prostatic hemeostasis,Prostanoid synthesis,28
+L155,Lineage,Club,45
+L156,Cellular Process,Cycling kinase,67
+L157,Biological Process,De-differentiation,8
+L158,Cellular Process,Spliceosome,25
+L159,Biological Process,Heatshock,24
+L160,Biological Process,AR pathway,34
+L161,PCa related Pathway,WNT Pathway,249
+L162,Biological Process,ECM,31
+L163,PCa related Pathway,PI3K pathway,11
+L164,PCa related Pathway,PI3K pathway,92
+L165,Biological Process,De-differentiation,32
+L166,Lineage,Neuroendocrine,54

@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 from ds_bu_bioinformatics.module_scores import load_modules, main, module_matrix, pca_score, score_dataset, survival
+from ds_bu_bioinformatics.analysis_policy import survival_blocker
 
 MODULES = {'prolif': [f'P{i}' for i in range(10)], 'tiny': ['P0', 'P1', 'ABSENT']}
 
@@ -52,6 +53,53 @@ def write_dataset(root: Path, name='demo-v1', scale=1.0, endpoint_style='shared'
 
 
 class ModuleScoreTest(unittest.TestCase):
+    def test_no_comparable_survival_pairs_does_not_abort_scoring(self):
+        rng = np.random.default_rng(17)
+        result = survival(pd.Series(rng.normal(size=25)),
+                          pd.Series([10.] * 20 + [1.] * 5), pd.Series([1] * 20 + [0] * 5))
+        self.assertIn('hazard_ratio_per_sd', result)
+        self.assertTrue(np.isnan(result['concordance']))
+        self.assertIn('Concordance unavailable', result['note'])
+
+    def test_sboner_extreme_groups_block_cox_but_keep_pca_scores(self):
+        self.assertIn('Outcome-selected', survival_blocker({'geo_series': 'GSE16560'}))
+        processed, _ = write_dataset(self.root, name='sboner-v1', endpoint_style='sboner')
+        (processed / 'metadata.json').write_text(json.dumps({'geo_series': 'GSE16560'}))
+        scores, summary = score_dataset(processed, MODULES)
+        self.assertEqual(len(scores), 80)
+        self.assertTrue(summary.hazard_ratio_per_sd.isna().all())
+        self.assertIn('Outcome-selected', summary.note.iloc[0])
+
+    def test_status_only_cohort_still_writes_pca_scores_without_survival(self):
+        processed, factor = write_dataset(self.root)
+        clinical = pd.read_csv(processed / 'clinical.csv')
+        clinical['bcr_months'] = np.nan
+        clinical['bcr_eligible'] = False
+        clinical.to_csv(processed / 'clinical.csv', index=False)
+        scores, summary = score_dataset(processed, MODULES)
+        self.assertGreater(np.corrcoef(scores.prolif, factor)[0, 1], 0.9)
+        self.assertTrue(summary.hazard_ratio_per_sd.isna().all())
+        self.assertEqual(summary.eligible.tolist(), [0, 0])
+        self.assertIn('PCA scored; survival not fitted', summary.note.iloc[0])
+        # A whole run with no fitted models must still write a readable report/plot.
+        modules = self.root / 'modules.csv'
+        modules.write_text('gene,module\n' + ''.join(f'{g},{m}\n' for m, gs in MODULES.items() for g in gs))
+        with redirect_stdout(StringIO()):
+            main(['--data-dir', str(self.root), '--modules', str(modules)])
+        out = self.root / 'analysis' / 'module_scores'
+        self.assertTrue((out / 'hazard_ratios.png').is_file())
+        self.assertIn('PCA scored; survival not fitted', (out / 'summary.md').read_text())
+        self.assertEqual(pd.read_csv(out / 'demo-v1_scores.csv').shape, (80, 2))
+
+    def test_all_censored_cohort_does_not_attempt_a_cox_fit(self):
+        processed, _ = write_dataset(self.root)
+        clinical = pd.read_csv(processed / 'clinical.csv')
+        clinical['bcr_event'] = 0
+        clinical.to_csv(processed / 'clinical.csv', index=False)
+        scores, summary = score_dataset(processed, MODULES)
+        self.assertEqual(len(scores), 80)
+        self.assertTrue(summary.hazard_ratio_per_sd.isna().all())
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)

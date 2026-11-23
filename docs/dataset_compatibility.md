@@ -8,6 +8,26 @@
 
 # Dataset compatibility assessment
 
+**Current registration: 20 cohort commands; twelve new workflows remain experimental.**
+See [the coverage and validation table](pipeline_coverage.md),
+[new public GEO workflows](additional_geo.md), and
+[DKFZ/CPGEA processed-source workflows](authorized_rnaseq.md).
+The historical feasibility notes below describe earlier source inspections, not
+missing pipeline implementations. New workflows have fixture-based integration and
+offline-rebuild tests; complete real-source runs and clinical validation remain pending.
+
+November 23, 2026: new [Belfast](belfast.md) and [Sun/Goodison](sun.md) adapters have
+synthetic integration coverage; complete-source acquisition and cohort counts remain
+unverified. Sun has recurrence labels without verified survival durations. See the
+[remaining implementation work and blockers](remaining_datasets.md). Do not treat
+these as fully validated additions to the eight existing cohorts below.
+
+Further implementation: [Nakagawa](nakagawa.md) now has a dedicated paired-panel
+adapter with synthetic integration/offline tests. [Curated import](cohort_import.md)
+and [clinical linkage](clinical_linkage.md) provide explicit checksummed local-input
+routes for unresolved cohorts/supplements. Those routes require real source curation
+and do not establish that missing follow-up or controlled data are available.
+
 Checked November 5, 2026. Scope: cohorts visible in the supplied table, excluding Belfast and TCGA.
 
 **Current end-to-end support includes Taylor/MSKCC, TCGA-PRAD, Sboner/GSE16560, [Cambridge](cambridge.md), [Stockholm](stockholm.md), [Mortensen](mortensen.md), [Long](long.md), and [CIT](cit.md).** These adapters share the CSV/AnnData output layout while preserving cohort-specific endpoints and limitations. See the [TCGA data dictionary](tcga_prad_data_dictionary.md) and the Sboner section in the [README](../README.md#sboner--gse16560-gpl5474). The November 5 assessment below is historical; consult the current cohort guides for implemented behavior.

@@ -1,5 +1,6 @@
 """Acquire and export Cambridge GSE70768 primary tumors with BCR outcomes."""
 from __future__ import annotations
+from .provenance import code_hashes
 
 import argparse
 import json
@@ -74,7 +75,7 @@ def build(cache, output_root: Path, interim_root: Path, anndata_root: Path, *, c
             'Missing-expression probes excluded without imputation; decisions are cohort-specific',
             'Subject identities are GEO-title-derived; no independent patient registry linkage',
             'Precise BCR criteria and death handling remain unverified; no raw assay QC'],
-        'code_sha256': {p.name: sha256(p) for p in sorted(Path(__file__).parent.glob('*.py'))}}
+        'code_sha256': code_hashes(__name__, cohort)}
     stages = []
     try:
         for root in (output_root, interim_root, anndata_root):

@@ -165,6 +165,23 @@ def check_dataset(processed: Path, anndata_folder: Path, load_anndata: bool = Tr
         stored = adata.uns.get('metadata_json')
         check.require(stored is not None and json.loads(stored) == metadata,
                       "expression.h5ad: uns['metadata_json'] differs from metadata.json")
+        for axis, filename, key in [('obs', 'clinical.csv', 'sample_id'), ('var', 'genes.csv', 'feature_id')]:
+            original = pd.read_csv(processed / filename, dtype=str, keep_default_na=False).set_index(key)
+            saved = getattr(adata, axis)
+            check.require(original.columns.tolist() == saved.columns.tolist(),
+                          f'expression.h5ad: {axis} annotation columns differ from {filename}')
+            for column in original.columns.intersection(saved.columns):
+                a, b = original[column].reset_index(drop=True), saved[column].reset_index(drop=True)
+                if pd.api.types.is_numeric_dtype(b.dtype) and not pd.api.types.is_bool_dtype(b.dtype):
+                    try:
+                        a = pd.to_numeric(a.replace('', np.nan), errors='raise')
+                        same = np.allclose(a.to_numpy(dtype=float), b.to_numpy(dtype=float, na_value=np.nan),
+                                           rtol=1e-12, atol=0, equal_nan=True)
+                    except (ValueError, TypeError):
+                        same = False
+                else:
+                    same = a.astype('string').fillna('').equals(b.astype('string').fillna(''))
+                check.require(same, f'expression.h5ad: {axis}[{column}] differs from {filename}')
 
     result.update({
         'samples': len(columns), 'patients': int(samples.patient_id.nunique()), 'feature_rows': len(features),

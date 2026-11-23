@@ -19,6 +19,39 @@ preserves separate features sharing a gene, and exports aligned CSV and AnnData
 Supported cohorts are listed above. See the [dataset compatibility assessment](docs/dataset_compatibility.md)
 for remaining cohorts and source limitations. The sections below describe Taylor unless they say otherwise.
 
+**All 20 requested cohorts now have dataset-specific commands.** See the
+[complete coverage table](docs/pipeline_coverage.md) for source access and validation
+status. The twelve new workflows below are **experimental**, with synthetic integration/offline coverage;
+complete real-source runs and cohort counts remain unverified.
+
+### Experimental adapters awaiting full-source validation
+
+| Cohort | Command | Status / guide |
+|---|---|---|
+| Belfast / FASTMAN, GSE116918 | `belfast-gse116918` | BCR and metastasis export implemented; synthetic integration/offline tests pass; full-cohort counts unverified. [Guide](docs/belfast.md) |
+| Sun / Goodison, GSE25136 | `sun-gse25136` | Expression and recurrence-class export implemented; no verified individual survival durations. Synthetic integration/offline tests pass; full-cohort counts unverified. [Guide](docs/sun.md) |
+| Nakagawa / Mayo, GSE10645 | `nakagawa-gse10645` | Paired-panel patient join, cached RefSeq annotation, source clinical fields and PCSM class export. Survival times require adjudication. Synthetic integration/offline tests pass; full-cohort counts unverified. [Guide](docs/nakagawa.md) |
+| CancerMap, GSE94767 | `cancermap-gse94767` | Native GEO acquisition, malignant human donor/region selection. [Guide](docs/additional_geo.md) |
+| CPC-GENE, GSE107299 | `cpc-gene-gse107299` | Native processed matrix/two-platform metadata acquisition and CPCG joins. [Guide](docs/additional_geo.md) |
+| Erho / Mayo, GSE46691 | `erho-gse46691` | Native processed PSR/GEO acquisition, source metastatic-event class. [Guide](docs/additional_geo.md) |
+| Karnes / Mayo, GSE62116 | `karnes-gse62116` | Native GEO/GPL5188 acquisition and export. [Guide](docs/additional_geo.md) |
+| Den / Thomas Jefferson, GSE72291 | `den-gse72291` | Native GEO acquisition with postoperative-RT context. [Guide](docs/additional_geo.md) |
+| Klein / Cleveland, GSE62667 | `klein-gse62667` | Native GEO/SCAN source acquisition. [Guide](docs/additional_geo.md) |
+| Moscow / EMB-RAS, GSE229904 | `moscow-gse229904` | Native mRNA-count acquisition, assay selection, BCR class and explicit log-CPM scoring. [Guide](docs/additional_geo.md) |
+| DKFZ / EOPC, EGAD00001004791 | `dkfz-eopc` | Dedicated authorized processed expression/sample-table workflow; actual source files required. [Guide](docs/authorized_rnaseq.md) |
+| CPGEA, PRJCA001124 | `cpgea` | Dedicated processed expression/sample-table workflow; actual source files required. [Guide](docs/authorized_rnaseq.md) |
+
+These use the shared checksummed source cache and aligned CSV/AnnData format. Missing
+clinical outcomes never remove expression samples or become invented follow-up times.
+PCA scoring now retains module scores when survival cannot be fitted and explains the
+missing HR/C-index in the report. [Remaining datasets and blockers](docs/remaining_datasets.md)
+records the remaining source-data prerequisites. [Clinical supplements](docs/clinical_linkage.md)
+can supply verified missing follow-up through exact sample linkage with source-conflict
+checks and cached offline replay. [Curated local-file import](docs/cohort_import.md)
+is an optional additional route; each cohort also has its own command above. Explicit raw-count inputs
+retain their counts in exports and use frozen full-source library totals for log-CPM
+module scoring.
+
 ### Sboner / GSE16560 (GPL5474)
 
 ```bash
@@ -352,3 +385,18 @@ uv run --locked jupyter nbconvert --to notebook --execute \
 Superseded project templates were replaced by this workflow and documentation.
 Previous averaged outputs remain local under `data/processed-averaged/` and are
 not inputs to the feature-preserving workflow. License: [GPL-3.0](LICENSE).
+
+## PCA and GSVA module comparison
+
+Use the actual 166-module CampLab table, converted from the client workbook, for
+within-cohort PCA/GSVA scoring. This analysis uses complete checked exports, preserves
+cohort boundaries, reports module coverage and PC1 orientation, and fits no survival models.
+See [PCA/GSVA workflow](docs/pca_gsva.md). The Hallmark placeholder table remains
+a separate positive-control resource.
+
+For source snapshots produced by older code, use [fresh output roots](docs/rebuilding.md)
+instead of overwriting existing checksum-protected exports.
+
+Latest completed analysis: [166-module PCA/GSVA results](docs/results/camplab-pca-gsva/report.md)
+for five complete cohorts / 473 profiles. Remaining cohort validation is documented
+separately; these counts do not reproduce the meeting summary of eight cohorts.
