@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "study_accession": "GSE46691",
+  "organism": "Homo sapiens",
+  "platforms": ["GPL5188"],
+  "expression_kind": "log_microarray",
+  "expression_scale": "REPLACE WITH actual deposited processing and scale",
+  "selection_policy": "REPLACE WITH source specimen/patient mapping and outcome-independent selection procedure",
+  "annotation_source": "REPLACE WITH actual annotation file/release and mapping procedure",
+  "source_description": "REPLACE WITH actual research file citations and curation details",
+  "primary_endpoint": "metastasis",
+  "endpoints": {
+    "metastasis": {
+      "definition": "REPLACE WITH verified event definition; preserve missing status if unavailable",
+      "time_origin": "REPLACE WITH actual time origin or explicitly state unavailable",
+      "censoring": "REPLACE WITH actual censoring definition or explicitly state times unavailable",
+      "sample_linkage": "REPLACE WITH exact source assay/patient crosswalk and evidence"
+    }
+  },
+  "files": {
+    "expression": {"path": "expression.csv.gz", "sha256": "REPLACE_WITH_ACTUAL_SHA256", "source": "REPLACE_WITH_ORIGINAL_SOURCE"},
+    "genes": {"path": "genes.csv", "sha256": "REPLACE_WITH_ACTUAL_SHA256", "source": "REPLACE_WITH_ORIGINAL_SOURCE"},
+    "samples": {"path": "samples.csv", "sha256": "REPLACE_WITH_ACTUAL_SHA256", "source": "REPLACE_WITH_ORIGINAL_SOURCE"},
+    "clinical": {"path": "clinical.csv", "sha256": "REPLACE_WITH_ACTUAL_SHA256", "source": "REPLACE_WITH_ORIGINAL_SOURCE"},
+    "sample_audit": {"path": "sample_audit.csv", "sha256": "REPLACE_WITH_ACTUAL_SHA256", "source": "REPLACE_WITH_ORIGINAL_SOURCE"}
+  }
+}

@@ -63,7 +63,7 @@ class CITTest(unittest.TestCase):
 
     def test_export_and_identical_offline_with_mocked_rma(self):
         self.cache.root.mkdir(parents=True)
-        self.cache.manifest_path.write_text('{}')
+        write_json(self.cache.manifest_path, self.cache.manifest)
         record = {'accno':cit.SERIES,'files':[{'path':n,'size':1} for n in self.names]}
         paths = {}
         for n in self.names:

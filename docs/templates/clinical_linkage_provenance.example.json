@@ -1,0 +1,12 @@
+{
+  "study_accession": "GSE25136",
+  "source": "REPLACE WITH actual publication/supplement or authorized clinical-file description",
+  "endpoint_definitions": {
+    "recurrence": {
+      "definition": "REPLACE WITH the verified recurrence definition and status coding",
+      "time_origin": "REPLACE WITH the verified baseline used for every supplied duration",
+      "censoring": "REPLACE WITH the individual non-event follow-up and competing-event policy",
+      "sample_linkage": "REPLACE WITH the source-ID to exported sample_id crosswalk and evidence"
+    }
+  }
+}
