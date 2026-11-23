@@ -37,20 +37,19 @@ complete real-source runs and cohort counts remain unverified.
 | Karnes / Mayo, GSE62116 | `karnes-gse62116` | Native GEO/GPL5188 acquisition and export. [Guide](docs/additional_geo.md) |
 | Den / Thomas Jefferson, GSE72291 | `den-gse72291` | Native GEO acquisition with postoperative-RT context. [Guide](docs/additional_geo.md) |
 | Klein / Cleveland, GSE62667 | `klein-gse62667` | Native GEO/SCAN source acquisition. [Guide](docs/additional_geo.md) |
-| Moscow / EMB-RAS, GSE229904 | `moscow-gse229904` | Native mRNA-count acquisition, assay selection, BCR class and explicit log-CPM scoring. [Guide](docs/additional_geo.md) |
+| Moscow / EMB-RAS, GSE229904 | `moscow-gse229904` | Native mRNA-count acquisition, assay selection, BCR class and frozen library-size metadata. [Guide](docs/additional_geo.md) |
 | DKFZ / EOPC, EGAD00001004791 | `dkfz-eopc` | Dedicated authorized processed expression/sample-table workflow; actual source files required. [Guide](docs/authorized_rnaseq.md) |
 | CPGEA, PRJCA001124 | `cpgea` | Dedicated processed expression/sample-table workflow; actual source files required. [Guide](docs/authorized_rnaseq.md) |
 
 These use the shared checksummed source cache and aligned CSV/AnnData format. Missing
 clinical outcomes never remove expression samples or become invented follow-up times.
-PCA scoring now retains module scores when survival cannot be fitted and explains the
-missing HR/C-index in the report. [Remaining datasets and blockers](docs/remaining_datasets.md)
+[Remaining datasets and blockers](docs/remaining_datasets.md)
 records the remaining source-data prerequisites. [Clinical supplements](docs/clinical_linkage.md)
 can supply verified missing follow-up through exact sample linkage with source-conflict
 checks and cached offline replay. [Curated local-file import](docs/cohort_import.md)
 is an optional additional route; each cohort also has its own command above. Explicit raw-count inputs
-retain their counts in exports and use frozen full-source library totals for log-CPM
-module scoring.
+retain their counts in exports and freeze full-source library totals for downstream normalization.
+This change adds no module-scoring or survival-analysis behavior.
 
 ### Sboner / GSE16560 (GPL5474)
 
@@ -386,17 +385,5 @@ Superseded project templates were replaced by this workflow and documentation.
 Previous averaged outputs remain local under `data/processed-averaged/` and are
 not inputs to the feature-preserving workflow. License: [GPL-3.0](LICENSE).
 
-## PCA and GSVA module comparison
-
-Use the actual 166-module CampLab table, converted from the client workbook, for
-within-cohort PCA/GSVA scoring. This analysis uses complete checked exports, preserves
-cohort boundaries, reports module coverage and PC1 orientation, and fits no survival models.
-See [PCA/GSVA workflow](docs/pca_gsva.md). The Hallmark placeholder table remains
-a separate positive-control resource.
-
-For source snapshots produced by older code, use [fresh output roots](docs/rebuilding.md)
+For snapshots produced by older code, use [fresh output roots](docs/rebuilding.md)
 instead of overwriting existing checksum-protected exports.
-
-Latest completed analysis: [166-module PCA/GSVA results](docs/results/camplab-pca-gsva/report.md)
-for five complete cohorts / 473 profiles. Remaining cohort validation is documented
-separately; these counts do not reproduce the meeting summary of eight cohorts.

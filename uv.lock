@@ -1,15 +1,15 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32'",
     "python_full_version >= '3.14' and sys_platform == 'emscripten'",
     "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
     "python_full_version == '3.13.*' and sys_platform == 'win32'",
-    "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
-    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
     "python_full_version < '3.13' and sys_platform == 'win32'",
+    "python_full_version == '3.13.*' and sys_platform == 'emscripten'",
     "python_full_version < '3.13' and sys_platform == 'emscripten'",
+    "python_full_version == '3.13.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
     "python_full_version < '3.13' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 
@@ -615,7 +615,6 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "anndata" },
-    { name = "gseapy" },
     { name = "ipykernel" },
     { name = "jupyter" },
     { name = "lifelines" },
@@ -627,7 +626,6 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "anndata", specifier = ">=0.13.4" },
-    { name = "gseapy", specifier = "==1.3.0" },
     { name = "ipykernel", specifier = ">=7.4.0" },
     { name = "jupyter", specifier = ">=1.1.1" },
     { name = "lifelines", specifier = ">=0.30" },
@@ -764,41 +762,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/c5/f8/7e33845d6b90ce1cf37cfabf25cb859277c7d3533ef1b6b1e1ca58581549/google_crc32c-1.9.0-cp315-cp315-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:f97c3806dcea41c29c04965347b0e12481561b75e0045dc7a4f69d75dec5d9b1", size = 38359, upload-time = "2026-09-24T21:38:14.983Z" },
     { url = "https://files.pythonhosted.org/packages/36/ff/556b2423f449a7515af6b8222a4d7833cbe09ff3e8d2f0b80471f5f6d02e/google_crc32c-1.9.0-cp315-cp315-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:0abe7e202c25909869c35672ab0f2fe748a7acf276eb78577332a7c38999740f", size = 36858, upload-time = "2026-09-24T21:38:15.799Z" },
     { url = "https://files.pythonhosted.org/packages/40/71/4733f1b7c921d04a2bb9b9916cf66498bf7ad0860a06289413830da83192/google_crc32c-1.9.0-cp315-cp315-win_amd64.whl", hash = "sha256:5695c8b9327e040b2aba12c6659b0acb5995314ef0af0192da66e662e011103b", size = 35534, upload-time = "2026-09-24T21:39:31.337Z" },
-]
-
-[[package]]
-name = "gseapy"
-version = "1.3.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "numpy" },
-    { name = "pandas" },
-    { name = "requests" },
-    { name = "scipy" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/29/d0/5430ceec2657b95f5c00e7a359caefaab44c531c207fd095a90c0757cf48/gseapy-1.3.0.tar.gz", hash = "sha256:bc5daa80376751c42c0beb5cfbb42131ad2de3c9426f97a415df37d713ceaae3", size = 163682, upload-time = "2026-06-21T23:28:07.005Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3e/a0/8af33d4ed3df54f4e128244408e14b40f365dc19f012ef62b35fac385f6f/gseapy-1.3.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:ae3dcbd7ad3d16250b92be7d28e8a346ed3fb051b438387b4cdd1c48400432e1", size = 589900, upload-time = "2026-06-21T23:27:22.515Z" },
-    { url = "https://files.pythonhosted.org/packages/42/b8/31644264f8b4b933e08aa1f24ed24b2f74df094168ffec4b74424c662b2d/gseapy-1.3.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:a6f34bd01509bd629c0012dcb638e08e053cc06e4c84490d74ace4312554e1f3", size = 641025, upload-time = "2026-06-21T23:27:24.308Z" },
-    { url = "https://files.pythonhosted.org/packages/92/83/6624a14a37dcf1e514806605ce65a0b4ee65ab0c586f72e5e6cf2bd55c17/gseapy-1.3.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:218057c8c11ceca3a260fde536416495364528785a3a0e599930853cfe47c61f", size = 664648, upload-time = "2026-06-21T23:27:26.197Z" },
-    { url = "https://files.pythonhosted.org/packages/05/1c/61c07976624e035accceb3fa468b71e67faa68fb03d8261b45db40081395/gseapy-1.3.0-cp312-cp312-win32.whl", hash = "sha256:43af0dfb4b7fc4eea7c9e291371b7e2c773d7b3c50c18b6ee5dd582e9dac2de9", size = 467541, upload-time = "2026-06-21T23:27:27.91Z" },
-    { url = "https://files.pythonhosted.org/packages/11/23/7ed420466f95e7b3c7ea0c18b70dfb17a9dd5e5845e0021acd4154f99bae/gseapy-1.3.0-cp312-cp312-win_amd64.whl", hash = "sha256:87cbdda670d515b5ff2d945f6dcdfcd82bc12272e416b2a47f81ab5959503f27", size = 485247, upload-time = "2026-06-21T23:27:29.606Z" },
-    { url = "https://files.pythonhosted.org/packages/53/d9/4edb901b0e8463e657d43c4b1ed68bc4f0ef0fe3cb181c2753ce44b18d01/gseapy-1.3.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:b180fd519522851a73540c2765fac3943ff659717bfad5fc2d14663d0c20783b", size = 589179, upload-time = "2026-06-21T23:27:31.252Z" },
-    { url = "https://files.pythonhosted.org/packages/c2/4f/b6a2d3b5c6abe1b8073f837fbacf2bb1e8d63ffd8a8a97b3560fb90496c4/gseapy-1.3.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:7a0c0f9daff5ffbe10f7dd8b6a147c9ca47ba6d66fee1eb75f776369d241fa94", size = 640632, upload-time = "2026-06-21T23:27:33.06Z" },
-    { url = "https://files.pythonhosted.org/packages/1b/d7/9f8c46f619b9e38a60fb453d67c1d522f3be5cb8ab8476e100eb50750443/gseapy-1.3.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:7500991530d90558f4c60c293a905f3804b398e6b65909190026e12fbfe30f8e", size = 663690, upload-time = "2026-06-21T23:27:35.039Z" },
-    { url = "https://files.pythonhosted.org/packages/f6/b4/d0b83a14197a9b6f32598ea3c13220038621a02f7ae04f06b0f2737ac12a/gseapy-1.3.0-cp313-cp313-win32.whl", hash = "sha256:59bb951ed0634e36674432cb554e893cbe90be742d5bdbf548d505eee8c34b16", size = 467192, upload-time = "2026-06-21T23:27:36.855Z" },
-    { url = "https://files.pythonhosted.org/packages/ef/7c/81d99dae5c8c5b2601720d6ebc297391564774c6011f6675d993e60c67d6/gseapy-1.3.0-cp313-cp313-win_amd64.whl", hash = "sha256:c6cb42eb900228f4f079aa8d8a05590b5dea76025664916cdb6d25bec55dfea9", size = 484849, upload-time = "2026-06-21T23:27:38.535Z" },
-    { url = "https://files.pythonhosted.org/packages/0d/b9/a14a4340225ec44c71c7e7b99249e9cd75113a8bfc61a19ad8ef01e198fa/gseapy-1.3.0-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:270422906e8f19443ae788f1c6bd47279f9d5342bd18a292104cf5f239a65d06", size = 588243, upload-time = "2026-06-21T23:27:40.293Z" },
-    { url = "https://files.pythonhosted.org/packages/6c/af/efc9f837f0b367d03ed59d5beca9c01e7830e01bbdfc9245be39603651ee/gseapy-1.3.0-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:3d6e18e8f2c2f1d81d1e88640c03d6fb25ab3719f61ba275f10d223c5af2abae", size = 639678, upload-time = "2026-06-21T23:27:42.028Z" },
-    { url = "https://files.pythonhosted.org/packages/30/16/fb034a3cdd658841c331022bfc1f14ef6686a4552725e81c405871edc9f6/gseapy-1.3.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:a6785033c4b33748f3b5db4c88bb893dc794612ec09f41d96baa002ed21d8db1", size = 662299, upload-time = "2026-06-21T23:27:43.665Z" },
-    { url = "https://files.pythonhosted.org/packages/f3/12/3d35b6ea89eff138de5f8794517882f1e87d9d1f2fe6ff902242e11f47e3/gseapy-1.3.0-cp314-cp314-win32.whl", hash = "sha256:6333a7403dbca988f58c4eaef908e717f2d8f6677b5b5009d073d405bd17c751", size = 475456, upload-time = "2026-06-21T23:27:45.473Z" },
-    { url = "https://files.pythonhosted.org/packages/4e/87/5cdf36c203e8d4eb6d0c174f12b6dc36440cd39f68eb301c5e0e9fcbc359/gseapy-1.3.0-cp314-cp314-win_amd64.whl", hash = "sha256:f6fce30e6f3c4e5449913dad80db9bbb354e87d4f3fac43a75b51210a2de70e5", size = 499117, upload-time = "2026-06-21T23:27:47.225Z" },
-    { url = "https://files.pythonhosted.org/packages/8e/ea/cb806bcf9b1230de8644cd5ee0f0aff0da997a88e4b1c4d11a394c9b025b/gseapy-1.3.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:f6d0b1e99c5c367e4370d1b2fa4fe42ea7b0581be7a9551d9c513ed7a1fa0274", size = 587219, upload-time = "2026-06-21T23:27:49.082Z" },
-    { url = "https://files.pythonhosted.org/packages/f3/23/5e3627093ea80893a41ea308ab8769c70b89ae937c9b856a647f52021c31/gseapy-1.3.0-cp314-cp314t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:2c2c5a8b559e7f5039a53c334cbd8d0e43a93ef7b24957c55a88f25e8e99aa20", size = 639624, upload-time = "2026-06-21T23:27:50.851Z" },
-    { url = "https://files.pythonhosted.org/packages/d1/c7/6b41c27e030688329b462abc431b402b17b508538340fd587214febdaeed/gseapy-1.3.0-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:4e34676c7de463d11457f99a81b2b0dafb16f97001ac60317cb32b6c2b0d630c", size = 664896, upload-time = "2026-06-21T23:27:52.54Z" },
-    { url = "https://files.pythonhosted.org/packages/bd/e3/d9261d61f106bf644a041f79bc7157fe47d430f30a5f0c085915b368b931/gseapy-1.3.0-cp314-cp314t-win32.whl", hash = "sha256:17ae514935967ff18e3270106f1489777fe7e8b2bd09697e0213b5addb60a9bf", size = 474580, upload-time = "2026-06-21T23:27:54.216Z" },
-    { url = "https://files.pythonhosted.org/packages/db/80/31046721ed04f87e31a24f75367ebe39de4952e481f68dc34cc6614c4242/gseapy-1.3.0-cp314-cp314t-win_amd64.whl", hash = "sha256:4dee0f8c1e232e4dadc375655fa50e2a3ba0f9e79c00dea1be448febf230536e", size = 499887, upload-time = "2026-06-21T23:27:55.978Z" },
 ]
 
 [[package]]

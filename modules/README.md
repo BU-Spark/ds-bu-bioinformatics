@@ -20,13 +20,3 @@ Liberzon et al., *Cell Systems* 2015; MSigDB gene sets are distributed under CC 
 
 E2F targets and G2M checkpoint are proliferation sets, which are known to be prognostic in
 prostate cancer, so they serve as a positive control for the scoring method.
-
-## CampLab study modules
-
-`camplab_modules.csv` contains the actual 166 study modules (12,680 unique genes),
-converted without symbol renaming from the client-provided Supplementary Table 2.
-`camplab_modules_info.csv` retains the original category and annotation.
-Source URL, workbook SHA-256 and size are recorded in `camplab_modules_source.json`.
-Use `python -m ds_bu_bioinformatics.camplab_modules --input <workbook.xlsx>` to reconvert.
-L60 retains the source Neuroendocrine label pending client review.
-The 28 modules with fewer than five genes are not automatically scored with reduced thresholds.

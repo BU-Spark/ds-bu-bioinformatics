@@ -203,9 +203,10 @@ def _build(cache, output_root, interim_root, anndata_root, *, cohort, clinical_f
         metadata['expression']['kind'] = details['expression_kind']
         if details.get('library_sizes') is not None:
             metadata['expression']['library_sizes'] = details['library_sizes']
-    metadata['expression']['pca_preprocessing'] = ('Use module-scores or module-analysis: log2(CPM+1) '
-        'for counts with full-source totals, log2(x+1) for TPM/FPKM/linear microarrays; '
-        'log microarrays unchanged; standardize genes within each cohort. X and CSV retain source values.')
+    metadata['expression']['downstream_preprocessing'] = (
+        'Exports retain original source values. Consumers must normalize for their analysis using '
+        'the declared expression kind and full-source library totals for raw counts. '
+        'This exporter does not normalize for analysis or fit survival models.')
     stages = []
     try:
         for root in (output_root, interim_root, anndata_root):

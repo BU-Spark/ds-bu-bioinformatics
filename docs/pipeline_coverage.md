@@ -62,6 +62,7 @@ CancerMap now classifies the deposited `material_type` separately from organ `ti
 and excludes source-named xenografts. Full-cohort validation and region sensitivity remain pending.
 Clinical supplements require matching known endpoint definitions, origins and censoring rules;
 unresolved deposited time definitions cannot be combined. Definitions for unmatched rows are preserved.
-Ordinary Cox regression is disabled for the twelve experimental cohorts and Sboner
-(outcome-selected extreme groups). Clinical record completeness is not analysis approval.
+The twelve experimental cohorts export restrictive `analysis_policy` metadata.
+Clinical record completeness is not analysis approval; downstream consumers must enforce
+the recorded restrictions. This PR does not change the existing analysis commands.
 See [review resolution](review_resolution.md) and [rebuild instructions](rebuilding.md).

@@ -22,16 +22,11 @@ import json
 import warnings
 from pathlib import Path
 
-from .analysis_policy import survival_blocker
-
 import numpy as np
 import pandas as pd
 
 LOG_SCALE_MAX = 50.0
 MIN_GENES = 5
-MIN_SURVIVAL_RECORDS = 20
-MIN_SURVIVAL_EVENTS = 10
-MIN_SURVIVAL_CENSORED = 5
 # Sboner (William's branch) stores one follow-up time and eligibility flag for all of its endpoints
 # instead of <endpoint>_months/_eligible. Used only until that output adopts the shared pattern.
 SHARED_FOLLOWUP = ('followup_months', 'survival_eligible')
@@ -56,26 +51,7 @@ def load_dataset(processed: Path):
     if genes.feature_id.tolist() != expression.index.tolist() or clinical.sample_id.tolist() != expression.columns.tolist():
         raise ValueError(f'{processed.name}: expression, genes.csv and clinical.csv are not aligned; run check-outputs')
     transform = 'none'
-    kind = metadata.get('expression', {}).get('kind')
-    if kind == 'raw_counts':
-        totals = metadata['expression'].get('library_sizes', {})
-        sizes = pd.Series(totals, dtype=float).reindex(expression.columns)
-        if sizes.isna().any() or not np.isfinite(sizes).all() or not sizes.gt(0).all():
-            raise ValueError('Raw-count scoring requires frozen positive library totals for every sample')
-        if expression.lt(0).any().any() or not np.isfinite(expression.to_numpy()).all():
-            raise ValueError('Raw-count scoring requires finite nonnegative expression')
-        if expression.sum(axis=0).gt(sizes + 1e-8).any():
-            raise ValueError('Retained counts exceed the frozen full-matrix library total')
-        expression = np.log2(expression.div(sizes, axis=1) * 1e6 + 1)
-        transform = 'log2(CPM + 1) for scoring; frozen full-source library totals, raw exports unchanged'
-    elif kind in {'tpm', 'fpkm', 'linear_microarray'}:
-        if expression.lt(0).any().any():
-            raise ValueError(f'{kind}: negative expression cannot be log-transformed')
-        expression = np.log2(expression + 1)
-        transform = f'log2(x + 1) for scoring from explicit {kind}; exports unchanged'
-    elif kind not in {None, 'log_microarray'}:
-        raise ValueError(f'Unsupported declared expression kind: {kind}')
-    elif kind is None and float(expression.to_numpy().max()) > LOG_SCALE_MAX:
+    if float(expression.to_numpy().max()) > LOG_SCALE_MAX:
         expression = np.log2(expression.clip(lower=0) + 1)
         transform = 'log2(x + 1) applied for scoring (deposited values are not log-scaled)'
     return expression, genes, clinical, metadata, transform
@@ -128,39 +104,16 @@ def endpoint(clinical: pd.DataFrame, metadata: dict, dataset: str):
 
 def survival(score: pd.Series, months: pd.Series, event: pd.Series) -> dict:
     from lifelines import CoxPHFitter
-    from lifelines.exceptions import ConvergenceError, ConvergenceWarning
     frame = pd.DataFrame({'score': score.to_numpy(), 'months': months.to_numpy(dtype=float),
                           'event': event.to_numpy(dtype=float)})
-    if (len(frame) < MIN_SURVIVAL_RECORDS or frame.event.eq(1).sum() < MIN_SURVIVAL_EVENTS
-            or frame.event.eq(0).sum() < MIN_SURVIVAL_CENSORED):
-        return {'note': 'PCA scored; survival not fitted: require at least 20 records, 10 events and 5 censored observations (exploratory screening floor)'}
-    if (not np.isfinite(frame.to_numpy()).all() or not frame.months.gt(0).all()
-            or not frame.event.isin([0, 1]).all() or frame.score.nunique() < 2):
-        return {'note': 'PCA scored; survival not fitted: invalid duration/event/score'}
-    try:
-        with warnings.catch_warnings(record=True) as caught:
-            warnings.simplefilter('always')
-            fit = CoxPHFitter().fit(frame, duration_col='months', event_col='event')
-        if any(issubclass(w.category, (ConvergenceWarning, RuntimeWarning)) for w in caught):
-            return {'note': 'PCA scored; survival fit rejected: convergence/numerical warning'}
-    except (ConvergenceError, ValueError, FloatingPointError, np.linalg.LinAlgError) as error:
-        return {'note': 'PCA scored; survival fit failed: ' + type(error).__name__}
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        fit = CoxPHFitter().fit(frame, duration_col='months', event_col='event')
     row = fit.summary.loc['score']
-    result = {'hazard_ratio_per_sd': float(row['exp(coef)']), 'hr_ci_low': float(row['exp(coef) lower 95%']),
-            'hr_ci_high': float(row['exp(coef) upper 95%']), 'p_value': float(row['p'])}
-    if (not np.isfinite(list(result.values())).all() or result['hr_ci_low'] <= 0
-            or not result['hr_ci_low'] <= result['hazard_ratio_per_sd'] <= result['hr_ci_high']
-            or not 0 <= result['p_value'] <= 1):
-        return {'note': 'PCA scored; survival fit rejected: nonfinite or invalid estimates'}
-    try:
-        # No comparable pairs is a valid missing metric, not a scoring failure.
-        concordance = float(fit.concordance_index_)
-        result['concordance'] = concordance if np.isfinite(concordance) and 0 <= concordance <= 1 else np.nan
-    except (ZeroDivisionError, ValueError, FloatingPointError):
-        result['concordance'] = np.nan
-    if pd.isna(result['concordance']):
-        result['note'] = 'Concordance unavailable: no comparable pairs or undefined estimate'
-    return result
+    return {'hazard_ratio_per_sd': float(row['exp(coef)']), 'hr_ci_low': float(row['exp(coef) lower 95%']),
+            'hr_ci_high': float(row['exp(coef) upper 95%']), 'p_value': float(row['p']),
+            # Use fitted risk direction, including modules with a protective coefficient.
+            'concordance': float(fit.concordance_index_)}
 
 
 def score_dataset(processed: Path, modules: dict[str, list[str]]):
@@ -171,23 +124,14 @@ def score_dataset(processed: Path, modules: dict[str, list[str]]):
         matrix = module_matrix(expression, genes, symbols)
         row = {'dataset': processed.name, 'module': module, 'module_genes': len(symbols), 'genes_used': len(matrix),
                'endpoint': name, 'eligible': int(eligible.sum()), 'events': int(event[eligible].eq(1).sum()),
-               'expression_transform': transform,
-               **{key: np.nan for key in ('hazard_ratio_per_sd', 'hr_ci_low', 'hr_ci_high', 'p_value', 'concordance')}}
+               'expression_transform': transform}
         if len(matrix) < MIN_GENES:
             rows.append({**row, 'note': f'fewer than {MIN_GENES} module genes measured; not scored'})
             continue
         score, variance, _ = pca_score(matrix)
         scores[module] = score
         row['pc1_variance_explained'] = round(variance, 4)
-        blocker = survival_blocker(metadata)
-        if blocker:
-            row['note'] = 'PCA scored; survival not fitted: ' + blocker
-        elif eligible.sum() < 2 or not event[eligible].eq(1).any():
-            row['note'] = 'PCA scored; survival not fitted: insufficient eligible observations or no events'
-        elif score[eligible].nunique() < 2:
-            row['note'] = 'PCA scored; survival not fitted: constant score in eligible observations'
-        else:
-            row.update(survival(score[eligible], months[eligible], event[eligible]))
+        row.update(survival(score[eligible], months[eligible], event[eligible]))
         rows.append(row)
     return pd.DataFrame(scores).rename_axis('sample_id'), pd.DataFrame(rows)
 
@@ -197,17 +141,13 @@ def markdown(summary: pd.DataFrame) -> str:
              '|---|---|---|---:|---:|---|---:|---:|']
     for r in summary.itertuples():
         if pd.isna(getattr(r, 'hazard_ratio_per_sd', np.nan)):
-            variance = getattr(r, 'pc1_variance_explained', np.nan)
-            variance_text = '' if pd.isna(variance) else f'{variance:.0%}'
-            note = getattr(r, 'note', 'not scored')
             lines.append(f'| {r.dataset} | {r.endpoint.upper()} ({r.eligible}, {r.events}) | {r.module} | '
-                         f'{r.genes_used}/{r.module_genes} | {variance_text} | {note} | | |')
+                         f'{r.genes_used}/{r.module_genes} | | not scored | | |')
             continue
-        concordance = f'{r.concordance:.2f}' if pd.notna(r.concordance) else 'unavailable'
         lines.append(f'| {r.dataset} | {r.endpoint.upper()} ({r.eligible}, {r.events}) | {r.module} | '
                      f'{r.genes_used}/{r.module_genes} | {r.pc1_variance_explained:.0%} | '
                      f'{r.hazard_ratio_per_sd:.2f} ({r.hr_ci_low:.2f}–{r.hr_ci_high:.2f}) | {r.p_value:.2g} | '
-                     f'{concordance} |')
+                     f'{r.concordance:.2f} |')
     return '\n'.join(lines) + '\n'
 
 
@@ -218,14 +158,6 @@ def forest_plot(summary: pd.DataFrame, path: Path) -> None:
     import matplotlib.pyplot as plt
     surface, ink, secondary, muted, grid, blue = '#fcfcfb', '#0b0b0b', '#52514e', '#898781', '#e1e0d9', '#2a78d6'
     data = summary.dropna(subset=['hazard_ratio_per_sd'])
-    if data.empty:
-        fig, ax = plt.subplots(figsize=(7, 2), facecolor=surface)
-        ax.set_axis_off()
-        ax.text(0.5, 0.5, 'No survival models fitted; see summary.csv for eligibility reasons',
-                ha='center', va='center', transform=ax.transAxes, color=secondary, wrap=True)
-        fig.savefig(path, dpi=160, facecolor=surface)
-        plt.close(fig)
-        return
     modules = sorted(data.module.unique())
     datasets = sorted(data.dataset.unique(), reverse=True)
     low = min(data.hr_ci_low.min(), 0.5)

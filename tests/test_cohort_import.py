@@ -130,11 +130,6 @@ class CohortImportTest(unittest.TestCase):
             cohort = BundleCohort('moscow', manifest)
             cache = SourceCache(root / 'raw' / cohort.SNAPSHOT, accessions=cohort.ACCESSIONS)
             build(cache, root / 'processed', root / 'interim', root / 'anndata', cohort=cohort)
-            from ds_bu_bioinformatics.module_scores import load_dataset
-            expression, *_, transform = load_dataset(root / 'processed' / cohort.SNAPSHOT)
-            import numpy as np
-            np.testing.assert_allclose(expression.loc['p1'], np.log2(np.array([2 / 106, 3 / 209]) * 1e6 + 1))
-            self.assertIn('log2(CPM + 1)', transform)
             metadata = json.loads((root / 'processed' / cohort.SNAPSHOT / 'metadata.json').read_text())
             self.assertEqual(metadata['expression']['library_sizes'], {'GSM1': 106, 'GSM2': 209})
             raw = pd.read_csv(root / 'processed' / cohort.SNAPSHOT / 'expression.csv.gz', index_col=0)

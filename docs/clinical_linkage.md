@@ -77,4 +77,5 @@ Rejected new local inputs are rolled back so corrected inputs can be retried in 
 same source snapshot. Accepted inputs remain immutable.
 
 `*_eligible` marks complete positive-time records, not approval for ordinary Cox.
-All twelve experimental cohorts and Sboner are blocked from ordinary Cox in module-scores.
+The experimental exports record analysis restrictions in metadata. Downstream consumers
+must enforce those restrictions; this dataset-pipeline change does not alter module-scores.

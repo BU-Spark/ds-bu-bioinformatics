@@ -1,7 +1,3 @@
-> Historical Hallmark-control analysis. The actual 166-module PCA/GSVA workflow is now
-> available in [PCA/GSVA](pca_gsva.md), with [current results](results/camplab-pca-gsva/report.md).
-> Ordinary Cox is now blocked for outcome-selected Sboner and all twelve experimental cohorts.
-
 # PCA module scoring: first results
 
 Built November 13, 2026 with `uv run --locked module-scores`. These are **placeholder modules**

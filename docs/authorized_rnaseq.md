@@ -36,8 +36,8 @@ They are **not assertions about the original study's exact file schema**.
 
 `expression_kind` is `raw_counts`, `tpm` or `fpkm`. Original values stay unchanged in
 exports. Raw counts must be complete, nonnegative integers with positive library totals;
-PCA module scoring uses log-CPM with totals frozen before annotation filtering. TPM/FPKM
-are log2(x + 1) transformed for scoring only.
+library totals are frozen before annotation filtering. Normalization of raw counts,
+TPM or FPKM for downstream analysis is outside this pipeline change.
 
 `sample_columns` maps output concepts to actual source table columns. Every expression
 column must map to exactly one metadata `expression_id`; no partial-string or positional

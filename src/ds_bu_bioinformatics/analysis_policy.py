@@ -21,14 +21,3 @@ def policy(accession):
             'reason': 'Full-source sample, endpoint and sampling-design validation pending; '
                       'clinical record completeness does not authorize ordinary Cox regression',
             'patient_overlap': 'Not established across studies; do not pool as independent cohorts'}
-
-
-def survival_blocker(metadata):
-    accession = metadata.get('geo_series', metadata.get('study_accession', metadata.get('series')))
-    rule = policy(accession)
-    if not rule['ordinary_cox_allowed']:
-        return rule['reason'] + '; design: ' + rule['sampling_design']
-    declared = metadata.get('analysis_policy', {})
-    if declared.get('ordinary_cox_allowed') is False:
-        return declared.get('reason', 'Ordinary Cox analysis disabled for this cohort')
-    return None

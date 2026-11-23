@@ -26,7 +26,7 @@ observed export count.
 | Den / Thomas Jefferson | Native GSE72291/GPL5188 workflow with RT context | Obtain linked BCR/metastasis durations and appropriate postoperative-radiotherapy time origins. |
 | Klein / Cleveland | Native GSE62667/GPL5188 workflow | Obtain verified event/time linkage; preserve the source's SCAN processing and study context. |
 | CPGEA | Dedicated processed-RNA source workflow | Obtain accessible processed expression and original clinical/sample metadata; verify the actual expression subset rather than assuming all 208 study patients have RNA-seq. |
-| Moscow / EMB-RAS | Native submitted mRNA counts, exact assay joins, tumor/mRNA selection and BCR class | Verify complete source IDs/counts and individual follow-up. Raw export counts remain unchanged; log-CPM scoring is a baseline normalization requiring downstream assessment. |
+| Moscow / EMB-RAS | Native submitted mRNA counts, exact assay joins, tumor/mRNA selection and BCR class | Verify complete source IDs/counts and individual follow-up. Raw export counts remain unchanged; library totals support separately reviewed downstream normalization. |
 | Sun / Goodison | Native GSE25136/GPL96 workflow and recurrence class | Need verified individual recurrence/censoring times for survival. MAS5 scale/normalization requires analysis review. |
 | Belfast / FASTMAN | Native GSE116918/GPL25318 workflow, separate BCR/metastasis durations | Verify full-source schemas, event counts and endpoint time origins against clinical methods; retain biopsy/RT/ADT context. |
 

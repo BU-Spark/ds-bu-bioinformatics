@@ -37,7 +37,6 @@ Run each command once with network access to freeze every input. For example:
 
 ```bash
 uv run --locked check-outputs --snapshot moscow-v1
-uv run --locked module-scores --snapshot moscow-v1
 uv run --locked moscow-gse229904 --offline \
   --output-root data/rebuilt/processed --interim-root data/rebuilt/interim \
   --anndata-root data/rebuilt/anndata
@@ -113,16 +112,16 @@ are explicitly counted in the audit, not silently assumed to have expression.
 
 Source `bcr`/`brf` codes map to known recurrence classes. Individual follow-up remains
 missing. Raw counts must be complete nonnegative integers with a positive library total.
-Exports retain counts unchanged. Module scoring uses log2(CPM + 1) with library totals
-computed from the full selected-source matrix **before** annotation filtering. This is
-an explicit baseline normalization; batch/compositional effects still require assessment.
+Exports retain counts unchanged and freeze library totals from the full selected-source
+matrix **before** annotation filtering. Downstream normalization and analysis are outside
+this dataset-pipeline change; raw counts should not be treated as normalized expression.
 
 ## Clinical supplementation and analysis
 
 Every new public command accepts `--clinical-file` and `--clinical-provenance` through
 [the exact-linkage interface](clinical_linkage.md). It fills verified missing endpoints
 without overwriting contradictory source values. Missing follow-up does not block the
-expression export or PCA; it prevents the associated survival model from being fitted.
+expression export. Consumers must separately verify any subsequent analysis eligibility.
 A structural `check-outputs` PASS is not a declaration of survival readiness.
 
 Source studies:
