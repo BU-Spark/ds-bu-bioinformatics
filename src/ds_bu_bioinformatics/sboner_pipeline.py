@@ -22,6 +22,7 @@ data come from the GEO sample characteristics (no cBioPortal).
 Usage: uv run --locked sboner-gse16560 [--data-dir data] [--offline]
 """
 from __future__ import annotations
+from .provenance import code_hashes
 import argparse
 import csv
 import gzip
@@ -369,7 +370,7 @@ def build(cache: SourceCache, output_root: Path, interim_root: Path, anndata_roo
                         "Log scale taken from GEO text; no raw intensity QC", "PCSM time origin unverified",
                         "Extreme-groups design",
                         "One sample (GSM416492) has minor Gleason pattern 6 (3+6=9), outside the usual 1-5 pattern range but consistent with its deposited total; retained as deposited and listed in validation.json"],
-        "code_sha256": {p.name: sha256(p) for p in sorted(Path(__file__).parent.glob("*.py"))},
+        "code_sha256": code_hashes(__name__),
     }
     metadata_out["output_schemas"] = {name: {c: {"dtype": str(f[c].dtype), "nullable": bool(f[c].isna().any())} for c in f.columns}
                                       for name, f in [("clinical.csv", clinical), ("samples.csv", samples), ("genes.csv", genes),

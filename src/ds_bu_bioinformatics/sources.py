@@ -1,10 +1,19 @@
 """Immutable, checksummed HTTP inputs for cohort pipelines."""
 from __future__ import annotations
 import hashlib
+import copy
+try:
+    import fcntl
+except ImportError:  # Windows
+    fcntl = None
+    import msvcrt
+from contextlib import contextmanager
 import gzip
 import http.client
 import json
+import shutil
 import time
+import threading
 import urllib.error
 import urllib.request
 import zlib
@@ -63,9 +72,56 @@ def write_json(path: Path, value) -> None:
 
 
 class SourceCache:
+    @contextmanager
+    def transaction(self):
+        """Serialize snapshot builds; roll back newly supplied local inputs on failure.
+
+        Valid downloads remain reusable. Rejected local bundles/configs/supplements
+        do not become immutable accepted inputs. The lock also prevents stale
+        manifests in concurrent shared-builder processes.
+        """
+        self.root.mkdir(parents=True, exist_ok=True)
+        with (self.root / '.build.lock').open('a+b') as lock:
+            try:
+                if fcntl is not None:
+                    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                else:
+                    if lock.tell() == 0:
+                        lock.write(b'0')
+                        lock.flush()
+                    lock.seek(0)
+                    msvcrt.locking(lock.fileno(), msvcrt.LK_NBLCK, 1)
+            except OSError as error:
+                raise ValueError('Another build is using this source snapshot') from error
+            if self.manifest_path.exists():
+                current = json.loads(self.manifest_path.read_text())
+                if current.get('accessions') != self.manifest['accessions']:
+                    raise ValueError('Concurrent source accession change')
+                self.manifest = current
+            before = copy.deepcopy(self.manifest)
+            try:
+                yield
+            except BaseException:
+                for name in list(self.manifest['sources']):
+                    if name not in before['sources'] and self.manifest['sources'][name]['method'] == 'LOCAL':
+                        (self.root / name).unlink(missing_ok=True)
+                        del self.manifest['sources'][name]
+                if self.manifest['sources']:
+                    write_json(self.manifest_path, self.manifest)
+                else:
+                    self.manifest_path.unlink(missing_ok=True)
+                raise
+            finally:
+                if fcntl is not None:
+                    fcntl.flock(lock, fcntl.LOCK_UN)
+                else:
+                    lock.seek(0)
+                    msvcrt.locking(lock.fileno(), msvcrt.LK_UNLCK, 1)
+
     def __init__(self, root: Path, offline: bool = False, accessions=None,
                  user_agent: str = 'Taylor-GSE21034/2.0'):
         self.root = root
+        self._manifest_lock = threading.RLock()
         self.offline = offline
         self.user_agent = user_agent
         self.manifest_path = root / 'manifest.json'
@@ -125,16 +181,57 @@ class SourceCache:
                 time.sleep(attempt + 1)
             finally:
                 temporary.unlink(missing_ok=True)
-        self.manifest['sources'][name] = {
+        entry = {
             **request_info, 'path': name, 'resolved_url': resolved_url,
             'retrieved_at_utc': datetime.now(timezone.utc).isoformat(),
             'sha256': sha256(path), 'bytes': path.stat().st_size,
             'response_metadata': response_metadata}
-        write_json(self.manifest_path, self.manifest)
+        with self._manifest_lock:
+            self.manifest['sources'][name] = entry
+            write_json(self.manifest_path, self.manifest)
         return path
 
     def json(self, name: str, url: str, body: bytes | None = None):
         return json.loads(self.fetch(name, url, body).read_text())
+
+    def ingest(self, name: str, source_path: Path | None, *, source: str) -> Path:
+        """Freeze explicitly supplied research files; cached inputs replay without originals."""
+        path = self.root / name
+        if not path.resolve().is_relative_to(self.root.resolve()) or path == self.manifest_path:
+            raise ValueError('Local input path escapes cache or replaces manifest')
+        request = {'url': source, 'method': 'LOCAL', 'body': None}
+        entry = self.manifest['sources'].get(name)
+        if entry:
+            if any(entry.get(key) != value for key, value in request.items()):
+                raise ValueError(f'Cached local input identity changed: {name}; use a new snapshot')
+            if not path.is_file() or sha256(path) != entry['sha256'] or path.stat().st_size != entry['bytes']:
+                raise ValueError(f'Missing/corrupt cached input: {name}')
+            if source_path is not None and source_path.exists() and sha256(source_path) != entry['sha256']:
+                raise ValueError(f'Local input changed: {name}; use a new snapshot')
+            return path
+        if self.offline:
+            raise ValueError(f'Offline local input absent from manifest: {name}')
+        if source_path is None or not source_path.is_file():
+            raise ValueError(f'Local input required: {name}')
+        if path.exists():
+            raise ValueError(f'Unmanifested cached input: {name}; use a new snapshot')
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(path.name + '.part')
+        try:
+            shutil.copyfile(source_path, temporary)
+            if not temporary.stat().st_size:
+                raise ValueError(f'Empty local input: {name}')
+            validate_download(temporary, name)
+            digest = sha256(temporary)
+            temporary.replace(path)
+        finally:
+            temporary.unlink(missing_ok=True)
+        self.manifest['sources'][name] = {
+            **request, 'path': name, 'resolved_url': source,
+            'retrieved_at_utc': datetime.now(timezone.utc).isoformat(),
+            'sha256': digest, 'bytes': path.stat().st_size, 'response_metadata': {}}
+        write_json(self.manifest_path, self.manifest)
+        return path
 
     def verify_all(self):
         for name, entry in self.manifest['sources'].items():

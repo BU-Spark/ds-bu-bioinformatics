@@ -16,6 +16,7 @@ TCGA-specific decisions (CampLab client meetings, Oct-Nov 2026; team meeting 11/
   * Gleason comes from the TCGA Firehose Legacy study (prad_tcga), matched on patient ID.
 """
 from __future__ import annotations
+from .provenance import code_hashes
 
 import argparse
 import json
@@ -439,7 +440,7 @@ def build_metadata(cache, attributes, z_threshold, stats, module_file, clinical,
             'Features with batch-correction gaps (missing values) are removed rather than imputed',
             'PFI is not relabeled BCR or DFS; DFI is incomplete in PRAD',
             'Gleason comes from a different cBioPortal study (Firehose Legacy) matched on patient ID'],
-        'code_sha256': {p.name: sha256(p) for p in sorted(Path(__file__).parent.glob('*.py'))}}
+        'code_sha256': code_hashes(__name__)}
     if module_file is not None:
         metadata['module_file'] = {'name': Path(module_file).name, 'sha256': sha256(Path(module_file))}
     missing_defs = [k for k in needed if k not in attribute_map]

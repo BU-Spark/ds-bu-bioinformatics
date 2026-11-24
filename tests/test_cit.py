@@ -63,7 +63,7 @@ class CITTest(unittest.TestCase):
 
     def test_export_and_identical_offline_with_mocked_rma(self):
         self.cache.root.mkdir(parents=True)
-        self.cache.manifest_path.write_text('{}')
+        write_json(self.cache.manifest_path, self.cache.manifest)
         record = {'accno':cit.SERIES,'files':[{'path':n,'size':1} for n in self.names]}
         paths = {}
         for n in self.names:
@@ -76,7 +76,9 @@ class CITTest(unittest.TestCase):
             return self.sdrf if name == cit.SDRF else paths[name]
         first = [self.root/n for n in ('processed','interim','anndata')]
         second = [self.root/('rebuild-'+n) for n in ('processed','interim','anndata')]
-        with patch.object(self.cache,'fetch',side_effect=fetch), patch.object(self.cache,'json',return_value=record), patch.object(cit,'run_rma',return_value=(frame,annotations,['fixture'])) as rma:
+        qc = pd.DataFrame({'cel_file':self.names,'cel_qc_pass':[True]*len(self.names),
+                           'cel_qc_reason':['readable_finite_nonnegative_raw_signals']*len(self.names)})
+        with patch.object(self.cache,'fetch',side_effect=fetch), patch.object(self.cache,'json',return_value=record), patch.object(cit,'run_rma',return_value=(frame,annotations,['fixture'],qc)) as rma:
             report = build(self.cache,*first,cohort=cit)
             build(self.cache,*second,cohort=cit)
             self.assertEqual([p.name for p in rma.call_args.args[0]],self.names)
@@ -86,6 +88,15 @@ class CITTest(unittest.TestCase):
         for a,b in zip(first,second):
             for f in (a/'cit-fixture').iterdir():
                 self.assertEqual(sha256(f),sha256(b/'cit-fixture'/f.name))
+        qc.loc[0,['cel_qc_pass','cel_qc_reason']] = [False,'unreadable_or_invalid_CEL: fixture reader error']
+        with patch.object(self.cache,'fetch',side_effect=fetch), patch.object(self.cache,'json',return_value=record), patch.object(cit,'run_rma',return_value=(frame.iloc[:,1:],annotations,['fixture'],qc)):
+            clinical,samples,audit,expression,_,extra,_,_=cit.prepare(self.cache)
+        self.assertEqual(len(samples),2)
+        self.assertFalse(audit.selected.iloc[0])
+        self.assertEqual(audit.selection_reason.iloc[0],'excluded_unreadable_or_invalid_CEL')
+        self.assertEqual(expression.columns.tolist(),samples.sample_id.tolist())
+        self.assertEqual(clinical.sample_id.tolist(),samples.sample_id.tolist())
+        self.assertFalse(extra['raw_array_qc.csv'].cel_qc_pass.iloc[0])
 
 
 if __name__ == '__main__':

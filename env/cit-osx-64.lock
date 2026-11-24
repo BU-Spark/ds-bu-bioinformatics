@@ -11,14 +11,11 @@ https://conda.anaconda.org/bioconda/osx-64/bioconductor-biostrings-2.78.0-r45h01
 https://conda.anaconda.org/bioconda/noarch/bioconductor-data-packages-20260207-hdfd78af_1.conda#18e4b2aa3e7ccbf04c8e7064fd9671b7
 https://conda.anaconda.org/bioconda/osx-64/bioconductor-delayedarray-0.36.1-r45hd001174_0.conda#d6dba43988f5575669897d83256275d9
 https://conda.anaconda.org/bioconda/osx-64/bioconductor-genomicranges-1.62.1-r45h010771c_0.conda#d368d2a96ff278a576ce74e20207df00
-https://conda.anaconda.org/bioconda/noarch/bioconductor-hugene20sttranscriptcluster.db-8.8.0-r45hdfd78af_6.conda#2c629abf02a5f2bbfd2f0a08eb46ad7d
 https://conda.anaconda.org/bioconda/osx-64/bioconductor-iranges-2.44.0-r45h010771c_1.conda#3bc36b0d1916d738043d9266cf1320f0
 https://conda.anaconda.org/bioconda/noarch/bioconductor-keggrest-1.50.0-r45hdfd78af_0.conda#c96e2ad4f63389243760a93d1cc5ea8a
 https://conda.anaconda.org/bioconda/noarch/bioconductor-matrixgenerics-1.22.0-r45hdfd78af_1.conda#cdf0406fc3caa814ff7b7876a42973a5
 https://conda.anaconda.org/bioconda/osx-64/bioconductor-oligo-1.74.0-r45h010771c_0.conda#d1527e7f7dc80ad2ed82edbf22cc2efc
 https://conda.anaconda.org/bioconda/noarch/bioconductor-oligoclasses-1.72.0-r45hdfd78af_0.conda#d5eb3ff9734febae3a949297f4a6b6b6
-https://conda.anaconda.org/bioconda/noarch/bioconductor-org.hs.eg.db-3.22.0-r45hdfd78af_0.conda#4a0953c26d85acf873354860512135ae
-https://conda.anaconda.org/bioconda/noarch/bioconductor-pd.hugene.2.0.st-3.14.1-r45hdfd78af_14.conda#2464abd4503679b9604b0824fc38e3f4
 https://conda.anaconda.org/bioconda/osx-64/bioconductor-preprocesscore-1.72.0-r45h010771c_0.conda#8c79bcbf85c3eb2287d1b88090fc9b2a
 https://conda.anaconda.org/bioconda/osx-64/bioconductor-s4arrays-1.10.1-r45h010771c_0.conda#06c056aefae6e3888aa60559fb3adc9c
 https://conda.anaconda.org/bioconda/osx-64/bioconductor-s4vectors-0.48.1-r45hd001174_0.conda#a9a44fbb0c8f6d2eacd4f1a4a5e0b551
@@ -168,3 +165,6 @@ https://conda.anaconda.org/conda-forge/noarch/xmltodict-1.0.4-pyhcf101f3_0.conda
 https://conda.anaconda.org/conda-forge/osx-64/yaml-0.2.5-had63097_3.conda#9b30f8e851965211d981aca9c9bd1196
 https://conda.anaconda.org/conda-forge/noarch/yq-4.4.5-pyh5ded981_0.conda#5bac2e2561ba113d10ed7cfebbd74a6d
 https://conda.anaconda.org/conda-forge/osx-64/zstd-1.5.7-hbc1a06c_7.conda#c1d11f04327e40537ffe6cad5b131019
+https://conda.anaconda.org/bioconda/noarch/bioconductor-org.hs.eg.db-3.22.0-r45hdfd78af_0.conda#4a0953c26d85acf873354860512135ae
+https://conda.anaconda.org/bioconda/noarch/bioconductor-pd.hugene.2.0.st-3.14.1-r45hdfd78af_14.conda#2464abd4503679b9604b0824fc38e3f4
+https://conda.anaconda.org/bioconda/noarch/bioconductor-hugene20sttranscriptcluster.db-8.8.0-r45hdfd78af_6.conda#2c629abf02a5f2bbfd2f0a08eb46ad7d
