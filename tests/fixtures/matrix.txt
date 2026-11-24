@@ -1,0 +1,14 @@
+!Series_geo_accession	"GSE21034"
+!Sample_title	"Primary A"	"Other"	"Primary B"
+!Sample_geo_accession	"GSM1"	"GSM2"	"GSM3"
+!Sample_platform_id	"GPL10264"	"GPL10264"	"GPL10264"
+!Sample_data_processing	"RMA background adjustment and quantile normalization"	"RMA background adjustment and quantile normalization"	"RMA background adjustment and quantile normalization"
+!Sample_characteristics_ch1	"sample id: PCA1"	"sample id: PCA2"	"sample id: PCA3"
+!Sample_characteristics_ch1	"tumor type: Primary tumor"	""	"tumor type: Primary tumor"
+!series_matrix_table_begin
+"ID_REF"	"GSM1"	"GSM2"	"GSM3"
+"1"	2	10	8
+"2"	6	12	4
+"3"	9	14	3
+"4"	7	16	5
+!series_matrix_table_end

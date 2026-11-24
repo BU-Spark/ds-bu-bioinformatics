@@ -1,0 +1,47 @@
+[project]
+name = "ds-bu-bioinformatics"
+version = "0.1.0"
+description = "Reproducible prostate cancer expression and clinical pipelines across 20 research cohorts"
+readme = "README.md"
+authors = [
+    { name = "Mansur Orazkhan", email = "orazkhanmansur@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "anndata>=0.13.4",
+    "ipykernel>=7.4.0",
+    "jupyter>=1.1.1",
+    "lifelines>=0.30",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pandas>=3.0.6",
+]
+
+[project.scripts]
+cancermap-gse94767 = "ds_bu_bioinformatics.cancermap_pipeline:main"
+cpc-gene-gse107299 = "ds_bu_bioinformatics.cpc_gene_pipeline:main"
+erho-gse46691 = "ds_bu_bioinformatics.erho_pipeline:main"
+karnes-gse62116 = "ds_bu_bioinformatics.karnes_pipeline:main"
+den-gse72291 = "ds_bu_bioinformatics.den_pipeline:main"
+klein-gse62667 = "ds_bu_bioinformatics.klein_pipeline:main"
+moscow-gse229904 = "ds_bu_bioinformatics.moscow_pipeline:main"
+dkfz-eopc = "ds_bu_bioinformatics.dkfz_eopc_pipeline:main"
+cpgea = "ds_bu_bioinformatics.cpgea_pipeline:main"
+import-cohort = "ds_bu_bioinformatics.cohort_import:main"
+nakagawa-gse10645 = "ds_bu_bioinformatics.nakagawa_pipeline:main"
+belfast-gse116918 = "ds_bu_bioinformatics.belfast_pipeline:main"
+sun-gse25136 = "ds_bu_bioinformatics.sun_pipeline:main"
+cit-e-mtab-6128 = "ds_bu_bioinformatics.cit_pipeline:main"
+mortensen-gse46602 = "ds_bu_bioinformatics.mortensen_pipeline:main"
+long-gse54460 = "ds_bu_bioinformatics.long_pipeline:main"
+stockholm-gse70769 = "ds_bu_bioinformatics.stockholm_pipeline:main"
+cambridge-gse70768 = "ds_bu_bioinformatics.cambridge_pipeline:main"
+taylor-gse21034 = "ds_bu_bioinformatics.taylor_pipeline:main"
+sboner-gse16560 = "ds_bu_bioinformatics.sboner_pipeline:main"
+tcga-prad = "ds_bu_bioinformatics.tcga_pipeline:main"
+module-scores = "ds_bu_bioinformatics.module_scores:main"
+check-outputs = "ds_bu_bioinformatics.output_check:main"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"

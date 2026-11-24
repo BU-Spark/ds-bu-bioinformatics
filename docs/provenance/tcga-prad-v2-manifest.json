@@ -1,0 +1,230 @@
+{
+  "accessions": [
+    "prad_tcga_pan_can_atlas_2018",
+    "prad_tcga"
+  ],
+  "schema_version": 1,
+  "sources": {
+    "cbio_clinical_attributes.json": {
+      "body": null,
+      "bytes": 17542,
+      "method": "GET",
+      "path": "cbio_clinical_attributes.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-attributes",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:55.743723+00:00",
+      "sha256": "9ac884f1a530e1157db2c085329589c6d5d3116582b932409a687b2a8c508173",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-attributes"
+    },
+    "cbio_patient_clinical_0000.json": {
+      "body": null,
+      "bytes": 2051963,
+      "method": "GET",
+      "path": "cbio_patient_clinical_0000.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=0",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:56.272430+00:00",
+      "sha256": "2e33578097fd0ecba3b456cb5d01f79c7ea3405cc034ecef5c9ca67d75feff9c",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=0"
+    },
+    "cbio_patient_clinical_0001.json": {
+      "body": null,
+      "bytes": 1219344,
+      "method": "GET",
+      "path": "cbio_patient_clinical_0001.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=1",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:56.929051+00:00",
+      "sha256": "af1266d546dbc3247681ffbeb4ffdd3a0f6e78ad79de303b13bbdb7b86a966a9",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=1"
+    },
+    "cbio_patient_clinical_0002.json": {
+      "body": null,
+      "bytes": 3,
+      "method": "GET",
+      "path": "cbio_patient_clinical_0002.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=2",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:57.067640+00:00",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=2"
+    },
+    "cbio_sample_clinical_0000.json": {
+      "body": null,
+      "bytes": 2825595,
+      "method": "GET",
+      "path": "cbio_sample_clinical_0000.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=SAMPLE&projection=SUMMARY&pageSize=10000&pageNumber=0",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:57.496249+00:00",
+      "sha256": "0e6cd99a2eba516296121ea1c71b273024195f480527becbd71bd6dc3c82a6c6",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=SAMPLE&projection=SUMMARY&pageSize=10000&pageNumber=0"
+    },
+    "cbio_sample_clinical_0001.json": {
+      "body": null,
+      "bytes": 3,
+      "method": "GET",
+      "path": "cbio_sample_clinical_0001.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=SAMPLE&projection=SUMMARY&pageSize=10000&pageNumber=1",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:57.686348+00:00",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/clinical-data?clinicalDataType=SAMPLE&projection=SUMMARY&pageSize=10000&pageNumber=1"
+    },
+    "cbio_samples_0000.json": {
+      "body": null,
+      "bytes": 143756,
+      "method": "GET",
+      "path": "cbio_samples_0000.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/samples?projection=SUMMARY&pageSize=10000&pageNumber=0",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:57.919502+00:00",
+      "sha256": "603d248a7a352820a22657e07bc49002d8c46cfa0dfb3b5088e2cf7bb4003c98",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/samples?projection=SUMMARY&pageSize=10000&pageNumber=0"
+    },
+    "cbio_samples_0001.json": {
+      "body": null,
+      "bytes": 3,
+      "method": "GET",
+      "path": "cbio_samples_0001.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/samples?projection=SUMMARY&pageSize=10000&pageNumber=1",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:58.088794+00:00",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga_pan_can_atlas_2018/samples?projection=SUMMARY&pageSize=10000&pageNumber=1"
+    },
+    "data_mrna_seq_v2_rsem.txt": {
+      "body": null,
+      "bytes": 77127361,
+      "method": "GET",
+      "path": "data_mrna_seq_v2_rsem.txt",
+      "resolved_url": "https://media.githubusercontent.com/media/cBioPortal/datahub/86690e1ed9752b1dcd50b5657f5f05eafa4b6b78/public/prad_tcga_pan_can_atlas_2018/data_mrna_seq_v2_rsem.txt",
+      "response_metadata": {
+        "Content-Length": "77127361",
+        "Content-Type": "text/plain",
+        "ETag": "\"b7c66db902bb2e7b2e68a1ef8dba4afc6b26f45fb453837bf30163e31d820179\"",
+        "Last-Modified": "Thu, 12 Nov 2026 00:22:44 GMT",
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:55.395942+00:00",
+      "sha256": "b7c66db902bb2e7b2e68a1ef8dba4afc6b26f45fb453837bf30163e31d820179",
+      "url": "https://media.githubusercontent.com/media/cBioPortal/datahub/86690e1ed9752b1dcd50b5657f5f05eafa4b6b78/public/prad_tcga_pan_can_atlas_2018/data_mrna_seq_v2_rsem.txt"
+    },
+    "legacy_patient_clinical_0000.json": {
+      "body": null,
+      "bytes": 1640401,
+      "method": "GET",
+      "path": "legacy_patient_clinical_0000.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=0",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:58.483550+00:00",
+      "sha256": "8e9d1c0f7f0b086e4c28a5929154cc044ad44fd04e1aa72a3529a688e73835c8",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=0"
+    },
+    "legacy_patient_clinical_0001.json": {
+      "body": null,
+      "bytes": 1649959,
+      "method": "GET",
+      "path": "legacy_patient_clinical_0001.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=1",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:58.779668+00:00",
+      "sha256": "ded75e63abbcc6dee48d3b2b3825a4990ce3e9f85dbaa941968d4c2f9dfc292b",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=1"
+    },
+    "legacy_patient_clinical_0002.json": {
+      "body": null,
+      "bytes": 475708,
+      "method": "GET",
+      "path": "legacy_patient_clinical_0002.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=2",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:59.102358+00:00",
+      "sha256": "5a4dc13d005625e66438a8ebc4e3003e368da5f66a28faf591a92acd6a766578",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=2"
+    },
+    "legacy_patient_clinical_0003.json": {
+      "body": null,
+      "bytes": 3,
+      "method": "GET",
+      "path": "legacy_patient_clinical_0003.json",
+      "resolved_url": "https://www.cbioportal.org/api/studies/prad_tcga/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=3",
+      "response_metadata": {
+        "Content-Length": null,
+        "Content-Type": "application/json",
+        "ETag": null,
+        "Last-Modified": null,
+        "total-count": null
+      },
+      "retrieved_at_utc": "2026-11-12T00:23:59.278152+00:00",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "url": "https://www.cbioportal.org/api/studies/prad_tcga/clinical-data?clinicalDataType=PATIENT&projection=SUMMARY&pageSize=10000&pageNumber=3"
+    }
+  }
+}

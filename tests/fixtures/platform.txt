@@ -1,0 +1,8 @@
+^PLATFORM = GPL10264
+!platform_table_begin
+ID	GB_ACC
+1	NM_1.2
+2	NM_2
+3	NM_3
+4	NM_4
+!platform_table_end
