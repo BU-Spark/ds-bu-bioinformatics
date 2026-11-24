@@ -102,7 +102,9 @@ Rules:
 ## First results with the CampLab modules
 
 Run on November 16, 2026 on `tcga-prad-v2`, `taylor-v2`, `cambridge-v2`, `stockholm-v1` and
-`belfast-v1` (130–135 of 166 modules scored per dataset).
+the earlier Belfast metastasis export (130–135 of 166 modules scored per dataset).
+The current Belfast pipeline uses different feature selection and defaults to BCR.
+These historical estimates have not been reproduced with the current export.
 
 Clinical models:
 

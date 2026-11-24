@@ -24,8 +24,18 @@ macOS; other platforms need a matching environment and separate verification.
 
 The first run acquires approximately 3.7 GB of raw CELs. BioStudies inventory
 and SDRF identities must agree; sizes and hashes are recorded in the raw
-manifest. All 141 deposited arrays are included in the same normalization
-batch. Tumor selection occurs after normalization.
+manifest. All readable deposited arrays with finite nonnegative raw signals are
+included in the same normalization batch. If batch reading fails, individual CEL
+reads identify invalid files. Invalid arrays are excluded before RMA and recorded
+in `raw_array_qc.csv` and `sample_audit.csv`; original files remain unchanged in
+the cache. Tumor selection occurs after normalization.
+
+The full deposited-source run exposed problems with `OCT_069_HuGene2.CEL`
+(tumor `PROST069`) and `OCT_056_HuGene2.CEL` (`PROST056`): the standard reader
+rejects both; for OCT_069 an alternate reader returns
+extreme signal values (up to approximately 3e32). It must not be repaired by
+imputation or silently included in normalization. Counts below describing the
+original SDRF inventory are distinct from the final QC-passing export counts.
 
 ## Cohort and expression policies
 
@@ -40,13 +50,18 @@ batch. Tumor selection occurs after normalization.
   Of the 101 tumors, 77 are survival-eligible (13 events, 64 censored).
   Twenty have unknown outcomes, and four non-events have zero-month follow-up;
   all 24 remain in expression with ineligibility reasons.
-- Use `oligo::rma(target="core")` to summarize raw CEL probes into log2
+- Use `oligo::rma(target="core")` to summarize QC-passing raw CEL probes into log2
   transcript-cluster intensities. This is a local RMA reprocessing, not an
   assertion of equivalence to the original paper's processed matrix.
 - Keep transcript-cluster IDs as feature keys. Annotation comes from the
   pinned `hugene20sttranscriptcluster.db` package. Unmapped or ambiguous
   annotations are audited and excluded; clusters sharing a gene remain
   separate. No cross-cluster averaging, extra transformation or imputation.
+
+The verified QC-passing full-source run normalized **139 arrays**, retained
+**99 primary tumor profiles**, and exported **75 BCR-eligible profiles with
+13 events**. Both excluded tumor arrays remain in the original cache and QC audit.
+The validated snapshot used here is `cit-fullsource-v1`.
 
 The verified full run retained **28,690 transcript-cluster features** mapping
 to **26,015 distinct Entrez IDs**. Of the 53,617 RMA rows, 24,927 lacked a

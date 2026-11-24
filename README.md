@@ -15,10 +15,43 @@ preserves separate features sharing a gene, and exports aligned CSV and AnnData
 | Mortensen / Aarhus | `mortensen-gse46602` | GEO **GSE46602 / GPL570** | [Mortensen guide](docs/mortensen.md) |
 | Long FFPE RNA-seq | `long-gse54460` | GEO **GSE54460**, supplementary FPKM matrix | [Long guide](docs/long.md) |
 | CIT / Kamoun | `cit-e-mtab-6128` | BioStudies **E-MTAB-6128**; raw CEL + SDRF | [CIT guide and R setup](docs/cit.md) |
-| Belfast / FASTMAN | `python -m ds_bu_bioinformatics.belfast_pipeline` | GEO **GSE116918 / GPL25318** (Almac array; clinical from GEO sample characteristics) | [Belfast guide](docs/belfast.md); see [Belfast](#belfast--gse116918-gpl25318) |
 
 Supported cohorts are listed above. See the [dataset compatibility assessment](docs/dataset_compatibility.md)
 for remaining cohorts and source limitations. The sections below describe Taylor unless they say otherwise.
+
+**All 20 requested cohorts now have dataset-specific commands.** See the
+[complete coverage table](docs/pipeline_coverage.md) for source access and validation
+status. All 20 cohorts now have verified real-source processed variants, totaling
+**4,073 cohort profiles**. The twelve new workflows remain **experimental** for
+clinical interpretation and study design. See the [source-validation report](docs/full_source_validation.md)
+for source subsets, QC exclusions, gene coverage and endpoint limitations.
+
+### Experimental cohort adapters
+
+| Cohort | Command | Status / guide |
+|---|---|---|
+| Belfast / FASTMAN, GSE116918 | `belfast-gse116918` | 248 profiles exported and checked; deposited endpoint time origins still require reconciliation. [Guide](docs/belfast.md) |
+| Sun / Goodison, GSE25136 | `sun-gse25136` | 79 profiles exported and checked; no verified individual survival durations. [Guide](docs/sun.md) |
+| Nakagawa / Mayo, GSE10645 | `nakagawa-gse10645` | 596 profiles exported and checked; 886 mapped genes under conservative annotation; survival times require adjudication. [Guide](docs/nakagawa.md) |
+| CancerMap, GSE94767 | `cancermap-gse94767` | Native GEO acquisition, malignant human donor/region selection. [Guide](docs/additional_geo.md) |
+| CPC-GENE, GSE107299 | `cpc-gene-gse107299` | Native processed matrix/two-platform metadata acquisition and CPCG joins. [Guide](docs/additional_geo.md) |
+| Erho / Mayo, GSE46691 | `erho-gse46691` | Native processed PSR/GEO acquisition, source metastatic-event class. [Guide](docs/additional_geo.md) |
+| Karnes / Mayo, GSE62116 | `karnes-gse62116` | Native GEO/GPL5188 acquisition and export. [Guide](docs/additional_geo.md) |
+| Den / Thomas Jefferson, GSE72291 | `den-gse72291` | Native GEO acquisition with postoperative-RT context. [Guide](docs/additional_geo.md) |
+| Klein / Cleveland, GSE62667 | `klein-gse62667` | Native GEO/SCAN source acquisition. [Guide](docs/additional_geo.md) |
+| Moscow / EMB-RAS, GSE229904 | `moscow-gse229904` | Native mRNA-count acquisition, assay selection, BCR class and frozen library-size metadata. [Guide](docs/additional_geo.md) |
+| DKFZ / EOPC, EGAD00001004791 | `dkfz-eopc` | Public Gerhauser 2018 processed subset via `--public-source` (95 donors), or authorized processed inputs. [Guide](docs/authorized_rnaseq.md) |
+| CPGEA, PRJCA001124 | `cpgea` | 134-profile public derivative via the documented preparation helper, or supplied processed inputs. [Guide](docs/authorized_rnaseq.md) |
+
+These use the shared checksummed source cache and aligned CSV/AnnData format. Missing
+clinical outcomes never remove expression samples or become invented follow-up times.
+[Remaining datasets and blockers](docs/remaining_datasets.md)
+records the remaining source-data prerequisites. [Clinical supplements](docs/clinical_linkage.md)
+can supply verified missing follow-up through exact sample linkage with source-conflict
+checks and cached offline replay. [Curated local-file import](docs/cohort_import.md)
+is an optional additional route; each cohort also has its own command above. Explicit raw-count inputs
+retain their counts in exports and freeze full-source library totals for downstream normalization.
+This change adds no module-scoring or survival-analysis behavior.
 
 ### Sboner / GSE16560 (GPL5474)
 
@@ -44,28 +77,6 @@ stated in GEO; the cohort overlaps the Swedish WW population in Setlur (GSE8402)
 panel is targeted (~6k genes). Code: `src/ds_bu_bioinformatics/sboner_pipeline.py`; tests:
 `tests/test_sboner_pipeline.py`.
 
-
-### Belfast / GSE116918 (GPL25318)
-
-```bash
-uv run --locked python -m ds_bu_bioinformatics.belfast_pipeline             # snapshot belfast-v1
-uv run --locked python -m ds_bu_bioinformatics.belfast_pipeline --offline   # rebuild from cached, checksummed inputs
-```
-
-Same output layout and reproducibility rules as Taylor, reusing the shared GEO cohort helpers
-(feature selection, validation, CSV round trips, AnnData export and output protection) without
-changing them. The first run downloads the 44 MB series matrix and the ~400 MB GPL25318 SOFT record.
-All 248 samples (one FFPE diagnostic biopsy per patient, men treated with radical radiotherapy and
-ADT) are kept, and all are eligible for both endpoints. Endpoints follow the shared contract:
-primary **`metastasis`** (22 events, 226 censored), the project's first metastasis endpoint, and
-`bcr` (56 events; biochemical failure after radiotherapy, not post-prostatectomy BCR).
-`metadata.json` records `primary_endpoint: metastasis`, so `module-scores` uses it. The Almac array
-includes **antisense** probes that the annotation still labels with a gene name; they are excluded,
-along with multi-gene, unannotated, no-match and identity-conflict probes. That leaves 43,152 sense
-probes as separate features (16,174 unique genes) of 65,531 deposited. Expression is the deposited
-RMA log2 signal. **Caveats:** only 22 metastasis events; biopsy tissue; clinical T stage and total
-Gleason only; GEO counts (BCR 56, metastasis 22) differ from Jain 2018 (65, 24). Code:
-`src/ds_bu_bioinformatics/belfast.py`, `belfast_pipeline.py`; tests: `tests/test_belfast_pipeline.py`.
 
 ## Quick start
 
@@ -320,7 +331,6 @@ Result on November 13, 2026 (Cambridge and Stockholm built from the `add-dataset
 | tcga-prad-v2 | PASS | 484 | 19,088 | 19,064 | 0.00 / 7.95 / 20.62 | PFI 484, 91; OS 484, 10; DSS 482, 5; DFI 330, 30 |
 | cambridge-v2 | PASS | 112 | 41,610 | 29,604 | 4.94 / 6.63 / 15.38 | BCR 112, 19 |
 | stockholm-v1 | PASS | 94 | 41,615 | 29,608 | 5.30 / 6.12 / 14.50 | BCR 92, 45 |
-| belfast-v1 | PASS | 248 | 43,152 | 16,174 | 0.65 / 4.82 / 14.42 | METASTASIS 248, 22; BCR 248, 56 |
 
 Warning: Taylor's deposited values are not on a log scale, while the other three are
 log2. Decide how to transform them before PCA module scoring. Endpoints also differ
@@ -358,7 +368,7 @@ model (likelihood-ratio test, change in C-index), and a DerSimonian-Laird random
 meta-analysis across cohorts. It writes `per_dataset.csv`, `meta.csv`, `analysis.md`, `heatmap.png`
 and `forest_top.png` to `data/analysis/camplab_scores/analysis/`.
 
-First results on five cohorts (TCGA, Taylor, Cambridge, Stockholm, Belfast; November 16, 2026):
+Historical results from November 16, 2026. These estimates used PR #9’s earlier Belfast metastasis export. The current Belfast export uses different feature selection and defaults to BCR. The estimates below have not been reproduced with the current export.
 
 | Module | Pooled HR per SD (95% CI) | q | Same direction | Adjusted pooled HR (95% CI) | Adjusted q |
 |---|---|---:|---:|---|---:|
@@ -418,3 +428,6 @@ uv run --locked jupyter nbconvert --to notebook --execute \
 Superseded project templates were replaced by this workflow and documentation.
 Previous averaged outputs remain local under `data/processed-averaged/` and are
 not inputs to the feature-preserving workflow. License: [GPL-3.0](LICENSE).
+
+For snapshots produced by older code, use [fresh output roots](docs/rebuilding.md)
+instead of overwriting existing checksum-protected exports.
