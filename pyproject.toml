@@ -40,6 +40,8 @@ taylor-gse21034 = "ds_bu_bioinformatics.taylor_pipeline:main"
 sboner-gse16560 = "ds_bu_bioinformatics.sboner_pipeline:main"
 tcga-prad = "ds_bu_bioinformatics.tcga_pipeline:main"
 module-scores = "ds_bu_bioinformatics.module_scores:main"
+pooled-analysis = "ds_bu_bioinformatics.pooled_analysis:main"
+decipher-comparison = "ds_bu_bioinformatics.decipher:main"
 check-outputs = "ds_bu_bioinformatics.output_check:main"
 
 [build-system]
