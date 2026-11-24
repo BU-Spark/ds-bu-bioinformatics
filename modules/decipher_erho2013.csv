@@ -1,0 +1,20 @@
+gene,module,marker_type,erho_direction,erho_cohens_d,erho_welch_p
+LASP1,decipher_erho2013,coding,-1,-0.0185,0.834
+IQGAP3,decipher_erho2013,3' UTR,1,0.2329,0.00836
+NFIB,decipher_erho2013,intronic,-1,-0.2159,0.0143
+S1PR4,decipher_erho2013,3' UTR,1,0.0361,0.682
+THBS2,decipher_erho2013,3' UTR,1,0.3154,0.000378
+ANO7,decipher_erho2013,3' UTR,-1,-0.4199,2.11e-06
+PCDH7,decipher_erho2013,intronic,-1,-0.0935,0.284
+MYBPC1,decipher_erho2013,coding,-1,-0.6340,8.73e-13
+EPPK1,decipher_erho2013,3' UTR,,,
+TSBP1,decipher_erho2013,intronic,,,
+PBX1,decipher_erho2013,coding,-1,-0.2027,0.022
+NUSAP1,decipher_erho2013,3' UTR,1,0.2020,0.0227
+ZWILCH,decipher_erho2013,3' UTR,1,0.1994,0.0234
+UBE2C,decipher_erho2013,3' UTR,-1,-0.0456,0.607
+CAMK2N1,decipher_erho2013,coding antisense,1,0.5752,3.99e-10
+RABGAP1,decipher_erho2013,exon/intron junction antisense,1,0.0436,0.619
+PCAT32,decipher_erho2013,non-coding transcript,,,
+GLYATL1P4,decipher_erho2013,non-coding transcript,,,
+TNFRSF19,decipher_erho2013,intronic,-1,-0.2023,0.0208

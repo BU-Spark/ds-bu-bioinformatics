@@ -27,6 +27,28 @@ For each dataset and module:
 Outputs go to `data/analysis/module_scores/`: `<snapshot>_scores.csv` (sample × module),
 `summary.csv`, `summary.md` and `hazard_ratios.png`.
 
+### PC1 orientation rule
+
+PC1's sign is arbitrary (flipping a principal component leaves the variance explained unchanged).
+`pca_score` therefore computes the correlation between PC1 and the module's mean standardized
+expression in each cohort and flips PC1 when it is negative. A **higher score always means
+higher average expression of the module's genes**, in every cohort, so hazard ratios can be compared
+across cohorts.
+
+`pooled-analysis --modules <gene,module CSV>` checks this rule and writes `pc1_orientation.csv`.
+On the CampLab modules in the five reliable cohorts (checked November 24, 2026):
+
+- 649 cohort × module scores. Every one reproduces the stored score, and every one correlates
+  positively with mean module expression.
+- 130 correlate below 0.5 (`low_coherence`). In those cases the module's genes do not move together
+  in that cohort, so PC1 follows a subset of them and "higher score" means "higher expression of the
+  dominant genes", not of the whole module. Treat those cohort × module results with caution.
+- The leading modules are coherent: L12 ≥ 0.92 in every cohort, L60 ≥ 0.93, L58 ≥ 0.90.
+  L11 drops to 0.29 in one cohort, and L149 and L61 drop to about 0.45.
+- The rule does not suit gene sets that mix genes going up and down with risk, such as the Decipher
+  gene set. PC1 can follow either group there, so those sets use a signed score instead (see
+  [pooled_and_decipher.md](pooled_and_decipher.md)).
+
 ![Hazard ratio per SD of module score](figures/module_scores_hallmark.png)
 
 ## Results

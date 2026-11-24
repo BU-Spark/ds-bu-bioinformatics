@@ -19,7 +19,8 @@ class PipelineCoverageTest(unittest.TestCase):
     def test_all_twenty_registered_commands_resolve_and_expose_help_without_acquisition(self):
         root = Path(__file__).resolve().parents[1]
         scripts = tomllib.loads((root / 'pyproject.toml').read_text())['project']['scripts']
-        self.assertEqual(set(scripts) - {'import-cohort', 'module-scores', 'check-outputs'}, COMMANDS)
+        self.assertEqual(set(scripts) - {'import-cohort', 'module-scores', 'check-outputs', 'pooled-analysis',
+                                         'decipher-comparison'}, COMMANDS)
         for command in sorted(COMMANDS):
             with self.subTest(command=command), contextlib.redirect_stdout(io.StringIO()), \
                  contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as stopped:

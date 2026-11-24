@@ -77,6 +77,7 @@ stated in GEO; the cohort overlaps the Swedish WW population in Setlur (GSE8402)
 panel is targeted (~6k genes). Code: `src/ds_bu_bioinformatics/sboner_pipeline.py`; tests:
 `tests/test_sboner_pipeline.py`.
 
+
 ## Quick start
 
 Requirements: Git, Python 3.12+, and [uv](https://docs.astral.sh/uv/).
@@ -345,9 +346,44 @@ uv run --locked module-scores --modules camplab_modules.csv     # gene,module CS
 
 For each dataset and module this computes a PC1 score per sample and tests it against that
 dataset's own endpoint, using a Cox model (hazard ratio per SD) and the C-index. Results go to
-`data/analysis/module_scores/`. The current modules are MSigDB Hallmark placeholders
-([modules/README.md](modules/README.md)) until the CampLab lists are shared. See
-[first results and open questions](docs/module_scoring.md).
+`data/analysis/module_scores/`. The default modules are MSigDB Hallmark placeholders
+([modules/README.md](modules/README.md)); see [first results and open questions](docs/module_scoring.md).
+The CampLab modules are used as described below.
+
+### CampLab modules and module analysis
+
+```bash
+uv run --locked python -m ds_bu_bioinformatics.camplab_modules --input path/to/Supp_Table_2_Module_List.xlsx
+uv run --locked module-scores --modules modules/camplab_modules.csv --output-dir data/analysis/camplab_scores
+uv run --locked python -m ds_bu_bioinformatics.module_analysis --scores-dir data/analysis/camplab_scores \
+  --module-info modules/camplab_modules_info.csv
+```
+
+`camplab_modules` converts CampLab Supplementary Table 2 (166 modules, 12,680 genes) into the
+`gene,module` CSV, plus each module's category and annotation. The CSV is not committed while the
+atlas paper is unpublished; regenerate it from the workbook. `module_analysis` adds Benjamini-Hochberg
+q-values per cohort, Cox models adjusted for clinical covariates (ISUP grade group or Gleason 8+,
+pT3+ or clinical T3+, age, N stage, mapped per cohort), the score's added value over a clinical-only
+model (likelihood-ratio test, change in C-index), and a DerSimonian-Laird random-effects
+meta-analysis across cohorts. It writes `per_dataset.csv`, `meta.csv`, `analysis.md`, `heatmap.png`
+and `forest_top.png` to `data/analysis/camplab_scores/analysis/`.
+
+Historical results from November 16, 2026. These estimates used PR #9’s earlier Belfast metastasis export. The current Belfast export uses different feature selection and defaults to BCR. The estimates below have not been reproduced with the current export.
+
+| Module | Pooled HR per SD (95% CI) | q | Same direction | Adjusted pooled HR (95% CI) | Adjusted q |
+|---|---|---:|---:|---|---:|
+| L60 · Neuroendocrine | 0.56 (0.49–0.64) | 2.5e-14 | 5/5 | 0.75 (0.62–0.92) | 0.30 |
+| L12 · Cycling kinase | 1.61 (1.42–1.82) | 4.3e-12 | 5/5 | 1.35 (1.13–1.59) | 0.087 |
+| L11 · DNA replication | 1.52 (1.34–1.74) | 1.0e-08 | 5/5 | 1.22 (1.06–1.41) | 0.30 |
+| L59 · AR pathway | 0.70 (0.62–0.80) | 6.1e-06 | 5/5 | 0.86 (0.74–0.99) | 0.59 |
+
+Proliferation modules predict higher risk and AR pathway, luminal and metallothionein modules lower
+risk, consistently across cohorts. L60 ("Neuroendocrine") is protective in all five, against what its
+label suggests. After adjusting for Gleason and stage, no module is significant at q < 0.05 within a
+single cohort. In Belfast, L58 (AR pathway) predicts lower metastasis risk (HR 0.39) and raises the
+C-index from 0.61 to 0.76 over clinical variables, while proliferation does not predict metastasis.
+Details, covariate mapping and caveats: [module analysis](docs/module_analysis.md) and
+[Belfast guide](docs/belfast.md).
 
 ## Tests and report
 
@@ -378,9 +414,15 @@ uv run --locked jupyter nbconvert --to notebook --execute \
 - `src/ds_bu_bioinformatics/`: CLI, acquisition, parsing, annotation, clinical
   matching, validation and AnnData export. `tcga_pipeline.py` holds the TCGA-PRAD
   pipeline and reuses the shared cache, clinical paging, CSV and AnnData writers.
+  `belfast.py`/`belfast_pipeline.py` hold the Belfast pipeline; `camplab_modules.py`
+  converts the CampLab module table; `module_analysis.py` adds FDR, clinical-adjusted
+  Cox and cross-cohort meta-analysis on top of `module_scores.py`.
+
 - `tests/`: synthetic fixtures and automated tests.
 - `notebooks/`: local inspection report; generated cell outputs are not committed.
-- `docs/`: data dictionary, cohort compatibility assessment and input provenance.
+- `docs/`: data dictionary, cohort guides (including [Belfast](docs/belfast.md)), cohort
+  compatibility assessment, [module scoring](docs/module_scoring.md) and
+  [module analysis](docs/module_analysis.md) results, and input provenance.
 - `pyproject.toml`, `uv.lock`: package/CLI definition and locked dependencies.
 
 Superseded project templates were replaced by this workflow and documentation.
