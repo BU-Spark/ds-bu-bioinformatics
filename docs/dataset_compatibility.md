@@ -13,8 +13,9 @@ See [the coverage and validation table](pipeline_coverage.md),
 [new public GEO workflows](additional_geo.md), and
 [DKFZ/CPGEA processed-source workflows](authorized_rnaseq.md).
 The historical feasibility notes below describe earlier source inspections, not
-missing pipeline implementations. New workflows have fixture-based integration and
-offline-rebuild tests; complete real-source runs and clinical validation remain pending.
+missing pipeline implementations. All 20 current public source variants now pass real-source
+processing and independent output checks; see the [2026-11-24 validation report](full_source_validation.md).
+Clinical suitability remains a separate review. The November 23 updates below are historical.
 
 November 23, 2026: new [Belfast](belfast.md) and [Sun/Goodison](sun.md) adapters have
 synthetic integration coverage; complete-source acquisition and cohort counts remain

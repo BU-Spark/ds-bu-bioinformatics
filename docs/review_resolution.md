@@ -28,11 +28,14 @@ tables, PCA/GSVA tooling and analysis results are outside this PR.
 
 ## Remaining validation
 
-All twelve new workflows still need complete real-source acquisition, source-schema/count
-review and offline-rebuild validation. Public acquisition previously hit HTTP 403 and
-DNS failures. DKFZ and CPGEA need legitimately accessible processed files and original
-specimen linkage. Exon-array peak memory/disk requirements and Erho's complete supplement
-layout remain unmeasured; the dense implementation is not claimed operational at full size.
+All 20 requested cohorts now have real-source processed variants with independent
+CSV/H5AD/checksum checks: 4,073 cohort profiles. The public DKFZ subset has 95 donors;
+CPGEA is an experimental secondary derivative. CIT excludes two invalid source
+arrays through an explicit raw-array audit. All 159 tests pass; 13 real cohorts
+additionally reproduced byte for byte offline. See the
+[full-source validation report](full_source_validation.md) for counts and provenance.
+Additional full-source byte comparisons and clinical/design review remain necessary
+before treating these experimental workflows as production analytical support.
 
 Selected Mayo study designs and patient overlap require dedicated analysis review;
 adding complete event times does not remove those restrictions. Full production support

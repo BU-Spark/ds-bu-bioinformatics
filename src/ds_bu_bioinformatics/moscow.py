@@ -39,21 +39,28 @@ def clinical_tables(metadata, present):
     audit = metadata.copy()
     if audit.empty or not audit.sample_id.is_unique or not audit.platform_id.eq(PLATFORM).all() or 'geo__tissue' not in audit:
         raise ValueError('Unexpected Moscow assay metadata')
-    rna = audit.title.str.fullmatch(r'\d+[TN] RNA')
-    mirna = audit.title.str.fullmatch(r'\d+[TN] miRNA')
+    rna = audit.title.str.fullmatch(r'U?\d+[TN] RNA(?:2)?')
+    mirna = audit.title.str.fullmatch(r'U?\d+[TN] miRNA')
     if not (rna | mirna).all():
         raise ValueError('Unrecognized Moscow assay type/title')
-    primary = audit.geo__tissue.eq('primary tumor') & audit.title.str.match(r'^\d+T ')
-    benign = audit.geo__tissue.eq('normal prostate tissue') & audit.title.str.match(r'^\d+N ')
+    primary = audit.geo__tissue.eq('primary tumor') & audit.title.str.match(r'^U?\d+T ')
+    benign = audit.geo__tissue.eq('normal prostate tissue') & audit.title.str.match(r'^U?\d+N ')
     if not (primary | benign).all():
         raise ValueError('Moscow specimen title and tissue disagree')
-    audit['patient_id'] = SERIES + ':' + audit.title.str.extract(r'^(\d+)', expand=False)
+    audit['patient_id'] = SERIES + ':' + audit.title.str.extract(r'^(U?\d+)', expand=False)
     has_counts = audit.sample_id.isin(present)
     if (has_counts & ~rna).any():
         raise ValueError('miRNA assay was linked to an mRNA count column')
-    audit['selected'] = rna & primary & has_counts
+    candidates = audit.loc[rna & primary & has_counts].copy()
+    candidates['repeat_rank'] = candidates.title.str.endswith(' RNA2').astype(int)
+    for patient, group in candidates.groupby('patient_id', sort=False):
+        events = {outcome(r)[0] for r in group.to_dict('records')} - {None}
+        if len(events) > 1:
+            raise ValueError('Conflicting Moscow clinical outcomes across RNA/RNA2 assays: ' + patient)
+    winners = set(candidates.sort_values(['repeat_rank', 'sample_id']).drop_duplicates('patient_id').sample_id)
+    audit['selected'] = audit.sample_id.isin(winners)
     audit['selection_reason'] = np.select([~rna, benign, rna & primary & ~has_counts, audit.selected],
-        ['miRNA_assay', 'normal_tissue', 'mRNA_primary_absent_from_counts', 'primary_mRNA'], default='unrecognized')
+        ['miRNA_assay', 'normal_tissue', 'mRNA_primary_absent_from_counts', 'primary_mRNA'], default='repeat_mRNA_same_patient')
     clinical = add_outcomes(audit.loc[audit.selected].reset_index(drop=True), outcome)
     if clinical.empty or not clinical.patient_id.is_unique:
         raise ValueError('Missing/duplicate Moscow primary mRNA patients')
@@ -66,9 +73,18 @@ def prepare(cache):
     meta, _, processing = read_geo(cache.fetch(SERIES + '_series_matrix.txt.gz', MATRIX_URL),
         series=SERIES, platforms={PLATFORM}, metadata_only=True)
     raw = read_tsv(cache.fetch('GSE229904_mRNA_counts.tsv.gz', COUNTS_URL))
-    rna = meta.loc[meta.title.str.fullmatch(r'\d+[TN] RNA')]
-    raw, linkage = align_columns(raw, rna,
-        lambda r: [r['sample_id'], r['title'], r['title'].removesuffix(' RNA')])
+    rna = meta.loc[meta.title.str.fullmatch(r'U?\d+[TN] RNA(?:2)?')]
+    aliases = lambda r: [r['sample_id'], r['title'], r['title'].replace(' RNA2', '2').removesuffix(' RNA')]
+    known = {a for r in rna.to_dict('records') for a in aliases(r)}
+    # The mRNA supplement includes normal columns whose GEO records are labelled
+    # miRNA. Audit/exclude those normal columns; never borrow miRNA outcomes or
+    # invent a GSM identity for an unregistered mRNA assay.
+    normal_keys = set(meta.loc[meta.geo__tissue.eq('normal prostate tissue'), 'title'].str.replace(r' (?:miRNA|RNA2?)$', '', regex=True))
+    unregistered_normals = [c for c in raw.columns if c not in known and re.fullmatch(r'U?\d+N', c) and c in normal_keys]
+    raw, linkage = align_columns(raw.drop(columns=unregistered_normals), rna, aliases)
+    linkage['linkage_status'] = 'exact_GEO_mRNA_assay'
+    linkage = pd.concat([linkage, pd.DataFrame({'source_expression_id': unregistered_normals,
+        'sample_id': [''] * len(unregistered_normals), 'linkage_status': 'excluded_normal_without_GEO_mRNA_record'})], ignore_index=True)
     clinical, samples, audit = clinical_tables(meta, set(raw.columns))
     source = raw.loc[:, samples.sample_id].copy()
     values = source.to_numpy(dtype=float)
@@ -80,7 +96,7 @@ def prepare(cache):
     scope = identifier_scope(source.index)
     genes, candidates = annotate(cache, source.index.tolist(), scope=scope)
     details = {'sample_selection': 'Primary tumor mRNA only; exclude normal/miRNA assays; exact GSM/title/core specimen key joins; all deposited assays audited',
-        'patient_identity': 'Numeric source specimen title label, before T/N suffix; repeated selected patient fails',
+        'patient_identity': 'Exact source specimen key before T/N suffix, preserving U prefixes; prefer base RNA over RNA2 within patient and audit repeats',
         'annotation': 'Exact source gene namespace mapped to human Entrez/symbol with cached responses; original gene rows retained',
         'expression_kind': 'raw_counts', 'library_sizes': {str(k): float(v) for k, v in totals.items()},
         'endpoints': {'bcr': {'definition': 'Deposited bcr/brf biochemical recurrence class', 'duration_available': False, 'unit': 'months'}},

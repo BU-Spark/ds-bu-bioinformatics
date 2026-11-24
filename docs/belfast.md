@@ -1,16 +1,15 @@
 # Belfast / FASTMAN — GSE116918
 
-New adapter: **implemented and tested with synthetic source-shaped fixtures; full-cohort
-acquisition, counts and reproducibility have not yet been verified**. The development
-execution environment could browse indexed GEO records but could not resolve GEO's
-bulk-download host. Do not label this cohort analysis-ready until the checks below pass.
+Real-source acquisition and independent CSV/H5AD checks pass for **248 profiles**.
+The cohort remains experimental for clinical interpretation: deposited endpoint
+time origins and published event-count differences still require reconciliation.
+See the [full-source report](full_source_validation.md).
 
 ## Run
 
 ```bash
 uv run --locked belfast-gse116918 --snapshot belfast-v1
 uv run --locked check-outputs --snapshot belfast-v1
-uv run --locked module-scores --snapshot belfast-v1
 ```
 
 Without installing the refreshed CLI entry points, the equivalent pipeline command is

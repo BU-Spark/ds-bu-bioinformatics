@@ -21,11 +21,16 @@ from .sources import SourceCache
 STUDIES = {'dkfz-eopc': ('EGAD00001004791', 'DKFZ / EOPC'), 'cpgea': ('PRJCA001124', 'CPGEA')}
 
 
+def source_field(column):
+    """Reversible source-header escaping for HDF5 keys; percent escapes first."""
+    return 'source__' + column.replace('%', '%25').replace('/', '%2F')
+
+
 def source_outcome(record, prefix, definition):
     status_column = definition.get('event_column')
     time_column = definition.get('time_column')
-    status = record.get('source__' + status_column) if status_column else None
-    time = number(record.get('source__' + time_column)) if time_column else None
+    status = record.get(source_field(status_column)) if status_column else None
+    time = number(record.get(source_field(time_column))) if time_column else None
     unit = definition.get('time_unit')
     if unit not in {'months', 'years'}:
         raise ValueError('Authorized endpoint needs explicit months/years units')
@@ -102,7 +107,8 @@ class AuthorizedRNASeq:
             for key in ('event_column', 'time_column'):
                 if definition.get(key) is not None and definition[key] not in source_meta:
                     raise ValueError('Configured clinical source field absent: ' + definition[key])
-        meta = source_meta.rename(columns={c: 'source__' + c for c in source_meta})
+        source_columns = {c: source_field(c) for c in source_meta}
+        meta = source_meta.rename(columns=source_columns)
         for target, original in columns.items():
             meta[target] = source_meta[original]
         meta['geo_accession'] = self.SERIES + ':' + meta.sample_id
@@ -153,6 +159,7 @@ class AuthorizedRNASeq:
         annotations, gene_candidates = annotate(cache, source.index.tolist(), scope=identifier_scope(source.index))
         details = {'sample_selection': config['specimen_definition'] + '; replicate policy: ' + policy,
             'patient_identity': config['sample_linkage'], 'source_provenance': config,
+            'source_column_export_names': source_columns,
             'annotation': 'Source gene IDs automatically validated through cached exact human identifier mapping; original rows preserved',
             'expression_kind': kind, 'library_sizes': totals,
             'endpoints': definitions,

@@ -94,7 +94,71 @@ DKFZ must use the EOPC accession listed above; a different convenient DKFZ/cBioP
 study is not interchangeable. Multi-area samples need explicit donor/area mapping.
 See [the EGA source/access record](https://ega-archive.org/datasets/EGAD00001004791).
 
+### Public processed DKFZ alternative
+
+The correct Gerhauser 2018 study also has a public processed cBioPortal deposit,
+`prostate_dkfz_2018` (PMID 30537516). It is distinct from `prad_guru_2017`.
+It can be processed without obtaining controlled raw EGA reads:
+
+```bash
+uv run --locked dkfz-eopc --public-source --snapshot dkfz-eopc-public-recovery-v1
+```
+
+This freezes cBioPortal/datahub commit
+`86690e1ed9752b1dcd50b5657f5f05eafa4b6b78`; the verified snapshot is
+`dkfz-eopc-public-recovery-v1` (`dkfz-eopc-public-v1` is the command's default
+for a fresh first run).
+The actual expression matrix contains 118 primary-tumor regions from 95 donors,
+all linked exactly to ICGC / EO / Tumor / localized source clinical records.
+One region per donor is selected by the lowest original sample ID, independently
+of outcomes; the other 23 regions are audited. This is the available public
+processed subset, not a claim to have acquired all 96 donors and nine controls
+in the controlled EGA description.
+
+The source Entrez column is empty. Original Hugo symbols and row-qualified
+duplicate feature keys are preserved; exact human symbol-to-Entrez mappings are
+cached, and ambiguous/retired labels are excluded with an audit. RPKM-labelled
+source values are retained unchanged. The profile's descriptive text incorrectly
+mentions neuroblastoma and mismatched totals; the adapter verifies the study ID,
+publication and actual RNA/sample/clinical identities and retains that limitation.
+Deposited BCR status is retained. The numeric follow-up column has no explicit
+unit, so it remains verbatim source data and is not converted into eligible
+survival durations.
+
 For CPGEA, do not assume the total 208-patient study size equals the expression cohort:
 the publication reports RNA-seq for a subset. Use the actual expression columns and
 verified clinical crosswalk. See [the primary publication](https://www.nature.com/articles/s41586-020-2135-x)
 and [GSA-Human record](https://ngdc.cncb.ac.cn/gsa-human/browse/HRA000099).
+
+### Experimental public CPGEA derivative
+
+A secondary public repository also provides the 134 expression profiles and the
+original study clinical supplement. Prepare its source inputs, then run the
+existing CPGEA pipeline:
+
+```bash
+uv run --locked python scripts/prepare_public_cpgea.py
+uv run --locked cpgea --snapshot cpgea-public-v1 \
+  --expression-file data/raw/cpgea-public-discovery/prepared/expression.tsv \
+  --sample-file data/raw/cpgea-public-discovery/prepared/samples.tsv \
+  --source-config data/raw/cpgea-public-discovery/prepared/source-config.json
+```
+
+The helper freezes `nationstrong/CPGEA` commit
+`13a8137dce2e2f447702354502d4b903dec40080`, checks exact source identities,
+combines the two deposited FOXA1 analysis groups without averaging, and preserves
+TPM values. The filenames' `normal` group is a FOXA1 comparison group, not a
+tumor/normal tissue pairing. All 134 sample labels match the original clinical
+sequencing IDs. Ten group labels disagree with the clinical FOXA1 field; both
+are retained without adjudication. All 1,998 unsupported XLOC/non-Ensembl rows
+remain in the original files and preparation audit. `Dead` in the recurrence
+column remains an unknown recurrence event. Duration semantics remain unresolved,
+and no survival durations are assigned. This derivative remains experimental.
+
+After preparing CPGEA and setting up CIT's R environment, the real-data runner
+can choose both explicit public source variants:
+
+```bash
+uv run --locked python scripts/run_real_data_validation.py --public-sources \
+  --output data/full-validation-public
+```

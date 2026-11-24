@@ -1,0 +1,854 @@
+{
+  "summary": {
+    "exported_cohorts": 20,
+    "cohort_profiles": 4073,
+    "expression_cells": 299190387,
+    "interpretation": [
+      "Profiles are not globally deduplicated patients; cross-study overlap remains unresolved.",
+      "Gene IDs must be harmonized and scales normalized before joint analysis.",
+      "Klein has restricted deposited coverage; CPGEA is a secondary public derivative.",
+      "DKFZ uses the public processed subset of 95 donors, not the full controlled raw deposit.",
+      "Eligible endpoint records do not override cohort sampling/design restrictions."
+    ]
+  },
+  "checks": [
+    {
+      "dataset": "belfast-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 248,
+          "events": 56,
+          "time_unit": "months"
+        },
+        "metastasis": {
+          "eligible": 248,
+          "events": 22,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        0.6503,
+        4.78955,
+        14.4168
+      ],
+      "feature_rows": 52099,
+      "patients": 248,
+      "platform": "GPL25318",
+      "rows_without_gene_id": 0,
+      "samples": 248,
+      "unique_genes": 17650,
+      "warnings": []
+    },
+    {
+      "dataset": "cambridge-v2",
+      "endpoints": {
+        "bcr": {
+          "eligible": 112,
+          "events": 19,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        4.939918277,
+        6.6276801405,
+        15.3770506
+      ],
+      "feature_rows": 41610,
+      "patients": 112,
+      "platform": "GPL10558",
+      "rows_without_gene_id": 0,
+      "samples": 112,
+      "unique_genes": 29604,
+      "warnings": []
+    },
+    {
+      "dataset": "cancermap-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        1.205371655,
+        7.2672215475,
+        13.76819866
+      ],
+      "feature_rows": 12703,
+      "patients": 134,
+      "platform": "GPL5175",
+      "rows_without_gene_id": 0,
+      "samples": 134,
+      "unique_genes": 12568,
+      "warnings": []
+    },
+    {
+      "dataset": "cit-fullsource-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 75,
+          "events": 13,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        1.9160833158631765,
+        5.751768893705417,
+        13.759420548963549
+      ],
+      "feature_rows": 28690,
+      "patients": 99,
+      "platform": "A-GEOD-16686",
+      "rows_without_gene_id": 0,
+      "samples": 99,
+      "unique_genes": 26015,
+      "warnings": []
+    },
+    {
+      "dataset": "cpc-gene-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        2.3056964025,
+        6.37808003565,
+        13.77377473
+      ],
+      "feature_rows": 24414,
+      "patients": 213,
+      "platform": "GPL16686;GPL17586",
+      "rows_without_gene_id": 0,
+      "samples": 213,
+      "unique_genes": 24414,
+      "warnings": []
+    },
+    {
+      "dataset": "cpgea-public-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        1.17533286574145,
+        14.3601656684158,
+        162221.835257987
+      ],
+      "feature_rows": 16034,
+      "patients": 134,
+      "platform": "Illumina RNA-seq",
+      "rows_without_gene_id": 0,
+      "samples": 134,
+      "unique_genes": 16031,
+      "warnings": [
+        "expression max is 162,222, so values do not look log-transformed; other datasets are log2, so transform before PCA or combined analysis"
+      ]
+    },
+    {
+      "dataset": "den-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        },
+        "metastasis": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        -2.96760951,
+        0.16284019125,
+        18.59483782
+      ],
+      "feature_rows": 259132,
+      "patients": 139,
+      "platform": "GPL5188",
+      "rows_without_gene_id": 0,
+      "samples": 139,
+      "unique_genes": 15573,
+      "warnings": []
+    },
+    {
+      "dataset": "erho-v1",
+      "endpoints": {
+        "metastasis": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        0.545826267709857,
+        5.739074743611475,
+        15.0627503422432
+      ],
+      "feature_rows": 259132,
+      "patients": 545,
+      "platform": "GPL5188",
+      "rows_without_gene_id": 0,
+      "samples": 545,
+      "unique_genes": 15573,
+      "warnings": []
+    },
+    {
+      "dataset": "karnes-v1",
+      "endpoints": {
+        "metastasis": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        -2.70340768,
+        0.17929697625000002,
+        22.76354312
+      ],
+      "feature_rows": 259132,
+      "patients": 235,
+      "platform": "GPL5188",
+      "rows_without_gene_id": 0,
+      "samples": 235,
+      "unique_genes": 15573,
+      "warnings": []
+    },
+    {
+      "dataset": "klein-v1",
+      "endpoints": {
+        "metastasis": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        0.433486491,
+        5.633937328,
+        13.75576602
+      ],
+      "feature_rows": 4424,
+      "patients": 182,
+      "platform": "GPL5188",
+      "rows_without_gene_id": 0,
+      "samples": 182,
+      "unique_genes": 286,
+      "warnings": []
+    },
+    {
+      "dataset": "long-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 91,
+          "events": 40,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        0.0,
+        0.349633,
+        314326.0
+      ],
+      "feature_rows": 23280,
+      "patients": 100,
+      "platform": "GPL11154",
+      "rows_without_gene_id": 0,
+      "samples": 100,
+      "unique_genes": 23206,
+      "warnings": [
+        "expression max is 314,326, so values do not look log-transformed; other datasets are log2, so transform before PCA or combined analysis"
+      ]
+    },
+    {
+      "dataset": "mortensen-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 36,
+          "events": 22,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        1.8715025,
+        3.74288595,
+        15.732532
+      ],
+      "feature_rows": 41692,
+      "patients": 36,
+      "platform": "GPL570",
+      "rows_without_gene_id": 0,
+      "samples": 36,
+      "unique_genes": 20462,
+      "warnings": []
+    },
+    {
+      "dataset": "moscow-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        0.0,
+        2.0,
+        1883926.0
+      ],
+      "feature_rows": 36627,
+      "patients": 136,
+      "platform": "GPL18573",
+      "rows_without_gene_id": 0,
+      "samples": 136,
+      "unique_genes": 36588,
+      "warnings": [
+        "expression max is 1,883,926, so values do not look log-transformed; other datasets are log2, so transform before PCA or combined analysis"
+      ]
+    },
+    {
+      "dataset": "nakagawa-v1",
+      "endpoints": {
+        "pcsm": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        247.9813333,
+        4252.6943329999995,
+        40970.107
+      ],
+      "feature_rows": 939,
+      "patients": 596,
+      "platform": "GPL5858;GPL5873",
+      "rows_without_gene_id": 0,
+      "samples": 596,
+      "unique_genes": 886,
+      "warnings": [
+        "expression max is 40,970, so values do not look log-transformed; other datasets are log2, so transform before PCA or combined analysis"
+      ]
+    },
+    {
+      "dataset": "sboner-v2",
+      "endpoints": {
+        "os": {
+          "eligible": 281,
+          "events": 206,
+          "time_unit": "months"
+        },
+        "pcsm": {
+          "eligible": 281,
+          "events": 165,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        7.29,
+        11.07,
+        15.02
+      ],
+      "feature_rows": 6144,
+      "patients": 281,
+      "platform": "GPL5474",
+      "rows_without_gene_id": 0,
+      "samples": 281,
+      "unique_genes": 6100,
+      "warnings": []
+    },
+    {
+      "dataset": "stockholm-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 92,
+          "events": 45,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        5.295101487,
+        6.123434739,
+        14.49923071
+      ],
+      "feature_rows": 41615,
+      "patients": 94,
+      "platform": "GPL10558",
+      "rows_without_gene_id": 0,
+      "samples": 94,
+      "unique_genes": 29608,
+      "warnings": []
+    },
+    {
+      "dataset": "sun-v1",
+      "endpoints": {
+        "recurrence": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        0.1,
+        234.2,
+        86114.1
+      ],
+      "feature_rows": 19695,
+      "patients": 79,
+      "platform": "GPL96",
+      "rows_without_gene_id": 0,
+      "samples": 79,
+      "unique_genes": 12427,
+      "warnings": [
+        "expression max is 86,114, so values do not look log-transformed; other datasets are log2, so transform before PCA or combined analysis"
+      ]
+    },
+    {
+      "dataset": "taylor-v2",
+      "endpoints": {
+        "dfs": {
+          "eligible": 131,
+          "events": 27,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        11.7232465744019,
+        224.072525024414,
+        30762.052734375
+      ],
+      "feature_rows": 25900,
+      "patients": 131,
+      "platform": "GPL10264",
+      "rows_without_gene_id": 0,
+      "samples": 131,
+      "unique_genes": 19306,
+      "warnings": [
+        "expression max is 30,762, so values do not look log-transformed; other datasets are log2, so transform before PCA or combined analysis"
+      ]
+    },
+    {
+      "dataset": "tcga-prad-v2",
+      "endpoints": {
+        "dfi": {
+          "eligible": 330,
+          "events": 30,
+          "time_unit": "months"
+        },
+        "dss": {
+          "eligible": 482,
+          "events": 5,
+          "time_unit": "months"
+        },
+        "os": {
+          "eligible": 484,
+          "events": 10,
+          "time_unit": "months"
+        },
+        "pfi": {
+          "eligible": 484,
+          "events": 91,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        0.0,
+        7.9511,
+        20.619
+      ],
+      "feature_rows": 19088,
+      "patients": 484,
+      "platform": "IlluminaHiSeq_RNASeqV2",
+      "rows_without_gene_id": 0,
+      "samples": 484,
+      "unique_genes": 19064,
+      "warnings": []
+    },
+    {
+      "dataset": "dkfz-eopc-public-recovery-v1",
+      "endpoints": {
+        "bcr": {
+          "eligible": 0,
+          "events": 0,
+          "time_unit": "months"
+        }
+      },
+      "errors": [],
+      "expression_range": [
+        0.0,
+        2.718920576355,
+        92381.4982868
+      ],
+      "feature_rows": 16582,
+      "patients": 95,
+      "platform": "RNA-seq, deposited RPKM-labelled values",
+      "rows_without_gene_id": 0,
+      "samples": 95,
+      "unique_genes": 16576,
+      "warnings": [
+        "expression max is 92,381, so values do not look log-transformed; other datasets are log2, so transform before PCA or combined analysis"
+      ]
+    }
+  ],
+  "provenance": [
+    {
+      "snapshot": "belfast-v1",
+      "source_manifest_sha256": "82a226a5d57b6ec813d05b318e54b209e4f94f281ec0213a1231ffcd1476c493",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "belfast.py": "c574a11320a1d8b065db80d8d7c664f30b515b028e2bfcf08a8ff101817f55e2",
+        "cambridge.py": "c7bbd2ee3f0dae0ecf10d9025cf4fda90617b7a554ee2931e40da9ad94895c0a",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_platform.py": "b49db9dfcfb4791e4bb9ac296e3db6173b99da8873edcc4ba59d756b88f2fbaf",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "cambridge-v2",
+      "source_manifest_sha256": "43acc914ec9d961a2fa229d52490029caa074c1c7147ab12bb93f54f37aa5f60",
+      "code_sha256": {
+        "cambridge.py": "c7bbd2ee3f0dae0ecf10d9025cf4fda90617b7a554ee2931e40da9ad94895c0a",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22"
+      }
+    },
+    {
+      "snapshot": "cancermap-v1",
+      "source_manifest_sha256": "6ac1cef74047356cd2fb1b046d50a3f450e164f33c6c5973a35e9183628c9dcc",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "cancermap.py": "e17d965ba2aa898758f30f16fea0c0a1e1d2702c5c5f6588f4d51f694096ea15",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "exon_arrays.py": "ab6aab2fbb483672597623231f72b1aa274dabd4e6937a331dd51911426550ae",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_io.py": "1b07c3d035e6578fef4b6e9841f25ca670101dd5a931dad4974f2076ec8854f3",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "cit-fullsource-v1",
+      "source_manifest_sha256": "930d5dd4d12630c8fed8f470305022963623911307b9854dadf7521d53276746",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "cit.py": "64e2d45005d4ea47057a5b820d6e37ed09402366938a7d575b48df7353612735",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "cpc-gene-v1",
+      "source_manifest_sha256": "8f107552b2ad4d10d9cbee3220aaf8039e8f32238d2a82185d9cb4462348c9dd",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "cpc_gene.py": "016aa11815679770b43a0ed089a61a09acfb36b8ed7801ba4ba9ebee9e451c9c",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "gene_identifiers.py": "56ef9aca785406e1cd05a5ed849decd447c8a0ec40a7bd52df36a2fcd6709b9e",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_io.py": "1b07c3d035e6578fef4b6e9841f25ca670101dd5a931dad4974f2076ec8854f3",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "cpgea-public-v1",
+      "source_manifest_sha256": "ac1e1e77d516b129eb815bbaca330b83d2a0ea3874bc634640b397cbbe585654",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "authorized_rnaseq.py": "ce31d0fe988ecf49c8daf5b18b8fd13924b317c30cf8a6ebd2d44710919287c1",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "gene_identifiers.py": "56ef9aca785406e1cd05a5ed849decd447c8a0ec40a7bd52df36a2fcd6709b9e",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_io.py": "1b07c3d035e6578fef4b6e9841f25ca670101dd5a931dad4974f2076ec8854f3",
+        "moscow.py": "cf8a82ccf844615e4eade7cf081e89e886da032fd04cc0f6cba300193c99a471",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "den-v1",
+      "source_manifest_sha256": "b12360b6c6065499e4bb975206813c10f8bb30ea69f46a1fa729c4570ccdf6d6",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "exon_arrays.py": "ab6aab2fbb483672597623231f72b1aa274dabd4e6937a331dd51911426550ae",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_io.py": "1b07c3d035e6578fef4b6e9841f25ca670101dd5a931dad4974f2076ec8854f3",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "dkfz-eopc-public-recovery-v1",
+      "source_manifest_sha256": "9d670b81b05449668be64f8bdce2394205e4173467b73120cd9f10e34632959d",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "dkfz_public.py": "5834c51979cc6491c1f23bc2831754944327279edd92da19b2d7d2246ffbfb04",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "gene_identifiers.py": "56ef9aca785406e1cd05a5ed849decd447c8a0ec40a7bd52df36a2fcd6709b9e",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "erho-v1",
+      "source_manifest_sha256": "b60b8f21a48f88320717a1822c0538dc4594901ce142a895a313eb5d46257b6d",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "exon_arrays.py": "ab6aab2fbb483672597623231f72b1aa274dabd4e6937a331dd51911426550ae",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_io.py": "1b07c3d035e6578fef4b6e9841f25ca670101dd5a931dad4974f2076ec8854f3",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "karnes-v1",
+      "source_manifest_sha256": "de07c7e43d638fa78783227da819394366fda990f7ca20b55501ebd25de89699",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "exon_arrays.py": "ab6aab2fbb483672597623231f72b1aa274dabd4e6937a331dd51911426550ae",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_io.py": "1b07c3d035e6578fef4b6e9841f25ca670101dd5a931dad4974f2076ec8854f3",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "klein-v1",
+      "source_manifest_sha256": "9aef7eb5a5326cb88c9b9d70142f8c6d58181ca05b3104fa0f3c94f736bd37c6",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "exon_arrays.py": "ab6aab2fbb483672597623231f72b1aa274dabd4e6937a331dd51911426550ae",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_io.py": "1b07c3d035e6578fef4b6e9841f25ca670101dd5a931dad4974f2076ec8854f3",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "long-v1",
+      "source_manifest_sha256": "ef148969808d070fb2bb0fa04181ec27276e3b5d947f1dd5791beb6f08e1afad",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "cambridge.py": "c7bbd2ee3f0dae0ecf10d9025cf4fda90617b7a554ee2931e40da9ad94895c0a",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "long_cohort.py": "ed1f12ad03da1cfb0719b5819deb3ab180139c012beafc1509e841fba81b238c",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "mortensen-v1",
+      "source_manifest_sha256": "9d5c72df0b0dc0962b59028548e554cd59d374519d14995bb365cbbe7549bf9a",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "cambridge.py": "c7bbd2ee3f0dae0ecf10d9025cf4fda90617b7a554ee2931e40da9ad94895c0a",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "mortensen.py": "fc49543ddd4e0a9ca961056ddc2f55089b668edae18c867069fb25dbbe711143",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "moscow-v1",
+      "source_manifest_sha256": "5d1719b1268eafa16eb35a57955aee8118d553d2897af1b85befae980fad8269",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "gene_identifiers.py": "56ef9aca785406e1cd05a5ed849decd447c8a0ec40a7bd52df36a2fcd6709b9e",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_io.py": "1b07c3d035e6578fef4b6e9841f25ca670101dd5a931dad4974f2076ec8854f3",
+        "moscow.py": "cf8a82ccf844615e4eade7cf081e89e886da032fd04cc0f6cba300193c99a471",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "nakagawa-v1",
+      "source_manifest_sha256": "2926b4f8bb3e9a4c1b9ba305e88037301370068f01c1bb4d2f4f60d59d77a683",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "cambridge.py": "c7bbd2ee3f0dae0ecf10d9025cf4fda90617b7a554ee2931e40da9ad94895c0a",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "nakagawa.py": "1656c0cab9cdebb9b863a0afd0b4b14eb97a3fbc9b749d4d22e6206b6d895b4e",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "sboner-v2",
+      "source_manifest_sha256": "cf41c6ed9f661ed5d6c7286df24d65f080236cf629c348919bcb117b23162421",
+      "code_sha256": {}
+    },
+    {
+      "snapshot": "stockholm-v1",
+      "source_manifest_sha256": "3e233536317fa3305e111b1570bd51acc916b28991d98ef248d2c0c272491118",
+      "code_sha256": {
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "cambridge.py": "c7bbd2ee3f0dae0ecf10d9025cf4fda90617b7a554ee2931e40da9ad94895c0a",
+        "cambridge_clinical_source.py": "068bd3e5de513c16ef1a69e3c111d09cc1ad3953edd4581c61ca7089df8a462c",
+        "cambridge_pipeline.py": "8a34de249dceaf6d3a71296fb03b209c149fd60cd467aca663182a908b3c4594",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "stockholm.py": "9818914acc46bb4cead92c9fab05829c56c5777f9ac2df308790a549c67c3183",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "sun-v1",
+      "source_manifest_sha256": "a83b3ddfb511888e4f174e213aa1b1638d49ff7d726968e595572907b186c578",
+      "code_sha256": {
+        "analysis_policy.py": "d89498bf1d68d30e9da9a7255948f74030045a97c5129d2de9a939defd3fb8d1",
+        "anndata_export.py": "2694ad1831df4d5152db6c9ad74c4f718ff71f89508e8fd223ec6677e8d4c44a",
+        "annotation.py": "7ace951373a3f2b710379734d13f130340cd9a0cfe7c7cfdc4082a872a42384f",
+        "cambridge.py": "c7bbd2ee3f0dae0ecf10d9025cf4fda90617b7a554ee2931e40da9ad94895c0a",
+        "clinical.py": "37c0d3e1c39a8a8f2beadc3bbc5ef0a11faa534e78af2fd39c6a0b64d4efcb85",
+        "clinical_linkage.py": "dea11fccfc054d6e89024611384a1a27bc37c0781701485bc4253b78858eef35",
+        "expression.py": "a3a471e5d3db3a37bbbf56110fce4376f314f82646f7c07c771ce2c781daac22",
+        "geo_cohort_pipeline.py": "7aa9efbca471c88fa924a0bdc8355714fcebc64c1c6c17c3c0923757d27ae7de",
+        "geo_platform.py": "b49db9dfcfb4791e4bb9ac296e3db6173b99da8873edcc4ba59d756b88f2fbaf",
+        "provenance.py": "dd0f59df09daf86f86ead69f7bccd33aa9d0b7a8a8005cdf54aed20b718edacf",
+        "sources.py": "444b00103d3360fc870d887b41fe70a45c412a7015ee93954cba2d0f1316dbb1",
+        "sun.py": "862a9377d2ebc58aa2465bab52c28b6c4a8e0bc7e4ee7df3c1ed94c7907e9b7b",
+        "taylor_pipeline.py": "b77f2c77477bcaf34f6c0649a475f79625a8b724b1c3d89e752799d3d55d7b76",
+        "validation.py": "edbee3f49db6ad163bf64d56c1e964ea2517ecc31774e8257a7d1a3e5b31de3e"
+      }
+    },
+    {
+      "snapshot": "taylor-v2",
+      "source_manifest_sha256": "509fa1ad37077207842febb6c5436f91e658da9fe2158675c4f5c4bca47d0e69",
+      "code_sha256": {}
+    },
+    {
+      "snapshot": "tcga-prad-v2",
+      "source_manifest_sha256": "afd3a30524c0e4dcb9c9de9e7a24e9d051002480b2d849c7ab3fe2cbafa949dc",
+      "code_sha256": {}
+    }
+  ]
+}

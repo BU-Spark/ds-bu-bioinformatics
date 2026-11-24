@@ -1,13 +1,12 @@
 # Sun / Goodison — GSE25136
 
-New adapter: **synthetic integration tests pass; full source download/counts remain
-unverified**. Expression and recurrence-class export are implemented. This cohort
-is **not survival-ready** because no individual follow-up duration has been verified.
+Real-source acquisition and independent CSV/H5AD checks pass for **79 profiles**.
+This cohort is **not survival-ready** because individual follow-up durations have
+not been verified. See the [full-source report](full_source_validation.md).
 
 ```bash
 uv run --locked sun-gse25136 --snapshot sun-v1
 uv run --locked check-outputs --snapshot sun-v1
-uv run --locked module-scores --snapshot sun-v1
 ```
 
 Module execution without refreshing installed entry points:

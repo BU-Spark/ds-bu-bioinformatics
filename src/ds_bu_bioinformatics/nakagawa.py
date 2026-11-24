@@ -120,7 +120,7 @@ def join_panels(panels):
         ('geo__time_yrs_from_psa_recurrence_to_systemic_disease', 'source_systemic_interval_months_from_psa')]:
         if source_key in clinical:
             clinical[target] = pd.array([None if (v := number(x)) is None else 12 * v for x in clinical[source_key]], dtype='Float64')
-    if not clinical.geo__case_control_group.isin(['SYS', 'PSA', 'NED']).all():
+    if not clinical.geo__case_control_group.isin(['Systemic', 'SYS', 'PSA', 'NED']).all():
         raise ValueError('Unexpected Nakagawa case-control group')
     samples = clinical[['sample_id', 'geo_accession', 'patient_id', 'platform_id', 'title',
                         'gpl5858_assay_id', 'gpl5873_assay_id']].copy()

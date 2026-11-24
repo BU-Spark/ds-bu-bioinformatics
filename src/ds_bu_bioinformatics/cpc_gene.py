@@ -1,5 +1,6 @@
 """CPC-GENE GSE107299 processed Entrez matrix with exact source-patient linkage."""
 import re
+import csv
 
 import numpy as np
 import pandas as pd
@@ -7,6 +8,7 @@ import pandas as pd
 from .gene_identifiers import annotate
 from .geo_cohort_pipeline import add_outcomes
 from .geo_io import align_columns, read_geo, read_tsv
+from .expression import open_text
 
 SERIES = 'GSE107299'
 PANELS = ('GPL16686', 'GPL17586')
@@ -34,6 +36,29 @@ def patient_label(title):
     return match.group(1)
 
 
+def processed_matrix(path):
+    """The deposited TSV has seven gene-annotation columns before assay values."""
+    with open_text(path) as handle:
+        header = next(csv.reader(handle, delimiter='\t'), [])
+    annotation_fields = ['GeneID', 'Symbol_UCSC', 'Name_UCSC', 'Chr_UCSC',
+                         'Start_UCSC', 'End_UCSC', 'RefSeq_UCSC']
+    annotated = header[:7] == annotation_fields
+    n = 7 if annotated else 1
+    if (len(header) <= n or len(header) != len(set(header))
+            or header[0] not in {'GeneID', 'Entrez'}
+            or not all(re.fullmatch(r'CPCG\d+|GSM\d+', c) for c in header[n:])):
+        raise ValueError('Unexpected CPC-GENE processed matrix schema')
+    frame = pd.read_csv(path, sep='\t', dtype=str, keep_default_na=False)
+    if frame.empty or frame.iloc[:, 0].eq('').any() or frame.iloc[:, 0].duplicated().any():
+        raise ValueError('CPC-GENE processed gene identifiers missing or duplicated')
+    annotations = frame.iloc[:, :n].copy().rename(columns={header[0]: 'feature_id'})
+    source = frame.iloc[:, n:].apply(lambda s: pd.to_numeric(s.mask(s.isin(['', 'NA', 'N/A', 'NaN'])), errors='raise'))
+    if np.isinf(source.to_numpy()).any():
+        raise ValueError('Infinite CPC-GENE source expression')
+    source.index = pd.Index(frame.iloc[:, 0], name='feature_id')
+    return source, annotations
+
+
 def prepare(cache):
     metadata, processing = [], []
     for platform in PANELS:
@@ -46,7 +71,7 @@ def prepare(cache):
         raise ValueError('CPC-GENE duplicate assay or unexpected tissue')
     meta['source_expression_id'] = meta.title.map(patient_label)
     meta['patient_id'] = meta.source_expression_id.str.replace(r'_rep$', '', regex=True)
-    source = read_tsv(cache.fetch('GSE107299_Matrix_processed_data.tsv.gz', EXPRESSION_URL))
+    source, deposited_annotations = processed_matrix(cache.fetch('GSE107299_Matrix_processed_data.tsv.gz', EXPRESSION_URL))
     source, linkage = align_columns(source, meta, lambda r: [r['sample_id'], r['source_expression_id']])
     present = set(source.columns)
     # The GEO record explicitly states that CPCG0398_rep was averaged into
@@ -78,6 +103,7 @@ def prepare(cache):
             'The clinical supplement/proteomic subset must be matched by source CPCG IDs before survival analysis',
             'Do not assume 55/76 proteomic-study cases equal all deposited expression patients']}
     return clinical, samples, meta, source, genes, {'expression_linkage.csv': linkage,
+        'deposited_gene_annotations.csv': deposited_annotations,
         'gene_mapping_candidates.csv.gz': candidates}, sorted(set(processing)), details
 
 

@@ -21,16 +21,18 @@ for remaining cohorts and source limitations. The sections below describe Taylor
 
 **All 20 requested cohorts now have dataset-specific commands.** See the
 [complete coverage table](docs/pipeline_coverage.md) for source access and validation
-status. The twelve new workflows below are **experimental**, with synthetic integration/offline coverage;
-complete real-source runs and cohort counts remain unverified.
+status. All 20 cohorts now have verified real-source processed variants, totaling
+**4,073 cohort profiles**. The twelve new workflows remain **experimental** for
+clinical interpretation and study design. See the [source-validation report](docs/full_source_validation.md)
+for source subsets, QC exclusions, gene coverage and endpoint limitations.
 
-### Experimental adapters awaiting full-source validation
+### Experimental cohort adapters
 
 | Cohort | Command | Status / guide |
 |---|---|---|
-| Belfast / FASTMAN, GSE116918 | `belfast-gse116918` | BCR and metastasis export implemented; synthetic integration/offline tests pass; full-cohort counts unverified. [Guide](docs/belfast.md) |
-| Sun / Goodison, GSE25136 | `sun-gse25136` | Expression and recurrence-class export implemented; no verified individual survival durations. Synthetic integration/offline tests pass; full-cohort counts unverified. [Guide](docs/sun.md) |
-| Nakagawa / Mayo, GSE10645 | `nakagawa-gse10645` | Paired-panel patient join, cached RefSeq annotation, source clinical fields and PCSM class export. Survival times require adjudication. Synthetic integration/offline tests pass; full-cohort counts unverified. [Guide](docs/nakagawa.md) |
+| Belfast / FASTMAN, GSE116918 | `belfast-gse116918` | 248 profiles exported and checked; deposited endpoint time origins still require reconciliation. [Guide](docs/belfast.md) |
+| Sun / Goodison, GSE25136 | `sun-gse25136` | 79 profiles exported and checked; no verified individual survival durations. [Guide](docs/sun.md) |
+| Nakagawa / Mayo, GSE10645 | `nakagawa-gse10645` | 596 profiles exported and checked; 886 mapped genes under conservative annotation; survival times require adjudication. [Guide](docs/nakagawa.md) |
 | CancerMap, GSE94767 | `cancermap-gse94767` | Native GEO acquisition, malignant human donor/region selection. [Guide](docs/additional_geo.md) |
 | CPC-GENE, GSE107299 | `cpc-gene-gse107299` | Native processed matrix/two-platform metadata acquisition and CPCG joins. [Guide](docs/additional_geo.md) |
 | Erho / Mayo, GSE46691 | `erho-gse46691` | Native processed PSR/GEO acquisition, source metastatic-event class. [Guide](docs/additional_geo.md) |
@@ -38,8 +40,8 @@ complete real-source runs and cohort counts remain unverified.
 | Den / Thomas Jefferson, GSE72291 | `den-gse72291` | Native GEO acquisition with postoperative-RT context. [Guide](docs/additional_geo.md) |
 | Klein / Cleveland, GSE62667 | `klein-gse62667` | Native GEO/SCAN source acquisition. [Guide](docs/additional_geo.md) |
 | Moscow / EMB-RAS, GSE229904 | `moscow-gse229904` | Native mRNA-count acquisition, assay selection, BCR class and frozen library-size metadata. [Guide](docs/additional_geo.md) |
-| DKFZ / EOPC, EGAD00001004791 | `dkfz-eopc` | Dedicated authorized processed expression/sample-table workflow; actual source files required. [Guide](docs/authorized_rnaseq.md) |
-| CPGEA, PRJCA001124 | `cpgea` | Dedicated processed expression/sample-table workflow; actual source files required. [Guide](docs/authorized_rnaseq.md) |
+| DKFZ / EOPC, EGAD00001004791 | `dkfz-eopc` | Public Gerhauser 2018 processed subset via `--public-source` (95 donors), or authorized processed inputs. [Guide](docs/authorized_rnaseq.md) |
+| CPGEA, PRJCA001124 | `cpgea` | 134-profile public derivative via the documented preparation helper, or supplied processed inputs. [Guide](docs/authorized_rnaseq.md) |
 
 These use the shared checksummed source cache and aligned CSV/AnnData format. Missing
 clinical outcomes never remove expression samples or become invented follow-up times.

@@ -23,8 +23,10 @@ def write_anndata(expression, clinical, genes, metadata, path, layers=None):
     for name, frame in layers.items():
         if frame.index.tolist() != expression.index.tolist() or frame.columns.tolist() != expression.columns.tolist():
             raise ValueError(f'AnnData layer {name} is not aligned with expression')
-    data = ad.AnnData(X=expression.to_numpy().T.copy(), obs=obs, var=var,
-                      layers={name: frame.to_numpy().T.copy() for name, frame in layers.items()},
+    # Values are read-only during export; a transpose view avoids another full
+    # multi-GB allocation for exon-array cohorts.
+    data = ad.AnnData(X=expression.to_numpy().T, obs=obs, var=var,
+                      layers={name: frame.to_numpy().T for name, frame in layers.items()},
                       uns={'metadata_json': json.dumps(metadata, sort_keys=True)})
     data.write_h5ad(path, compression='gzip')
     saved = ad.read_h5ad(path)

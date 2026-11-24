@@ -6,7 +6,7 @@ import pandas as pd
 
 from .annotation import fetch_mappings, resolve_mappings
 from .geo_cohort_pipeline import add_outcomes, decode_bcr
-from .geo_io import align_columns, read_geo, read_tsv
+from .geo_io import align_columns, read_geo, read_tsv, tsv_feature_inventory
 
 
 def source_annotations(cache, platform, expression):
@@ -52,6 +52,8 @@ def source_annotations(cache, platform, expression):
                         refseqs.add(query)
             valid = len(symbols) == 1 and len(stable_ids) <= 1 and bool(refseqs) and not malformed
             rows.append({'feature_id': feature, 'refseq_original': ';'.join(sorted(refseqs)),
+                         'source_seqname': row[header.index('seqname')] if 'seqname' in header else '',
+                         'source_transcript_cluster_id': row[header.index('transcript_cluster_id')] if 'transcript_cluster_id' in header else '',
                          'refseq_query': sorted(refseqs) if valid else [''],
                          'valid_refseq': valid, 'source_gene_assignment': assignment,
                          'source_gene_id': next(iter(stable_ids)) if len(stable_ids) == 1 else '',
@@ -63,14 +65,16 @@ def source_annotations(cache, platform, expression):
     table = pd.DataFrame(rows).set_index('feature_id').loc[expression.index].reset_index()
     expanded = table.explode('refseq_query').reset_index(drop=True)
     candidates = resolve_mappings(expanded, fetch_mappings(cache, expanded), expression.index)
-    grouped = {feature: frame for feature, frame in candidates.groupby('feature_id', sort=False)}
+    grouped = {}
+    for hit in candidates.itertuples(index=False):
+        grouped.setdefault(hit.feature_id, []).append(
+            (hit.candidate_gene_id, hit.candidate_symbol, hit.mapping_status, hit.selected))
     outcomes = []
     for row in table.itertuples():
         hits = grouped[row.feature_id]
-        selected = hits.loc[hits.selected]
-        identities = set(zip(selected.candidate_gene_id, selected.candidate_symbol))
-        conflicting = (hits.mapping_status.isin(['ambiguous', 'invalid_candidate', 'refseq_mismatch',
-                                                'gene_symbol_identity_conflict']).any()
+        identities = {(gene, symbol) for gene, symbol, status, selected in hits if selected}
+        conflicting = (any(status in {'ambiguous', 'invalid_candidate', 'refseq_mismatch',
+                                      'gene_symbol_identity_conflict'} for _, _, status, _ in hits)
                        or len(identities) > 1)
         gene, symbol = next(iter(identities)) if len(identities) == 1 else ('', '')
         conflicting |= bool(symbol and symbol != row.source_gene_symbol)
@@ -79,6 +83,7 @@ def source_annotations(cache, platform, expression):
                   else 'unmapped' if row.valid_refseq else 'invalid_source_assignment')
         outcomes.append((gene if status == 'mapped' else '', symbol if status == 'mapped' else '', status, status == 'mapped'))
     table['refseq_query'] = table.refseq_query.map(';'.join)
+    table.attrs['source_platform_feature_count'] = len(seen)
     table[['gene_id', 'gene_symbol', 'mapping_status', 'annotation_eligible']] = pd.DataFrame(outcomes, index=table.index)
     decisions = table.set_index('feature_id').mapping_status
     candidates['feature_mapping_status'] = candidates.feature_id.map(decisions)
@@ -136,31 +141,48 @@ class ExonCohort:
         return clinical, samples, audit
 
     def prepare(self, cache):
-        meta, expression, processing = read_geo(cache.fetch(self.SERIES + '_series_matrix.txt.gz', self.MATRIX_URL),
-                                                series=self.SERIES, platforms={self.PLATFORM})
+        matrix_path = cache.fetch(self.SERIES + '_series_matrix.txt.gz', self.MATRIX_URL)
+        meta, inventory, processing = read_geo(matrix_path, series=self.SERIES, platforms={self.PLATFORM},
+                                                metadata_only=True, collect_features=True)
         extra = {}
-        if expression.empty:
+        supplementary = len(inventory.index) == 0
+        if supplementary:
             if not self.SUPPLEMENT_URL:
                 raise ValueError(f'{self.SERIES}: source matrix empty; inspect the deposited processed files')
-            expression = read_tsv(cache.fetch(self.supplementary, self.SUPPLEMENT_URL))
+            source_path = cache.fetch(self.supplementary, self.SUPPLEMENT_URL)
+            inventory = tsv_feature_inventory(source_path)
+        annotations, candidates = source_annotations(cache, self.PLATFORM, inventory)
+        eligible = set(annotations.loc[annotations.annotation_eligible, 'feature_id'])
+        if not eligible:
+            raise ValueError('No unambiguously annotated exon-array features')
+        if supplementary:
+            expression = read_tsv(source_path, feature_filter=eligible)
             expression, linkage = align_columns(expression, meta,
-                lambda r: [r['sample_id'], r.get('source_description', '')])
+                lambda r: [r['sample_id'], r.get('source_description', ''), r.get('source_description', '') + '.CEL'])
             extra['expression_linkage.csv'] = linkage
+        else:
+            _, expression, _ = read_geo(matrix_path, series=self.SERIES, platforms={self.PLATFORM}, feature_filter=eligible)
         if set(expression.columns) != set(meta.sample_id):
             raise ValueError('Expression and GEO source assay sets differ')
         clinical, samples, audit = self.clinical_tables(meta)
         source = expression.loc[:, samples.sample_id]
-        annotations, candidates = source_annotations(cache, self.PLATFORM, source)
+        del expression
         extra['gene_mapping_candidates.csv.gz'] = candidates
         details = {
             'sample_selection': 'Require primary-tumor title and expected platform; retain all unique study-qualified subjects independently of outcomes',
             'patient_identity': 'Source title-derived within-study label; overlap across Mayo/Decipher studies is not resolved',
             'annotation': 'Original PSR IDs retained; single-symbol source assignments anchored by cached, exact human RefSeq mapping; no aggregation',
             'expression_kind': 'log_microarray',
+            'feature_coverage': {
+                'deposited_source_features': len(annotations),
+                'reference_platform_features': annotations.attrs['source_platform_feature_count'],
+                'source_sequence_counts': annotations.source_seqname.value_counts().sort_index().to_dict(),
+                'interpretation': 'Only deposited processed rows are exported. A source subset does not establish whole-transcriptome coverage; raw-array reprocessing is a separate workflow.'},
+            'interim_matrix_scope': 'Only unambiguously annotated source rows are materialized; every original row ID/annotation decision remains in feature_mapping. Excluded unannotated numeric values remain in the immutable raw source and have unknown missingness, never zero-filled.',
             'endpoints': {p: {'definition': 'Source metastatic event' if p == 'metastasis' else 'Biochemical recurrence',
                 'duration_available': False, 'unit': 'months', 'missing_policy': 'Missing status/time remains missing; verified clinical supplement can add individual durations'} for p in self.ENDPOINTS},
             'study_source': f'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={self.SERIES}',
-            'limitations': ['Full-source run and counts remain unverified; synthetic integration tests only',
+            'limitations': ['Experimental adapter: source parsing and structural export checks do not establish clinical validity',
                 'Missing clinical follow-up does not block expression/PCA; survival fitting requires verified individual event/censoring times',
                 'Source processed values (' + self.method + ') retained; no raw CEL QC/reprocessing',
                 'Large PSR matrices require substantial memory/disk; numeric conversion is batched',

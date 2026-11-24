@@ -9,7 +9,12 @@ def build(cache, output_root, interim_root, anndata_root, *, expression_file=Non
 
 
 def main(argv=None):
-    return _main('dkfz-eopc', argv)
+    import sys
+    args=list(sys.argv[1:] if argv is None else argv)
+    if '--public-source' in args:
+        from .dkfz_public_pipeline import main as public_main
+        return public_main([a for a in args if a!='--public-source'])
+    return _main('dkfz-eopc', args)
 
 
 if __name__ == '__main__':

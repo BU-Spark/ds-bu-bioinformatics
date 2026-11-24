@@ -1,16 +1,19 @@
 # Pipeline coverage for all 20 requested cohorts
 
 The working tree registers a dataset-specific command for every listed cohort.
-The twelve new workflows are **experimental**, not fully validated supported pipelines. Eighteen
-commands acquire public research sources; two use explicitly supplied authorized
-processed RNA-seq sources. The generic `import-cohort` utility is optional and is
+The twelve new workflows remain **experimental** for clinical interpretation and
+analysis design. All 20 requested cohorts now have real-source processed outputs,
+using explicit public processed variants for DKFZ and CPGEA. Those variants do not
+claim equivalence to controlled raw-sequencing deposits or resolve missing clinical
+semantics. The generic `import-cohort` utility is optional and is
 **not** counted as a dataset-specific pipeline.
 
-New workflows are covered by synthetic source-format parsing, export and byte-identical
-offline-rebuild tests. **Complete real-source acquisition, source-schema coverage,
-cohort counts and clinical validity remain pending for the twelve new workflows.**
-Direct GEO acquisition returned HTTP 403 from the execution environment during the
-initial check; independent re-review later encountered DNS resolution failures. No real-data reference manifests or validated cohort counts are invented.
+Real-source builds and independent CSV/H5AD/checksum checks now cover **20 source
+variants and 4,073 cohort profiles**. All 159 tests pass; 13 full real cohorts also
+reproduced byte for byte offline. Initial network failures were overcome through
+completed acquisitions and exact verified cache reuse. See the
+[full-source validation report](full_source_validation.md) for actual counts,
+source variants, QC exclusions and remaining scientific limitations.
 
 | Cohort | Accession | Dataset-specific command | Acquisition / guide |
 |---|---|---|---|
@@ -41,10 +44,10 @@ Command registration is complete; implementation correctness and real-source com
 are not established for all workflows. Data availability and scientific validation
 remain separate requirements:
 
-- First real acquisition, sample/feature/endpoint audit review, structural output checks,
-  and comparison of full-source offline-rebuild hashes for each new workflow.
-- Actual processed expression and original clinical/sample files for DKFZ and CPGEA,
-  with legitimate access and documented column maps.
+- Scientific review of sample/feature/endpoint audits and additional full-source
+  offline byte comparisons for the newly completed large source variants.
+- Authorized original DKFZ/CPGEA sources if full raw-deposit coverage or an alternative
+  to the documented public processed subsets is required.
 - Verified patient-linked event/censoring times for cohorts whose public source only
   provides status or clinical covariates. Expression/PCA exports do not wait for these
   dates; survival fits remain unavailable until sufficient eligible data exist.
@@ -59,7 +62,8 @@ structural checker pass is not evidence of clinical validity or a validated pred
 ## Review fixes and analysis policy
 
 CancerMap now classifies the deposited `material_type` separately from organ `tissue`,
-and excludes source-named xenografts. Full-cohort validation and region sensitivity remain pending.
+and excludes source-named xenografts. Its complete deposited-source build passed;
+region sensitivity and clinical interpretation remain research decisions.
 Clinical supplements require matching known endpoint definitions, origins and censoring rules;
 unresolved deposited time definitions cannot be combined. Definitions for unmatched rows are preserved.
 The twelve experimental cohorts export restrictive `analysis_policy` metadata.

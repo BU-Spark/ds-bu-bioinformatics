@@ -28,7 +28,7 @@ def clinical_tables(metadata):
         raise ValueError('Sun: missing source tissue, identity or recurrence column')
     audit = metadata.copy()
     if (audit.empty or not audit.geo__tissue.eq('Prostate cancer primary tumor').all()
-            or not audit.title.str.fullmatch(r'Prostate cancer primary tumor PR\d+').all()
+            or not audit.title.str.fullmatch(r'Prostate cancer primary tumor P[GR]\d+').all()
             or not audit.platform_id.eq(PLATFORM).all()):
         raise ValueError('Sun: unrecognized specimen/platform/title; review selection')
     audit['patient_id'] = audit.title.str.rsplit(' ', n=1).str[-1]

@@ -41,13 +41,14 @@ def clinical_tables(metadata):
     material = source_column(audit, ['geo__material_type'], 'material_type')
     donor = source_column(audit, ['geo__donor_id', 'geo__donor', 'geo__patient_id', 'geo__patient', 'geo__individual'], 'donor')
     human = audit.get('organism', pd.Series('', index=audit.index)).eq('Homo sapiens')
-    malignant = material.str.lower().isin({'malignant', 'malignant tissue', 'tumour', 'tumor', 'cancer',
+    malignant = material.str.lower().isin({'malignant', 'malignant tissue', 'tumour', 'tumor', 'low tumor', 'cancer',
         'prostate cancer', 'prostate tumour', 'prostate tumor', 'tumour tissue', 'tumor tissue'})
     benign = material.str.lower().isin({'benign', 'benign tissue', 'normal', 'normal tissue', 'morphologically benign tissue',
                                      'prostate benign', 'benign prostate tissue'})
+    stroma = material.str.lower().eq('stroma')
     source_name = audit.get('source_name', pd.Series('', index=audit.index)).fillna('').astype(str)
     xenograft = ~human | source_name.str.contains(r'xenograft|\bPDX\b', case=False, regex=True)
-    if audit.empty or not audit.platform_id.eq(PLATFORM).all() or not (malignant | benign | xenograft).all():
+    if audit.empty or not audit.platform_id.eq(PLATFORM).all() or not (malignant | benign | stroma | xenograft).all():
         raise ValueError('Unrecognized CancerMap specimen; review source tissue/organism values')
     primary = human & malignant & ~xenograft
     if not primary.any() or donor[primary].isin(['', 'NA', 'N/A', 'UNKNOWN']).any():
@@ -55,10 +56,11 @@ def clinical_tables(metadata):
     audit['patient_id'] = SERIES + ':' + donor
     # No independent per-region quality ranking is supplied: a deterministic,
     # outcome-independent rule retains one original region without averaging.
-    winners = set(audit.loc[primary].sort_values('sample_id').drop_duplicates('patient_id').sample_id)
+    audit['tumor_material_rank'] = material.str.lower().eq('low tumor').astype(int)
+    winners = set(audit.loc[primary].sort_values(['tumor_material_rank', 'sample_id']).drop_duplicates('patient_id').sample_id)
     audit['selected'] = audit.sample_id.isin(winners)
-    audit['selection_reason'] = np.select([audit.selected, primary, benign & human & ~xenograft, xenograft],
-        ['primary_region_lowest_gsm', 'other_primary_region_same_donor', 'benign', 'nonhuman_or_xenograft'], default='unrecognized')
+    audit['selection_reason'] = np.select([audit.selected, primary, benign & human & ~xenograft, stroma & ~xenograft, xenograft],
+        ['primary_region_lowest_gsm', 'other_primary_region_same_donor', 'benign', 'stroma', 'nonhuman_or_xenograft'], default='unrecognized')
     clinical = add_outcomes(audit.loc[audit.selected].reset_index(drop=True), outcome)
     clinical['bcr_clinical_source'] = 'BCR status/duration not verified from deposited CancerMap metadata'
     samples = clinical[['sample_id', 'geo_accession', 'patient_id', 'platform_id', 'title']].copy()
@@ -71,7 +73,7 @@ def prepare(cache):
     clinical, samples, audit = clinical_tables(meta)
     source = expression.loc[:, samples.sample_id]
     genes, candidates = source_annotations(cache, PLATFORM, source)
-    details = {'sample_selection': 'Human malignant tissue; one donor region chosen by lowest GSM identifier, independently of outcomes; all regions audited',
+    details = {'sample_selection': 'Human Tumor/Low Tumor tissue; prefer Tumor over Low Tumor, then lowest GSM within donor, independently of outcomes; all regions audited',
         'patient_identity': 'Explicit source donor characteristic; never infer one patient per assay',
         'annotation': 'Single-symbol source gene_assignment anchored to cached human RefSeq mapping; deposited target rows preserved',
         'expression_kind': 'log_microarray',

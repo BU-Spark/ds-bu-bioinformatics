@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import csv
+import concurrent.futures
 import os
 import re
 import shutil
@@ -135,11 +136,16 @@ def run_rma(paths):
         subprocess.run([rscript, '--vanilla', str(R_SCRIPT), str(listing), temp], check=True)
         frame = pd.read_csv(directory/'expression.tsv', sep='\t', index_col=0,
                             dtype={'feature_id':str}, float_precision='round_trip')
-        if frame.empty or not frame.index.is_unique or frame.columns.tolist() != [p.name for p in paths]:
+        qc = pd.read_csv(directory/'cel_qc.tsv', sep='\t', keep_default_na=False)
+        if (qc.columns.tolist() != ['cel_file','cel_qc_pass','cel_qc_reason']
+                or qc.cel_file.tolist() != [p.name for p in paths]
+                or qc.cel_qc_pass.dtype != bool or qc.cel_qc_reason.eq('').any()):
+            raise ValueError('R raw-array QC inventory differs from immutable CEL inputs')
+        if frame.empty or not frame.index.is_unique or frame.columns.tolist() != qc.loc[qc.cel_qc_pass,'cel_file'].tolist():
             raise ValueError('RMA expression assay/feature identities differ')
         annotations = read_annotations(directory/'annotations.tsv', frame.index)
         versions = (directory/'versions.txt').read_text().splitlines()
-    return frame, annotations, versions
+    return frame, annotations, versions, qc
 
 
 def prepare(cache):
@@ -150,21 +156,34 @@ def prepare(cache):
     sizes = cel_sizes(record)
     if set(sizes) != set(audit.cel_file):
         raise ValueError('SDRF and BioStudies CEL inventory differ')
-    paths = [cache.fetch(name, FILES_URL+name) for name in audit.cel_file]
+    workers = int(os.environ.get('CIT_DOWNLOAD_WORKERS', '4'))
+    if not 1 <= workers <= 8:
+        raise ValueError('CIT_DOWNLOAD_WORKERS must be between 1 and 8')
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
+        paths = list(pool.map(lambda name: cache.fetch(name, FILES_URL + name), audit.cel_file))
     if any(p.stat().st_size != sizes[p.name] for p in paths):
         raise ValueError('CEL size differs from BioStudies inventory')
-    full, annotations, versions = run_rma(paths)
+    full, annotations, versions, qc = run_rma(paths)
+    audit = audit.merge(qc, on='cel_file', how='left', validate='one_to_one', sort=False)
+    if audit.cel_qc_pass.isna().any():
+        raise ValueError('Missing raw-array QC decision')
+    failed = ~audit.cel_qc_pass
+    audit.loc[failed, 'selected'] = False
+    audit.loc[failed, 'selection_reason'] = 'excluded_unreadable_or_invalid_CEL'
+    selected = set(audit.loc[audit.selected,'sample_id'])
+    clinical = clinical.loc[clinical.sample_id.isin(selected)].reset_index(drop=True)
+    samples = samples.loc[samples.sample_id.isin(selected)].reset_index(drop=True)
     expression = full.loc[:, samples.cel_file].copy()
     expression.columns = samples.sample_id.tolist()
     details = {'source_repository':'EMBL-EBI BioStudies / ArrayExpress', 'bcr_source':'SDRF Characteristics fields, cross-checked against Factor Value fields',
                'sample_selection':'Select explicit Tumoral tissue; retain incomplete outcomes; unique deposited patient IDs',
-               'normalization':'oligo::rma(target="core") jointly across all deposited arrays, including non-tumor arrays, before tumor selection',
+               'normalization':'oligo::rma(target="core") jointly across readable CEL arrays with finite nonnegative raw signals, including non-tumor arrays, before tumor selection; unreadable/invalid source arrays excluded with individual QC audit',
                'rma_script_sha256':sha256(R_SCRIPT), 'r_versions':versions,
                'annotation':'Pinned hugene20sttranscriptcluster.db; require one Entrez/symbol pair per transcript cluster; no averaging across clusters',
                'clinical_time':'SDRF months to BCR or last news; preserve zero and missing outcomes but flag ineligible'}
-    return clinical, samples, audit, expression, annotations, {}, versions, details
+    return clinical, samples, audit, expression, annotations, {'raw_array_qc.csv':qc}, versions, details
 
 
 def summarize(clinical, audit, mapping, extra):
     return {'deposited_arrays':len(audit), 'deposited_subjects':int(audit.patient_id.nunique()),
-            'rma_input_arrays':len(audit)}
+            'rma_input_arrays':int(audit.cel_qc_pass.sum()), 'raw_arrays_excluded_for_qc':int((~audit.cel_qc_pass).sum())}

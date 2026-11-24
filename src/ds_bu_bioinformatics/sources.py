@@ -13,6 +13,7 @@ import http.client
 import json
 import shutil
 import time
+import threading
 import urllib.error
 import urllib.request
 import zlib
@@ -120,6 +121,7 @@ class SourceCache:
     def __init__(self, root: Path, offline: bool = False, accessions=None,
                  user_agent: str = 'Taylor-GSE21034/2.0'):
         self.root = root
+        self._manifest_lock = threading.RLock()
         self.offline = offline
         self.user_agent = user_agent
         self.manifest_path = root / 'manifest.json'
@@ -179,12 +181,14 @@ class SourceCache:
                 time.sleep(attempt + 1)
             finally:
                 temporary.unlink(missing_ok=True)
-        self.manifest['sources'][name] = {
+        entry = {
             **request_info, 'path': name, 'resolved_url': resolved_url,
             'retrieved_at_utc': datetime.now(timezone.utc).isoformat(),
             'sha256': sha256(path), 'bytes': path.stat().st_size,
             'response_metadata': response_metadata}
-        write_json(self.manifest_path, self.manifest)
+        with self._manifest_lock:
+            self.manifest['sources'][name] = entry
+            write_json(self.manifest_path, self.manifest)
         return path
 
     def json(self, name: str, url: str, body: bytes | None = None):

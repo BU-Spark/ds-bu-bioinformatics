@@ -1,9 +1,9 @@
 # Nakagawa / Mayo — GSE10645
 
-A dedicated paired-panel adapter is implemented, with synthetic source-shaped tests
-and byte-identical fixture-cache offline rebuilds. **Complete real-cohort acquisition,
-counts and schema coverage remain unverified.** Do not count this as a validated
-596-patient export until a full run has been checked.
+The complete paired-panel source run passes independent CSV/H5AD checks for
+**596 profiles**, retaining **939 rows / 886 mapped genes** under the conservative
+RefSeq policy. Targeted coverage, unmapped GenBank-only targets and clinical
+duration interpretation remain limitations. See the [full-source report](full_source_validation.md).
 
 ```bash
 uv run --locked nakagawa-gse10645 --snapshot nakagawa-v1

@@ -51,16 +51,22 @@ def add_outcomes(clinical, outcome, prefix='bcr'):
 
 
 def finite_features(source, annotations):
-    if source.index.tolist() != annotations.feature_id.tolist() or not source.index.is_unique:
+    if (not source.index.is_unique or not annotations.feature_id.is_unique
+            or not set(source.index).issubset(annotations.feature_id)
+            or source.index.tolist() != annotations.loc[annotations.feature_id.isin(source.index), 'feature_id'].tolist()
+            or not set(annotations.loc[annotations.annotation_eligible, 'feature_id']).issubset(source.index)):
         raise ValueError('Feature annotations are not aligned or unique')
     mapping = annotations.copy()
-    mapping['missing_selected_values'] = source.isna().sum(axis=1).to_numpy()
-    mapping['expression_status'] = np.where(mapping.missing_selected_values.gt(0), 'missing_selected_expression', 'complete')
+    counts = source.isna().sum(axis=1)
+    mapping['missing_selected_values'] = pd.array(mapping.feature_id.map(counts), dtype='Int64')
+    mapping['expression_status'] = np.where(mapping.missing_selected_values.gt(0).fillna(False), 'missing_selected_expression', 'complete')
+    mapping.loc[mapping.missing_selected_values.isna(), 'expression_status'] = 'unmaterialized_unannotated_source'
     if np.isinf(source.to_numpy()).any():
         raise ValueError('Infinite source expression')
     mapping['selected'] = mapping.annotation_eligible & mapping.expression_status.eq('complete')
     genes = mapping.loc[mapping.selected, annotations.columns].drop(columns=['annotation_eligible', 'mapping_status']).reset_index(drop=True)
-    expression = source.loc[genes.feature_id].copy()
+    expression = (source.copy(deep=False) if genes.feature_id.tolist() == source.index.tolist()
+                  else source.loc[genes.feature_id].copy())
     if expression.empty:
         raise ValueError('No finite eligible expression features')
     return expression, genes, mapping
@@ -108,6 +114,8 @@ def validate(expression, clinical, samples, genes, mapping, audit, outcome, *, e
         'sample_dispositions': audit.selection_reason.value_counts().to_dict(),
         'feature_dispositions': mapping.mapping_status.value_counts().to_dict(),
         'features_with_missing_selected_expression': int(mapping.missing_selected_values.gt(0).sum()),
+        'unmaterialized_unannotated_features': int(mapping.missing_selected_values.isna().sum()),
+        'missingness_scope': 'Materialized selected-sample values; unannotated rows skipped before numeric loading have unknown missingness and remain in the raw source',
         'missing_selected_expression_cells': int(mapping.missing_selected_values.sum()),
         'otherwise_eligible_features_excluded_for_missing_expression': int((mapping.annotation_eligible & mapping.missing_selected_values.gt(0)).sum()),
         **reasons,
@@ -139,6 +147,17 @@ def reload_table(path, expected):
 
 
 def build(cache, output_root, interim_root, anndata_root, *, cohort, clinical_file=None, clinical_provenance=None):
+    if cohort.SERIES in {'GSE46691', 'GSE62116', 'GSE72291', 'GSE62667', 'E-MTAB-6128'}:
+        # This lock-only directory has no scientific inputs or source manifest.
+        guard = SourceCache(cache.root.parent / '.large-cohort-resource', accessions=['resource-lock'])
+        with guard.transaction():
+            return _locked_build(cache, output_root, interim_root, anndata_root, cohort=cohort,
+                                 clinical_file=clinical_file, clinical_provenance=clinical_provenance)
+    return _locked_build(cache, output_root, interim_root, anndata_root, cohort=cohort,
+                         clinical_file=clinical_file, clinical_provenance=clinical_provenance)
+
+
+def _locked_build(cache, output_root, interim_root, anndata_root, *, cohort, clinical_file=None, clinical_provenance=None):
     with cache.transaction():
         return _build(cache, output_root, interim_root, anndata_root, cohort=cohort,
                       clinical_file=clinical_file, clinical_provenance=clinical_provenance)
@@ -229,6 +248,7 @@ def _build(cache, output_root, interim_root, anndata_root, *, cohort, clinical_f
         check = validate(saved_expression, loaded['clinical.csv'], loaded['samples.csv'], loaded['genes.csv'], loaded['feature_mapping.csv.gz'], loaded['sample_audit.csv'], cohort.outcome, endpoints=endpoints)
         if check['counts'] != report['counts']:
             raise ValueError('CSV round-trip changed counts')
+        del saved_expression
         write_anndata(expression, clinical, genes, metadata, ad_stage / 'expression.h5ad')
         report.update(export_round_trip_valid=True, anndata_round_trip_valid=True)
         write_json(stage / 'validation.json', report)

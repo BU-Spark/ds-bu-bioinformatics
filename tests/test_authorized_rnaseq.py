@@ -36,6 +36,27 @@ def sources(root, key):
 
 
 class AuthorizedStudyTest(unittest.TestCase):
+    def test_source_slashes_and_literal_escape_sequences_round_trip_without_key_collisions(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            expression, samples, config_path, config = sources(root, 'cpgea')
+            rows = samples.read_text().replace('Years', 'Time/Years').splitlines()
+            samples.write_text(rows[0] + '\tTime%2FYears\n' + ''.join(row + '\toriginal\n' for row in rows[1:]))
+            config['endpoints']['bcr']['time_column'] = 'Time/Years'
+            config_path.write_text(json.dumps(config))
+            cohort = AuthorizedRNASeq('cpgea', expression_file=expression, sample_file=samples, source_config=config_path)
+            cache = SourceCache(root / 'raw' / cohort.SNAPSHOT, accessions=cohort.ACCESSIONS)
+            roots = [root / p for p in ('processed', 'interim', 'anndata')]
+            with transport({}), contextlib.redirect_stdout(io.StringIO()):
+                cpgea_pipeline.build(cache, *roots, expression_file=expression, sample_file=samples, source_config=config_path)
+            self.assertEqual(check_dataset(roots[0] / cohort.SNAPSHOT, roots[2] / cohort.SNAPSHOT)['errors'], [])
+            clinical = pd.read_csv(roots[0] / cohort.SNAPSHOT / 'clinical.csv')
+            self.assertEqual(clinical.bcr_months.tolist(), [12, 36])
+            self.assertEqual(clinical['source__Time%2FYears'].tolist(), [1, 3])
+            self.assertEqual(clinical['source__Time%252FYears'].tolist(), ['original', 'original'])
+            metadata = json.loads((roots[0] / cohort.SNAPSHOT / 'metadata.json').read_text())
+            self.assertEqual(metadata['policies']['source_column_export_names']['Time/Years'], 'source__Time%2FYears')
+
     def test_both_dedicated_studies_parse_sources_select_regions_and_replay_offline(self):
         for key, entry in [('dkfz-eopc', dkfz_eopc_pipeline), ('cpgea', cpgea_pipeline)]:
             with self.subTest(cohort=key), tempfile.TemporaryDirectory() as temp:

@@ -5,10 +5,10 @@ original GEO metadata, processed expression and annotation inputs, perform the c
 patient/specimen selection, and generate aligned CSV/AnnData exports. They do not
 require users to prepare the generic five-file import bundle.
 
-**Validation status:** synthetic source-format integration and offline-rebuild tests
-cover all seven workflows. Complete real-source acquisition, platform/source-schema
-coverage and cohort counts have not yet been validated in this execution environment.
-A successful fixture test is not a claim that a real-source run has completed.
+**Validation status:** complete deposited-source builds and independent export checks
+now pass for all seven workflows. Synthetic source-format and offline-rebuild tests
+also cover them. See the [real-source report](full_source_validation.md) for actual
+counts and limitations. These source/export checks do not establish clinical validity.
 
 | Cohort | Command | Snapshot | Native inputs and selection |
 |---|---|---|---|
@@ -75,8 +75,10 @@ is excluded and audited; there is no zero fill or expression-dependent patient s
 Select Homo sapiens malignant tissue using explicit tissue/donor characteristics.
 Supported source-field aliases are listed in `cancermap.py`; unknown source fields
 or tissue values fail and print the fields that need review. Never assume one patient
-per region/array. Among multiple eligible regions for a donor, the lowest GSM identifier
-is selected independently of outcomes and the other regions remain in the audit.
+per region/array. Both deposited `Tumor` and `Low Tumor` regions are eligible;
+`Tumor` takes priority over `Low Tumor`, then the lowest GSM identifier is selected
+within that material class, independently of outcomes. Stroma, normal and mouse
+fibroblast profiles are excluded. Other regions remain in the audit.
 This is a reproducibility rule, not evidence that the chosen region is clinically
 dominant. Region sensitivity analysis remains a downstream research decision.
 
@@ -92,7 +94,8 @@ cohort. Clinical tables must be joined by verified source CPCG/GSM crosswalks.
 ### Erho, Karnes, Den and Klein
 
 Require primary-tumor source titles, unique study-qualified subjects and GPL5188.
-Erho's supplementary matrix aliases use exact source descriptions or GSMs. A processed
+Erho's supplementary matrix aliases use exact source descriptions (including the
+deposited `.CEL` suffix) or GSMs. A processed
 column that cannot be mapped uniquely fails rather than being positionally matched.
 The deposited metastatic-event label is retained when present. Individual durations
 remain missing until verified. Den also declares BCR as a secondary endpoint and
@@ -103,12 +106,29 @@ These Mayo/Decipher studies can overlap and include selected sampling designs.
 Study-qualified IDs keep separate exports distinct; they do not establish independence
 or justify pooling cohorts without a patient-overlap/design review.
 
+The actual Klein processed deposit contains **18,846 PSR rows**. The platform
+annotation places 18,823 on chromosome 1 and leaves 23 without a sequence label;
+the full platform lists 1,432,155 features. Under the conservative exact-RefSeq
+mapping rule, only 4,424 rows representing 286 genes are eligible. This is a
+major limitation for broad gene-module analysis. It is present in the deposited
+processed values, not an intentional chromosome filter in this pipeline.
+`feature_coverage` in metadata records the observed row and sequence counts.
+Whole-transcriptome recovery would require a separately validated raw-CEL
+normalization and annotation workflow; the present command preserves the
+deposited SCAN values and does not claim whole-transcriptome coverage.
+
 ### Moscow
 
-Only `*T RNA` primary tumor samples enter expression/PCA. Normal `*N RNA` and miRNA
+Only primary tumor mRNA samples enter expression exports. Preserve the optional
+`U` patient-ID prefix: `U1` and `1` are different source patients. Prefer the
+base `RNA` assay over its `RNA2` repeat, without averaging; conflicting known
+outcomes fail. Normal `*N RNA` and miRNA
 assays are audited and excluded; exact GSM, full title or specimen-core IDs link count
 columns to RNA metadata. Primary RNA profiles absent from the submitted count matrix
 are explicitly counted in the audit, not silently assumed to have expression.
+The real count matrix also contains normal columns whose GEO records are only
+miRNA assays. These normal columns are explicitly excluded in the linkage audit;
+miRNA clinical identities are never borrowed for mRNA expression.
 
 Source `bcr`/`brf` codes map to known recurrence classes. Individual follow-up remains
 missing. Raw counts must be complete nonnegative integers with a positive library total.
